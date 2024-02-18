@@ -17,6 +17,15 @@ const banner_astro = require('../assets/images/banner_astro.png');
 const Slider1 = require('../assets/images/slider1.png');
 const Slider2 = require('../assets/images/slider2.png');
 const Slider3 = require('../assets/images/slider3.png');
+const Profile1 = require('../assets/images/profile1.png');
+const Profile2 = require('../assets/images/profile2.png');
+const Profile3 = require('../assets/images/profile3.png');
+const star_icon = require('../assets/images/star.png');
+const verified_icon = require('../assets/images/verified_icon.png');
+const button_icon = require('../assets/images/button_icon.png');
+const blog1 = require('../assets/images/blog1.png');
+const blog2 = require('../assets/images/blog2.png');
+const blog_bg = require('../assets/images/blog_bg.png');
 
 export default {
   astropath_logo,
@@ -38,4 +47,13 @@ export default {
   Slider1,
   Slider2,
   Slider3,
+  Profile1,
+  Profile2,
+  Profile3,
+  star_icon,
+  blog1,
+  blog2,
+  verified_icon,
+  button_icon,
+  blog_bg,
 };
