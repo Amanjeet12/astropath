@@ -11,6 +11,12 @@ const cpmplete_profile = require('../assets/images/complete_profile.png');
 const profile_image = require('../assets/images/profile_image.png');
 const location_icon = require('../assets/images/location.png');
 const calendet_icon = require('../assets/images/calender.png');
+const background_Image = require('../assets/images/bc.png');
+const wallet_icon = require('../assets/images/wallet.png');
+const banner_astro = require('../assets/images/banner_astro.png');
+const Slider1 = require('../assets/images/slider1.png');
+const Slider2 = require('../assets/images/slider2.png');
+const Slider3 = require('../assets/images/slider3.png');
 
 export default {
   astropath_logo,
@@ -26,4 +32,10 @@ export default {
   profile_image,
   location_icon,
   calendet_icon,
+  background_Image,
+  wallet_icon,
+  banner_astro,
+  Slider1,
+  Slider2,
+  Slider3,
 };

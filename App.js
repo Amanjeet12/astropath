@@ -8,6 +8,7 @@ import LoginScreen from './src/screens/Login/LoginScreen';
 import OtpScreen from './src/screens/Login/OtpScreen';
 import CompleteProfile from './src/screens/Login/CompleteProfile';
 import CompleteScreen from './src/screens/Login/CompleteScreen';
+import BottomTabScreen from './src/screens/BottomSheetScreen/BottomTabScreen';
 
 const Stack = createStackNavigator();
 
@@ -87,6 +88,11 @@ const App = () => {
           options={{headerShown: false}}
           name="CompleteScreen"
           component={CompleteScreen}
+        />
+        <Stack.Screen
+          options={{headerShown: false}}
+          name="BottomTabScreen"
+          component={BottomTabScreen}
         />
       </Stack.Navigator>
     </NavigationContainer>

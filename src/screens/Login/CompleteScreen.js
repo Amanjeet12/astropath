@@ -42,7 +42,7 @@ const CompleteScreen = () => {
           width: '100%',
           paddingHorizontal: 20,
         }}>
-        <Custombutton placeholder={'Go to home'} />
+        <Custombutton placeholder={'Go to home'} screen={'BottomTabScreen'} />
       </View>
     </SafeAreaView>
   );
