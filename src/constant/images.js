@@ -26,6 +26,14 @@ const button_icon = require('../assets/images/button_icon.png');
 const blog1 = require('../assets/images/blog1.png');
 const blog2 = require('../assets/images/blog2.png');
 const blog_bg = require('../assets/images/blog_bg.png');
+const mobile_bg = require('../assets/images/Mobile.png');
+const wallet = require('../assets/images/wallet_icon.png');
+const terms = require('../assets/images/terms.png');
+const privacy = require('../assets/images/privacy.png');
+const language = require('../assets/images/language.png');
+const logout = require('../assets/images/logout.png');
+const notification = require('../assets/images/notification.png');
+const customer_care = require('../assets/images/customer.png');
 
 export default {
   astropath_logo,
@@ -56,4 +64,12 @@ export default {
   verified_icon,
   button_icon,
   blog_bg,
+  mobile_bg,
+  wallet,
+  language,
+  notification,
+  terms,
+  privacy,
+  customer_care,
+  logout,
 };

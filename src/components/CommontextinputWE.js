@@ -2,7 +2,7 @@ import {StyleSheet, Text, TextInput, View} from 'react-native';
 import React from 'react';
 import {COLORS} from '../constant/theme';
 
-const Commontextinput = ({placeholder}) => {
+const CommontextinputWE = ({placeholder}) => {
   return (
     <View style={styles.mainContainer}>
       <TextInput
@@ -15,14 +15,13 @@ const Commontextinput = ({placeholder}) => {
   );
 };
 
-export default Commontextinput;
+export default CommontextinputWE;
 
 const styles = StyleSheet.create({
   mainContainer: {
     height: 50,
     backgroundColor: COLORS.white,
     borderRadius: 15,
-    elevation: 4,
     marginBottom: 3,
   },
 });

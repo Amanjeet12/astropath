@@ -9,27 +9,32 @@ import {
 import React from 'react';
 import {COLORS, SIZES} from '../../constant/theme';
 import HeaderSection from '../../components/HeaderSection';
-import {images} from '../../constant';
 import OrderSection from '../../components/OrderSection';
 import {Order} from '../../constant/data';
+import {images} from '../../constant';
 const OrderScreen = () => {
   return (
-    <View style={styles.container}>
+    <>
       <StatusBar backgroundColor={'#f7f1e1'} barStyle={'dark-content'} />
-      <ScrollView>
-        <View style={styles.mainContainer}>
-          <View style={{marginTop: 10}}>
-            <HeaderSection />
-          </View>
-          <View style={{marginTop: 20}}>
-            <Text style={styles.tagLine}>Recent orders and chats</Text>
-            <View>
-              <OrderSection data={Order} />
+      <ImageBackground
+        source={images.mobile_bg}
+        style={{width: SIZES.width, height: SIZES.height, flex: 1}}
+        imageStyle={{resizeMode: 'stretch'}}>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <View style={styles.mainContainer}>
+            <View style={{marginTop: 10}}>
+              <HeaderSection />
+            </View>
+            <View style={{marginTop: 20}}>
+              <Text style={styles.tagLine}>Recent orders and chats</Text>
+              <View>
+                <OrderSection data={Order} />
+              </View>
             </View>
           </View>
-        </View>
-      </ScrollView>
-    </View>
+        </ScrollView>
+      </ImageBackground>
+    </>
   );
 };
 

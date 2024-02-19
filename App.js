@@ -9,6 +9,7 @@ import OtpScreen from './src/screens/Login/OtpScreen';
 import CompleteProfile from './src/screens/Login/CompleteProfile';
 import CompleteScreen from './src/screens/Login/CompleteScreen';
 import BottomTabScreen from './src/screens/BottomSheetScreen/BottomTabScreen';
+import UpdateProfileScreen from './src/screens/BottomSheetScreen/UpdateProfileScreen';
 
 const Stack = createStackNavigator();
 
@@ -93,6 +94,11 @@ const App = () => {
           options={{headerShown: false}}
           name="BottomTabScreen"
           component={BottomTabScreen}
+        />
+        <Stack.Screen
+          options={{headerShown: false}}
+          name="UpdateProfileScreen"
+          component={UpdateProfileScreen}
         />
       </Stack.Navigator>
     </NavigationContainer>
