@@ -57,13 +57,6 @@ const LanguageScreen = () => {
             </View>
           </View>
         </ScrollView>
-        <View style={styles.button_position}>
-          <TouchableOpacity
-            style={styles.buttonContainer}
-            onPress={() => handleNavigation()}>
-            <Text style={styles.title}>Update</Text>
-          </TouchableOpacity>
-        </View>
       </ImageBackground>
     </>
   );

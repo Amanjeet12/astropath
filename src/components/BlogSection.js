@@ -11,8 +11,15 @@ import {
 import React from 'react';
 import {images} from '../constant';
 import {COLORS} from '../constant/theme';
+import useNavigateToScreen from './Navigation';
+import Icon from 'react-native-vector-icons/Entypo';
+import Eys from 'react-native-vector-icons/AntDesign';
 
 const BlogSection = ({data}) => {
+  const navigation = useNavigateToScreen();
+  const handleNavigation = () => {
+    navigation('BlogScreen');
+  };
   return (
     <>
       {data.map((item, index) => {
@@ -49,7 +56,9 @@ const BlogSection = ({data}) => {
               </View>
 
               <View style={{position: 'absolute', right: 6, top: 3}}>
-                <TouchableOpacity style={styles.buttonContainer}>
+                <TouchableOpacity
+                  style={styles.buttonContainer}
+                  onPress={() => handleNavigation()}>
                   <Text style={styles.buttonText}>View</Text>
                   <Image
                     source={images.button_icon}
@@ -58,8 +67,14 @@ const BlogSection = ({data}) => {
                 </TouchableOpacity>
               </View>
               <View style={styles.bottomContainer}>
-                <Text style={styles.bottomText}>Posted 2 days ago</Text>
-                <Text style={styles.bottomText}>1704</Text>
+                <View style={styles.flexBox}>
+                  <Icon name={'back-in-time'} color={'#000'} size={16} />
+                  <Text style={styles.bottomText}>Posted 2 days ago</Text>
+                </View>
+                <View style={styles.flexBox}>
+                  <Eys name={'eyeo'} color={'#000'} size={16} />
+                  <Text style={styles.bottomText}>1704</Text>
+                </View>
               </View>
             </ImageBackground>
           </View>
@@ -80,6 +95,7 @@ const styles = StyleSheet.create({
     color: COLORS.black,
     fontSize: 12,
     fontFamily: 'KantumruyPro-Regular',
+    paddingTop: 3,
   },
   bottomContainer: {
     position: 'absolute',
@@ -125,7 +141,7 @@ const styles = StyleSheet.create({
   category: {
     fontSize: 12,
     paddingHorizontal: 15,
-    borderWidth: 1,
+    borderWidth: 0.5,
     paddingVertical: 5,
     borderRadius: 15,
     backgroundColor: '#F39200',
@@ -136,4 +152,5 @@ const styles = StyleSheet.create({
     fontFamily: 'KantumruyPro-Light',
     color: '#494949',
   },
+  flexBox: {flexDirection: 'row', alignItems: 'center', gap: 5},
 });

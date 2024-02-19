@@ -13,6 +13,10 @@ import UpdateProfileScreen from './src/screens/BottomSheetScreen/UpdateProfileSc
 import WalletScreen from './src/screens/BottomSheetScreen/WalletScreen';
 import LanguageScreen from './src/screens/BottomSheetScreen/LanguageScreen';
 import TermsAndConditionScreen from './src/screens/BottomSheetScreen/TermsAndConditionScreen';
+import KundliScreen from './src/screens/BottomSheetScreen/KundliScreen';
+import MarraigeKundli from './src/screens/BottomSheetScreen/MarraigeKundli';
+import SingleKundli from './src/screens/BottomSheetScreen/SingleKundli';
+import BlogScreen from './src/screens/BottomSheetScreen/BlogScreen';
 
 const Stack = createStackNavigator();
 
@@ -117,6 +121,26 @@ const App = () => {
           options={{headerShown: false}}
           name="TermsAndConditionScreen"
           component={TermsAndConditionScreen}
+        />
+        <Stack.Screen
+          options={{headerShown: false}}
+          name="KundliScreen"
+          component={KundliScreen}
+        />
+        <Stack.Screen
+          options={{headerShown: false}}
+          name="MarraigeKundli"
+          component={MarraigeKundli}
+        />
+        <Stack.Screen
+          options={{headerShown: false}}
+          name="SingleKundli"
+          component={SingleKundli}
+        />
+        <Stack.Screen
+          options={{headerShown: false}}
+          name="BlogScreen"
+          component={BlogScreen}
         />
       </Stack.Navigator>
     </NavigationContainer>

@@ -35,6 +35,12 @@ const logout = require('../assets/images/logout.png');
 const notification = require('../assets/images/notification.png');
 const customer_care = require('../assets/images/customer.png');
 const image_selector = require('../assets/images/imageSelecter_icon.png');
+const marriage_meter = require('../assets/images/marriage_meter.png');
+const marriage_ring1 = require('../assets/images/marriage_ring1.png');
+const marriage_ring2 = require('../assets/images/marriage_ring2.png');
+const marriage_ring3 = require('../assets/images/marriage_ring3.png');
+const lagan_chart = require('../assets/images/lagan_chart.png');
+const table = require('../assets/images/table.png');
 
 export default {
   astropath_logo,
@@ -74,4 +80,10 @@ export default {
   customer_care,
   logout,
   image_selector,
+  marriage_meter,
+  marriage_ring1,
+  marriage_ring2,
+  marriage_ring3,
+  lagan_chart,
+  table,
 };
