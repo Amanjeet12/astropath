@@ -155,3 +155,16 @@ export const Order = [
     duration: '35',
   },
 ];
+
+export const language = [
+  {
+    id: '1',
+    type: 'English',
+    title: 'ENG',
+  },
+  {
+    id: '2',
+    type: 'Hindi',
+    title: 'हिन्दी',
+  },
+];

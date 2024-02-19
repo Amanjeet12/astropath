@@ -34,6 +34,7 @@ const language = require('../assets/images/language.png');
 const logout = require('../assets/images/logout.png');
 const notification = require('../assets/images/notification.png');
 const customer_care = require('../assets/images/customer.png');
+const image_selector = require('../assets/images/imageSelecter_icon.png');
 
 export default {
   astropath_logo,
@@ -72,4 +73,5 @@ export default {
   privacy,
   customer_care,
   logout,
+  image_selector,
 };

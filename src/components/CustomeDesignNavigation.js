@@ -1,11 +1,19 @@
+/* eslint-disable react-native/no-inline-styles */
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import {images} from '../constant';
 import Icon from 'react-native-vector-icons/Entypo';
+import useNavigateToScreen from './Navigation';
 
 const CustomeDesignNavigation = ({title, icon, screen}) => {
+  const navigation = useNavigateToScreen();
+  const handleNavihation = () => {
+    navigation(screen);
+  };
   return (
-    <TouchableOpacity style={styles.flexContainer}>
+    <TouchableOpacity
+      style={styles.flexContainer}
+      onPress={() => handleNavihation()}>
       <View style={{width: '10%'}}>
         <Image
           source={icon}

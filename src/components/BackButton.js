@@ -3,7 +3,7 @@ import React from 'react';
 import Icon from 'react-native-vector-icons/Entypo';
 import {useNavigation} from '@react-navigation/native';
 
-const BackButton = () => {
+const BackButton = ({placeholder}) => {
   const navigation = useNavigation();
 
   return (
@@ -16,7 +16,7 @@ const BackButton = () => {
         size={24}
         style={{paddingTop: 5}}
       />
-      <Text style={styles.title}>Account</Text>
+      <Text style={styles.title}>{placeholder}</Text>
     </TouchableOpacity>
   );
 };

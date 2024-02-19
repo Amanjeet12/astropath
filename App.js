@@ -10,6 +10,9 @@ import CompleteProfile from './src/screens/Login/CompleteProfile';
 import CompleteScreen from './src/screens/Login/CompleteScreen';
 import BottomTabScreen from './src/screens/BottomSheetScreen/BottomTabScreen';
 import UpdateProfileScreen from './src/screens/BottomSheetScreen/UpdateProfileScreen';
+import WalletScreen from './src/screens/BottomSheetScreen/WalletScreen';
+import LanguageScreen from './src/screens/BottomSheetScreen/LanguageScreen';
+import TermsAndConditionScreen from './src/screens/BottomSheetScreen/TermsAndConditionScreen';
 
 const Stack = createStackNavigator();
 
@@ -99,6 +102,21 @@ const App = () => {
           options={{headerShown: false}}
           name="UpdateProfileScreen"
           component={UpdateProfileScreen}
+        />
+        <Stack.Screen
+          options={{headerShown: false}}
+          name="WalletScreen"
+          component={WalletScreen}
+        />
+        <Stack.Screen
+          options={{headerShown: false}}
+          name="LanguageScreen"
+          component={LanguageScreen}
+        />
+        <Stack.Screen
+          options={{headerShown: false}}
+          name="TermsAndConditionScreen"
+          component={TermsAndConditionScreen}
         />
       </Stack.Navigator>
     </NavigationContainer>

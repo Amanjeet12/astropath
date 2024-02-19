@@ -49,12 +49,12 @@ const AccountScreen = () => {
                   <CustomeDesignNavigation
                     title={'Wallet'}
                     icon={images.wallet}
-                    screen={'DashboardScreen'}
+                    screen={'WalletScreen'}
                   />
                   <CustomeDesignNavigation
                     title={'Language'}
                     icon={images.language}
-                    screen={'DashboardScreen'}
+                    screen={'LanguageScreen'}
                   />
                   <CustomeDesignNavigation
                     title={'Notification'}
@@ -71,7 +71,7 @@ const AccountScreen = () => {
                   <CustomeDesignNavigation
                     title={'Terms and Conditions'}
                     icon={images.terms}
-                    screen={'DashboardScreen'}
+                    screen={'TermsAndConditionScreen'}
                   />
                   <CustomeDesignNavigation
                     title={'Privacy Policy'}
