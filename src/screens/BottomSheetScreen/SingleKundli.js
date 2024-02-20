@@ -34,10 +34,10 @@ const SingleKundli = () => {
         imageStyle={{resizeMode: 'stretch'}}>
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.mainContainer}>
-            <View style={{marginTop: 10}}>
+            <View style={{marginTop: SIZES.width * 0.026}}>
               <HeaderSection />
             </View>
-            <View style={{width: 250}}>
+            <View style={{width: SIZES.width * 0.65}}>
               <BackButton placeholder={'Your Kundli'} />
             </View>
             <View style={styles.boxContainer}>
@@ -52,7 +52,7 @@ const SingleKundli = () => {
                 <Text
                   style={{
                     color: selected === 'Basic' ? '#fff' : '#000',
-                    fontSize: 12,
+                    fontSize: SIZES.width * 0.031,
                   }}>
                   Basic
                 </Text>
@@ -68,7 +68,7 @@ const SingleKundli = () => {
                 <Text
                   style={{
                     color: selected === 'Charts' ? '#fff' : '#000',
-                    fontSize: 12,
+                    fontSize: SIZES.width * 0.031,
                   }}>
                   Charts
                 </Text>
@@ -85,7 +85,7 @@ const SingleKundli = () => {
                 <Text
                   style={{
                     color: selected === 'Ashtakvarga' ? '#fff' : '#000',
-                    fontSize: 12,
+                    fontSize: SIZES.width * 0.031,
                   }}>
                   Ashtakvarga
                 </Text>
@@ -101,13 +101,13 @@ const SingleKundli = () => {
                 <Text
                   style={{
                     color: selected === 'Dasha' ? '#fff' : '#000',
-                    fontSize: 12,
+                    fontSize: SIZES.width * 0.031,
                   }}>
                   Dasha
                 </Text>
               </TouchableOpacity>
             </View>
-            <View style={{marginTop: 30}}>
+            <View style={{marginTop: SIZES.width * 0.077}}>
               {selected === 'Basic' ? (
                 <BasicSection />
               ) : selected === 'Charts' ? (
@@ -132,24 +132,24 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   mainContainer: {
-    marginHorizontal: 20,
+    marginHorizontal: SIZES.width * 0.051,
   },
   boxContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-evenly',
-    marginTop: 30,
+    marginTop: SIZES.width * 0.077,
     backgroundColor: '#fff',
     width: '100%',
-    height: 54,
+    height: SIZES.width * 0.139,
     alignSelf: 'center',
-    borderRadius: 30,
+    borderRadius: SIZES.width * 0.077,
   },
   singleContainer: {
-    paddingHorizontal: 15,
-    paddingVertical: 10,
+    paddingHorizontal: SIZES.width * 0.039,
+    paddingVertical: SIZES.width * 0.026,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 30,
+    borderRadius: 18,
   },
 });

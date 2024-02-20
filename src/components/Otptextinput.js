@@ -9,7 +9,7 @@ const Otptextinput = () => {
   return (
     <View>
       <OTPInputView
-        style={{width: '80%', height: 50, alignSelf: 'center'}}
+        style={{width: '80%', height: SIZES.width * 0.13, alignSelf: 'center'}}
         pinCount={4}
         autoFocusOnLoad={true}
         editable={true}
@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
   underlineStyleBase: {
     width: SIZES.width * 0.14,
     height: SIZES.width * 0.14,
-    borderRadius: 12,
+    borderRadius: SIZES.width * 0.031,
     color: COLORS.black,
     backgroundColor: COLORS.white,
   },

@@ -81,7 +81,7 @@ export const Horoscope = {
   title: 'Your Today’s Horoscope',
   date: '06th February 2024',
   description: `A few fresh ideas will not only add some pizzazz to your life right now, they will increase your romantic potential! If you're in the mood to start a new romance, expose yourself to new ways of thinking.`,
-  image: images.Profile1,
+  image: images.Sagittarius,
 };
 
 export const Blog = [

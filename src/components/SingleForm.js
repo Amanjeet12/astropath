@@ -8,7 +8,7 @@ import {
   View,
 } from 'react-native';
 import React, {useState} from 'react';
-import {COLORS} from '../constant/theme';
+import {COLORS, SIZES} from '../constant/theme';
 import {images} from '../constant';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {Dropdown} from 'react-native-element-dropdown';
@@ -85,7 +85,7 @@ const SingleForm = () => {
         <View style={styles.mainContainer}>
           <TextInput
             placeholder={'Enter your Full Name'}
-            style={{paddingLeft: 20, color: COLORS.black}}
+            style={{paddingLeft: SIZES.width * 0.051, color: COLORS.black}}
             keyboardType="default"
             placeholderTextColor={'grey'}
           />
@@ -113,15 +113,15 @@ const SingleForm = () => {
           />
         </View>
       </View> */}
-      <View style={{marginTop: 10}}>
+      <View style={{marginTop: SIZES.width * 0.026}}>
         <Text style={styles.title}>Time of Birth</Text>
         <TouchableOpacity
           style={styles.mainContainer2}
           onPress={showTimepicker}
           activeOpacity={0.7}>
-          <View style={{width: '90%', paddingLeft: 15}}>
+          <View style={{width: '90%', paddingLeft: SIZES.width * 0.039}}>
             <Text style={{color: 'grey'}}>
-              {showDateTime ? showDateTime : 'placeholder'}
+              {showDateTime ? showDateTime : 'Enter Birth Time'}
             </Text>
           </View>
           {showTime && (
@@ -135,13 +135,13 @@ const SingleForm = () => {
           )}
         </TouchableOpacity>
       </View>
-      <View style={{marginTop: 10}}>
+      <View style={{marginTop: SIZES.width * 0.026}}>
         <Text style={styles.title}>Date of Birth</Text>
         <TouchableOpacity
           style={styles.mainContainer2}
           onPress={showDatepicker}
           activeOpacity={0.7}>
-          <View style={{width: '90%', paddingLeft: 18}}>
+          <View style={{width: '90%', paddingLeft: SIZES.width * 0.046}}>
             <Text style={{color: 'grey'}}>
               {showDate ? showDate : 'Enter DOB'}
             </Text>
@@ -149,7 +149,11 @@ const SingleForm = () => {
           <View>
             <Image
               source={images.calendet_icon}
-              style={{width: 20, height: 20, resizeMode: 'contain'}}
+              style={{
+                width: SIZES.width * 0.051,
+                height: SIZES.width * 0.051,
+                resizeMode: 'contain',
+              }}
             />
           </View>
           {show && (
@@ -163,12 +167,12 @@ const SingleForm = () => {
           )}
         </TouchableOpacity>
       </View>
-      <View style={{marginTop: 10}}>
+      <View style={{marginTop: SIZES.width * 0.026}}>
         <Text style={styles.title}>Place of Birth</Text>
         <View style={styles.mainContainer}>
           <TextInput
             placeholder={'Enter your Full Name'}
-            style={{paddingLeft: 20, color: COLORS.black}}
+            style={{paddingLeft: SIZES.width * 0.051, color: COLORS.black}}
             keyboardType="default"
             placeholderTextColor={'grey'}
           />
@@ -189,42 +193,42 @@ export default SingleForm;
 
 const styles = StyleSheet.create({
   mainContainer: {
-    height: 50,
+    height: SIZES.width * 0.13,
     backgroundColor: COLORS.white,
     borderRadius: 4,
-    marginVertical: 5,
+    marginVertical: SIZES.width * 0.013,
     borderColor: 'gray',
     borderWidth: 0.5,
   },
   title: {
-    fontSize: 14,
+    fontSize: SIZES.width * 0.036,
     color: '#000',
   },
   button_position: {
     position: 'relative',
   },
   buttonContainer: {
-    height: 50,
-    marginTop: 20,
+    height: SIZES.width * 0.13,
+    marginTop: SIZES.width * 0.051,
     backgroundColor: '#FFB443',
-    borderRadius: 15,
+    borderRadius: SIZES.width * 0.039,
     alignItems: 'center',
     justifyContent: 'center',
   },
   mainContainer2: {
-    height: 50,
+    height: SIZES.width * 0.13,
     backgroundColor: COLORS.white,
     borderRadius: 8,
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 5,
+    marginVertical: SIZES.width * 0.013,
     borderColor: 'gray',
     borderWidth: 0.5,
   },
   //
 
   dropdown: {
-    height: 50,
+    height: SIZES.width * 0.13,
     borderColor: 'gray',
     borderWidth: 0.1,
     borderRadius: 8,

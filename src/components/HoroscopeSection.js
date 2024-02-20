@@ -1,40 +1,53 @@
 /* eslint-disable react-native/no-inline-styles */
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
-import {COLORS} from '../constant/theme';
+import {COLORS, SIZES} from '../constant/theme';
 import {images} from '../constant';
 import useNavigateToScreen from './Navigation';
 
 const HoroscopeSection = ({data}) => {
   const navigation = useNavigateToScreen();
-  const handleNavigation = () => {
+  const handleNavigaion = () => {
     navigation('HoroscopeScreen');
   };
   return (
     <View style={styles.container}>
-      <View style={{flexDirection: 'row', alignItems: 'flex-start', gap: 20}}>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'flex-start',
+          gap: SIZES.width * 0.051,
+        }}>
         <View>
           <Image
             source={data.image}
-            style={{width: 80, height: 80, resizeMode: 'contain'}}
+            style={{
+              width: SIZES.width * 0.205,
+              height: SIZES.width * 0.205,
+              resizeMode: 'contain',
+            }}
           />
         </View>
-        <View style={{paddingTop: 10}}>
+        <View style={{paddingTop: SIZES.width * 0.026}}>
           <Text style={styles.title}>{data.title}</Text>
           <Text style={styles.date}>{data.date}</Text>
         </View>
       </View>
-      <View style={{marginTop: 5}}>
+      <View style={{marginTop: SIZES.width * 0.013}}>
         <Text style={styles.description}>{data.description}</Text>
       </View>
-      <View style={{alignItems: 'flex-end', marginTop: 10}}>
+      <View style={{alignItems: 'flex-end', marginTop: SIZES.width * 0.026}}>
         <TouchableOpacity
           style={styles.buttonContainer}
-          onPress={() => handleNavigation()}>
+          onPress={() => handleNavigaion()}>
           <Text style={styles.buttonText}>View more</Text>
           <Image
             source={images.button_icon}
-            style={{width: 15, height: 15, resizeMode: 'contain'}}
+            style={{
+              width: SIZES.width * 0.039,
+              height: SIZES.width * 0.039,
+              resizeMode: 'contain',
+            }}
           />
         </TouchableOpacity>
       </View>
@@ -46,38 +59,38 @@ export default HoroscopeSection;
 
 const styles = StyleSheet.create({
   container: {
-    height: 235,
+    height: SIZES.width * 0.6,
     backgroundColor: '#fae3d2',
-    borderRadius: 15,
-    marginBottom: 20,
-    padding: 20,
+    borderRadius: SIZES.width * 0.039,
+    marginBottom: SIZES.width * 0.051,
+    padding: SIZES.width * 0.051,
   },
   title: {
     fontFamily: 'DMSerifDisplay-Regular',
-    fontSize: 18,
+    fontSize: SIZES.width * 0.046,
     color: COLORS.black,
   },
   date: {
     fontFamily: 'KantumruyPro-Regular',
-    lineHeight: 25,
+    lineHeight: SIZES.width * 0.064,
     color: COLORS.black,
-    fontSize: 12,
+    fontSize: SIZES.width * 0.031,
   },
   description: {
     fontFamily: 'KantumruyPro-Regular',
-    fontSize: 12,
+    fontSize: SIZES.width * 0.031,
     color: '#444444',
-    lineHeight: 17,
+    lineHeight: SIZES.width * 0.044,
   },
   buttonContainer: {
     width: 150,
-    paddingHorizontal: 20,
-    paddingVertical: 8,
+    paddingHorizontal: SIZES.width * 0.051,
+    paddingVertical: SIZES.width * 0.021,
     borderWidth: 1,
-    borderRadius: 30,
+    borderRadius: SIZES.width * 0.077,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 5,
+    gap: SIZES.width * 0.013,
     backgroundColor: '#FFB443',
     justifyContent: 'center',
   },

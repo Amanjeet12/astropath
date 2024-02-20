@@ -26,13 +26,13 @@ const AccountScreen = () => {
         imageStyle={{resizeMode: 'stretch'}}>
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.mainContainer}>
-            <View style={{marginTop: 10}}>
+            <View style={{marginTop: SIZES.width * 0.026}}>
               <HeaderSection />
             </View>
-            <View style={{marginTop: 20}}>
+            <View style={{marginTop: SIZES.width * 0.051}}>
               <ProfileSection />
             </View>
-            <View style={{marginTop: 20}}>
+            <View style={{marginTop: SIZES.width * 0.051}}>
               <Text style={styles.profile_name}>User Name</Text>
               <Text
                 style={[
@@ -42,10 +42,14 @@ const AccountScreen = () => {
                 tSingh102
               </Text>
             </View>
-            <View style={{marginTop: 20, paddingLeft: 15}}>
+            <View
+              style={{
+                marginTop: SIZES.width * 0.051,
+                paddingLeft: SIZES.width * 0.039,
+              }}>
               <Text style={styles.title}>Account Settings</Text>
               <View>
-                <View style={{marginTop: 10}}>
+                <View style={{marginTop: SIZES.width * 0.026}}>
                   <CustomeDesignNavigation
                     title={'Wallet'}
                     icon={images.wallet}
@@ -64,10 +68,14 @@ const AccountScreen = () => {
                 </View>
               </View>
             </View>
-            <View style={{marginTop: 30, paddingLeft: 15}}>
+            <View
+              style={{
+                marginTop: SIZES.width * 0.077,
+                paddingLeft: SIZES.width * 0.039,
+              }}>
               <Text style={styles.title}>General</Text>
               <View>
-                <View style={{marginTop: 10}}>
+                <View style={{marginTop: SIZES.width * 0.026}}>
                   <CustomeDesignNavigation
                     title={'Terms and Conditions'}
                     icon={images.terms}
@@ -86,7 +94,7 @@ const AccountScreen = () => {
                 </View>
               </View>
             </View>
-            <View style={{marginTop: 50, alignItems: 'center'}}>
+            <View style={{marginTop: SIZES.width * 0.13, alignItems: 'center'}}>
               <LogoutButton />
             </View>
           </View>
@@ -103,16 +111,16 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   mainContainer: {
-    marginHorizontal: 20,
+    marginHorizontal: SIZES.width * 0.051,
   },
   profile_name: {
     fontFamily: 'KantumruyPro-Bold',
-    fontSize: 18,
+    fontSize: SIZES.width * 0.046,
     color: COLORS.black,
-    paddingLeft: 15,
+    paddingLeft: SIZES.width * 0.039,
   },
   title: {
-    fontSize: 20,
+    fontSize: SIZES.width * 0.051,
     color: COLORS.black,
   },
 });

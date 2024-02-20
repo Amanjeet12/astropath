@@ -25,7 +25,7 @@ const LanguageScreen = () => {
   };
 
   const renderItem = ({item}) => (
-    <TouchableOpacity style={{marginRight: 10}}>
+    <TouchableOpacity style={{marginRight: SIZES.width * 0.026}}>
       <View style={styles.language_Container}>
         <Text style={styles.text_container}>{item.title}</Text>
         <Text style={styles.text_container}>{item.type}</Text>
@@ -41,13 +41,13 @@ const LanguageScreen = () => {
         imageStyle={{resizeMode: 'stretch'}}>
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.mainContainer}>
-            <View style={{marginTop: 10}}>
+            <View style={{marginTop: SIZES.width * 0.026}}>
               <HeaderSection />
             </View>
-            <View style={{width: 150}}>
+            <View style={{width: SIZES.width * 0.38}}>
               <BackButton placeholder={'Language'} />
             </View>
-            <View style={{marginTop: 20}}>
+            <View style={{marginTop: SIZES.width * 0.051}}>
               <FlatList
                 horizontal
                 data={language}
@@ -69,41 +69,41 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   mainContainer: {
-    marginHorizontal: 20,
+    marginHorizontal: SIZES.width * 0.051,
   },
   buttonContainer: {
-    height: 50,
-    marginTop: 10,
+    height: SIZES.width * 0.013,
+    marginTop: SIZES.width * 0.026,
     backgroundColor: '#FFB443',
-    borderRadius: 15,
+    borderRadius: SIZES.width * 0.039,
     alignItems: 'center',
     justifyContent: 'center',
-    elevation: 4,
+    elevation: SIZES.width * 0.01,
   },
   title: {
     fontFamily: 'KantumruyPro-Regular',
     color: COLORS.black,
-    fontSize: 16,
+    fontSize: SIZES.width * 0.041,
   },
   button_position: {
     position: 'absolute',
     width: '100%',
-    bottom: 20,
-    paddingHorizontal: 20,
+    bottom: SIZES.width * 0.102,
+    paddingHorizontal: SIZES.width * 0.051,
   },
   language_Container: {
-    width: 80,
-    height: 60,
+    width: SIZES.width * 0.205,
+    height: SIZES.width * 0.153,
     alignItems: 'center',
     borderWidth: 1,
     justifyContent: 'center',
     backgroundColor: '#fff',
     borderColor: '#F39200',
-    borderRadius: 8,
+    borderRadius: SIZES.width * 0.021,
   },
   text_container: {
     color: '#000',
     fontFamily: 'KantumruyPro-Regular',
-    fontSize: 14,
+    fontSize: SIZES.width * 0.036,
   },
 });

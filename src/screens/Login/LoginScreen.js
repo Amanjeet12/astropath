@@ -32,7 +32,12 @@ const LoginScreen = () => {
       <StatusBar backgroundColor={COLORS.white} barStyle={'dark-content'} />
       <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
         <View style={{height: SIZES.height}}>
-          <View style={{marginTop: 30, height: '40%', width: '100%'}}>
+          <View
+            style={{
+              marginTop: SIZES.width * 0.077,
+              height: '40%',
+              width: '100%',
+            }}>
             <Image
               source={images.login_image}
               style={{
@@ -48,27 +53,28 @@ const LoginScreen = () => {
               <Text style={styles.title}>Hi Welcome!</Text>
               <Text style={styles.description}>Submit your mobile number</Text>
             </View>
-            <View style={{marginTop: 10}}>
+            <View style={{marginTop: SIZES.width * 0.026}}>
               <Divider Placeholder={'Log in or Sign up'} />
             </View>
 
-            <View style={{marginTop: 15}}>
+            <View style={{marginTop: SIZES.width * 0.039}}>
               <Flagtextinput />
             </View>
-            <View style={{marginTop: 10}}>
+            <View style={{marginTop: SIZES.width * 0.026}}>
               <Custombutton placeholder={'SEND OTP'} screen={'OtpScreen'} />
             </View>
-            <View style={{marginTop: 20}}>
+            <View style={{marginTop: SIZES.width * 0.051}}>
               <Divider Placeholder={'or'} />
             </View>
-            <View style={{marginTop: 20}}>
+            <View style={{marginTop: SIZES.width * 0.051}}>
               <CustomeIconButton
                 icon={images.mail_Icon}
                 placeholder={'Continue with email id'}
               />
             </View>
-            <View style={{marginTop: 13}}>
-              <Text style={[styles.description, {lineHeight: 21.5}]}>
+            <View style={{marginTop: SIZES.width * 0.034}}>
+              <Text
+                style={[styles.description, {lineHeight: SIZES.width * 0.055}]}>
                 By signing up, you agree to our{' '}
                 <Text style={styles.linkText}>Terms of Use </Text> and
                 <Text style={styles.linkText}> Privacy Policy </Text>
@@ -92,27 +98,27 @@ const styles = StyleSheet.create({
     width: SIZES.width,
     height: '70%',
     backgroundColor: '#EDD498',
-    borderTopRightRadius: 32,
-    borderTopLeftRadius: 32,
-    marginTop: 30,
-    paddingTop: 28,
-    paddingHorizontal: 20,
+    borderTopRightRadius: SIZES.width * 0.082,
+    borderTopLeftRadius: SIZES.width * 0.082,
+    marginTop: SIZES.width * 0.077,
+    paddingTop: SIZES.width * 0.072,
+    paddingHorizontal: SIZES.width * 0.051,
   },
   title: {
     fontFamily: 'KantumruyPro-Bold',
-    fontSize: 20,
+    fontSize: SIZES.width * 0.051,
     color: '#000',
   },
   description: {
     fontFamily: 'KantumruyPro-Regular',
-    fontSize: 14,
+    fontSize: SIZES.width * 0.036,
     color: '#000',
   },
   dividerText: {
     position: 'absolute',
-    top: -10,
+    top: -SIZES.width * 0.026,
     backgroundColor: '#EDD498',
-    paddingHorizontal: 10,
+    paddingHorizontal: SIZES.width * 0.026,
     fontFamily: 'KantumruyPro-Regular',
     color: COLORS.black,
   },
@@ -121,7 +127,11 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2,
     width: '100%',
   },
-  dividerContainer: {width: '100%', alignItems: 'center', marginVertical: 10},
+  dividerContainer: {
+    width: '100%',
+    alignItems: 'center',
+    marginVertical: SIZES.width * 0.026,
+  },
   linkText: {
     color: '#F39200',
     textDecorationLine: 'underline',

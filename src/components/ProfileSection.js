@@ -4,6 +4,7 @@ import React from 'react';
 import {images} from '../constant';
 import Icon from 'react-native-vector-icons/Feather';
 import useNavigateToScreen from './Navigation';
+import {SIZES} from '../constant/theme';
 
 const ProfileSection = () => {
   const navigateToScreen = useNavigateToScreen();
@@ -16,10 +17,14 @@ const ProfileSection = () => {
       <View style={{width: '40%'}}>
         <Image
           source={images.Profile2}
-          style={{width: 120, height: 120, resizeMode: 'contain'}}
+          style={{
+            width: SIZES.width * 0.31,
+            height: SIZES.width * 0.31,
+            resizeMode: 'contain',
+          }}
         />
       </View>
-      <View style={{width: '50%', paddingTop: 10}}>
+      <View style={{width: '50%', paddingTop: SIZES.width * 0.026}}>
         <Text style={styles.Profile}>Tanmay Singh</Text>
         <Text style={styles.profile2}>+91 7717744558</Text>
         <Text style={styles.profile2}>tanmay@gmail.com</Text>
@@ -27,11 +32,11 @@ const ProfileSection = () => {
       <TouchableOpacity
         style={{
           width: '10%',
-          paddingTop: 10,
-          height: 40,
+          paddingTop: SIZES.width * 0.026,
+          height: SIZES.width * 0.102,
         }}
         onPress={() => handleNavigation()}>
-        <Icon name={'edit'} size={24} color={'#000'} />
+        <Icon name={'edit'} size={SIZES.width * 0.062} color={'#000'} />
       </TouchableOpacity>
     </View>
   );
@@ -44,12 +49,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   Profile: {
-    fontSize: 20,
+    fontSize: SIZES.width * 0.051,
     color: '#000',
     fontFamily: 'KantumruyPro-Regular',
   },
   profile2: {
-    fontSize: 14,
+    fontSize: SIZES.width * 0.036,
     color: '#848484',
     fontFamily: 'KantumruyPro-Regular',
   },

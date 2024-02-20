@@ -24,17 +24,19 @@ const TermsAndConditionScreen = () => {
         imageStyle={{resizeMode: 'stretch'}}>
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.mainContainer}>
-            <View style={{marginTop: 10}}>
+            <View style={{marginTop: SIZES.width * 0.026}}>
               <HeaderSection />
             </View>
-            <View style={{width: 250}}>
+            <View style={{width: SIZES.width * 0.65}}>
               <BackButton placeholder={'Terms & Conditions'} />
             </View>
-            <View style={{marginTop: 20}}>
+            <View style={{marginTop: SIZES.width * 0.051}}>
               <View>
-                <Text style={{fontSize: 20, color: '#000'}}>Clause 1</Text>
+                <Text style={{fontSize: SIZES.width * 0.051, color: '#000'}}>
+                  Clause 1
+                </Text>
               </View>
-              <View style={{marginTop: 5}}>
+              <View style={{marginTop: SIZES.width * 0.013}}>
                 <Text style={styles.description}>
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                   Viverra condimentum eget purus in. Consectetur eget id morbi
@@ -44,11 +46,13 @@ const TermsAndConditionScreen = () => {
                 </Text>
               </View>
             </View>
-            <View style={{marginTop: 20}}>
+            <View style={{marginTop: SIZES.width * 0.051}}>
               <View>
-                <Text style={{fontSize: 20, color: '#000'}}>Clause 2</Text>
+                <Text style={{fontSize: SIZES.width * 0.051, color: '#000'}}>
+                  Clause 2
+                </Text>
               </View>
-              <View style={{marginTop: 5}}>
+              <View style={{marginTop: SIZES.width * 0.013}}>
                 <Text style={styles.description}>
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                   Viverra condimentum eget purus in. Consectetur eget id morbi
@@ -72,11 +76,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   mainContainer: {
-    marginHorizontal: 20,
+    marginHorizontal: SIZES.width * 0.051,
   },
   description: {
-    fontSize: 16,
+    fontSize: SIZES.width * 0.041,
     color: '#000',
-    lineHeight: 22,
+    lineHeight: SIZES.width * 0.05,
   },
 });

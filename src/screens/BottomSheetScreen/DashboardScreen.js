@@ -23,46 +23,50 @@ const DashboardScreen = () => {
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor={'#f7f1e1'} barStyle={'dark-content'} />
-      <ScrollView>
-        <ImageBackground
-          source={images.background_Image}
-          style={{width: SIZES.width, height: 300}}
-          imageStyle={{resizeMode: 'stretch'}}>
+
+      <ImageBackground
+        source={images.mobile_bg}
+        style={{width: SIZES.width, height: SIZES.height, flex: 1}}
+        imageStyle={{resizeMode: 'stretch'}}>
+        <ScrollView>
           <View style={styles.mainContainer}>
-            <View style={{marginTop: 10}}>
+            <View style={{marginTop: SIZES.width * 0.026}}>
               <HeaderSection />
             </View>
-            <View style={{marginTop: 10}}>
+            <View style={{marginTop: SIZES.width * 0.026}}>
               <SearchSection placeholder={' Search Astrologer'} />
             </View>
-            <View style={{marginTop: 20}}>
+            <View style={{marginTop: SIZES.width * 0.051}}>
               <BannerSection />
             </View>
           </View>
-        </ImageBackground>
-        <View>
-          <AstrologerType data={Slider} />
-        </View>
-        <View>
-          <View style={[styles.mainContainer, {marginTop: 20}]}>
-            <Text style={styles.tagLine}>Features Astrologer</Text>
+          <View>
+            <AstrologerType data={Slider} />
           </View>
-          <View style={[styles.mainContainer, {marginTop: 20}]}>
-            <AstrologerComponent data={Astrologer} />
+          <View>
+            <View
+              style={[styles.mainContainer, {marginTop: SIZES.width * 0.051}]}>
+              <Text style={styles.tagLine}>Features Astrologer</Text>
+            </View>
+            <View
+              style={[styles.mainContainer, {marginTop: SIZES.width * 0.051}]}>
+              <AstrologerComponent data={Astrologer} />
+            </View>
           </View>
-        </View>
-        <View style={styles.mainContainer}>
-          <HoroscopeSection data={Horoscope} />
-        </View>
-        <View>
-          <View style={[styles.mainContainer]}>
-            <Text style={styles.tagLine}>Latest Blogs</Text>
+          <View style={styles.mainContainer}>
+            <HoroscopeSection data={Horoscope} />
           </View>
-          <View style={[styles.mainContainer, {marginTop: 20}]}>
-            <BlogSection data={Blog} />
+          <View>
+            <View style={[styles.mainContainer]}>
+              <Text style={styles.tagLine}>Latest Blogs</Text>
+            </View>
+            <View
+              style={[styles.mainContainer, {marginTop: SIZES.width * 0.051}]}>
+              <BlogSection data={Blog} />
+            </View>
           </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </ImageBackground>
     </View>
   );
 };
@@ -74,10 +78,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   mainContainer: {
-    marginHorizontal: 20,
+    marginHorizontal: SIZES.width * 0.051,
   },
   tagLine: {
-    fontSize: 18,
+    fontSize: SIZES.width * 0.046,
     fontFamily: 'DMSerifDisplay-Regular',
     color: COLORS.black,
   },

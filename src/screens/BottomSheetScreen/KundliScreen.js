@@ -22,7 +22,6 @@ const KundliScreen = () => {
   const handleSelecter = option => {
     setSelected(option);
   };
-
   return (
     <>
       <StatusBar backgroundColor={'#f7f1e1'} barStyle={'dark-content'} />
@@ -32,10 +31,10 @@ const KundliScreen = () => {
         imageStyle={{resizeMode: 'stretch'}}>
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.mainContainer}>
-            <View style={{marginTop: 10}}>
+            <View style={{marginTop: SIZES.width * 0.026}}>
               <HeaderSection />
             </View>
-            <View style={{width: 250}}>
+            <View style={{width: SIZES.width * 0.65}}>
               <BackButton placeholder={'Free Kundli'} />
             </View>
             <View style={styles.boxContainer}>
@@ -72,7 +71,7 @@ const KundliScreen = () => {
                 </Text>
               </TouchableOpacity>
             </View>
-            <View style={{marginTop: 30}}>
+            <View style={{marginTop: SIZES.width * 0.077}}>
               {selected === 'Single Kundli' ? (
                 <SingleFormSection />
               ) : (
@@ -93,25 +92,25 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   mainContainer: {
-    marginHorizontal: 20,
+    marginHorizontal: SIZES.width * 0.051,
   },
   boxContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-evenly',
-    marginTop: 30,
+    marginTop: SIZES.width * 0.077,
     backgroundColor: '#fff',
-    width: 300,
-    height: 40,
+    width: SIZES.width * 0.78,
+    height: SIZES.width * 0.102,
     alignSelf: 'center',
-    borderRadius: 6,
-    paddingHorizontal: 4,
+    borderRadius: SIZES.width * 0.016,
+    paddingHorizontal: SIZES.width * 0.01,
   },
   singleContainer: {
-    width: 140,
-    height: 30,
+    width: SIZES.width * 0.36,
+    height: SIZES.width * 0.077,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 4,
+    borderRadius: 10,
   },
 });

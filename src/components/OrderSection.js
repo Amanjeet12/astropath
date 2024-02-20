@@ -1,6 +1,6 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
-import {COLORS} from '../constant/theme';
+import {COLORS, SIZES} from '../constant/theme';
 import Icon from 'react-native-vector-icons/Entypo';
 
 const OrderSection = ({data}) => {
@@ -24,7 +24,7 @@ const OrderSection = ({data}) => {
               </Text>
               <TouchableOpacity style={styles.starContainer}>
                 <Text style={[styles.categories, {color: '#000'}]}>Rate</Text>
-                <Icon name={'star'} color={'#000'} size={16} />
+                <Icon name={'star'} color={'#000'} size={SIZES.width * 0.041} />
               </TouchableOpacity>
             </View>
           </View>
@@ -38,34 +38,34 @@ export default OrderSection;
 
 const styles = StyleSheet.create({
   container: {
-    height: 120,
-    marginTop: 20,
+    height: SIZES.width * 0.31,
+    marginTop: SIZES.width * 0.051,
     borderWidth: 1,
     backgroundColor: COLORS.white,
-    borderRadius: 15,
-    padding: 20,
+    borderRadius: SIZES.width * 0.039,
+    padding: SIZES.width * 0.051,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
   name: {
     fontFamily: 'DMSerifDisplay-Regular',
     color: COLORS.black,
-    fontSize: 14,
+    fontSize: SIZES.width * 0.036,
   },
   categories: {
     fontFamily: 'KantumruyPro-Regular',
-    fontSize: 12,
+    fontSize: SIZES.width * 0.031,
     color: '#707B81',
-    paddingTop: 5,
+    paddingTop: SIZES.width * 0.01,
   },
   experience: {
     fontFamily: 'KantumruyPro-Regular',
-    fontSize: 12,
+    fontSize: SIZES.width * 0.031,
     color: '#707B81',
   },
   cost: {
     fontFamily: 'KantumruyPro-Bold',
-    fontSize: 10,
+    fontSize: SIZES.width * 0.026,
     color: COLORS.black,
     paddingTop: 3,
   },
@@ -74,9 +74,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 5,
     borderWidth: 1,
-    paddingHorizontal: 15,
+    paddingHorizontal: SIZES.width * 0.039,
     paddingVertical: 3,
-    borderRadius: 15,
+    borderRadius: SIZES.width * 0.039,
     backgroundColor: '#FFB443',
   },
 });

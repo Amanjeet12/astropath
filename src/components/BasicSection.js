@@ -1,6 +1,8 @@
+/* eslint-disable react-native/no-inline-styles */
 import {StyleSheet, Text, View} from 'react-native';
 import React, {useState} from 'react';
 import {Dropdown} from 'react-native-element-dropdown';
+import {SIZES} from '../constant/theme';
 
 const data = [
   {label: 'Item 1', value: '1'},
@@ -22,7 +24,7 @@ const BasicSection = () => {
         <View>
           <Text style={styles.title}>General</Text>
         </View>
-        <View style={{width: 120, backgroundColor: '#fff'}}>
+        <View style={{width: SIZES.width * 0.31, backgroundColor: '#fff'}}>
           <Dropdown
             style={[styles.dropdown, isFocus && {borderColor: 'blue'}]}
             placeholderStyle={styles.placeholderStyle}
@@ -30,7 +32,11 @@ const BasicSection = () => {
             inputSearchStyle={styles.inputSearchStyle}
             iconStyle={styles.iconStyle}
             itemContainerStyle={{}}
-            itemTextStyle={{fontSize: 12, padding: 0}}
+            itemTextStyle={{
+              fontSize: SIZES.width * 0.031,
+              padding: 0,
+              color: 'grey',
+            }}
             data={data}
             maxHeight={150}
             labelField="label"
@@ -47,7 +53,7 @@ const BasicSection = () => {
         </View>
       </View>
       <View style={styles.border} />
-      <View style={{marginTop: 20}}>
+      <View style={{marginTop: SIZES.width * 0.051}}>
         <Text style={styles.description}>
           You may notice that you're in need of some serious self-care, sweet
           Scorpion, as the sun and Uranus square off. Consider your options
@@ -69,30 +75,33 @@ export default BasicSection;
 
 const styles = StyleSheet.create({
   title: {
-    fontSize: 20,
+    fontSize: SIZES.width * 0.051,
     color: '#171532',
     fontFamily: 'KantumruyPro-Regular',
   },
   dropdown: {
-    height: 40,
+    height: SIZES.width * 0.102,
     borderColor: 'gray',
     borderWidth: 0.5,
-    paddingHorizontal: 8,
-    borderRadius: 4,
+    paddingHorizontal: SIZES.width * 0.021,
+    borderRadius: SIZES.width * 0.01,
   },
   placeholderStyle: {
-    fontSize: 12,
+    fontSize: SIZES.width * 0.031,
+    color: 'grey',
   },
   selectedTextStyle: {
-    fontSize: 12,
+    fontSize: SIZES.width * 0.031,
+    color: 'grey',
   },
   iconStyle: {
-    width: 20,
-    height: 20,
+    width: SIZES.width * 0.051,
+    height: SIZES.width * 0.051,
   },
   inputSearchStyle: {
-    height: 20,
-    fontSize: 12,
+    height: SIZES.width * 0.051,
+    fontSize: SIZES.width * 0.031,
+    color: 'grey',
   },
   flexBox: {
     flexDirection: 'row',
@@ -103,12 +112,12 @@ const styles = StyleSheet.create({
     height: 1,
     borderWidth: 0.5,
     borderColor: '#F39200',
-    marginTop: 5,
+    marginTop: SIZES.width * 0.013,
   },
   description: {
-    fontSize: 16,
+    fontSize: SIZES.width * 0.041,
     fontFamily: 'KantumruyPro-Regular',
     color: '#000',
-    lineHeight: 25,
+    lineHeight: SIZES.width * 0.064,
   },
 });

@@ -9,8 +9,6 @@ import {
   TouchableOpacity,
   View,
   Modal,
-  Button,
-  FlatList,
 } from 'react-native';
 import React, {useState} from 'react';
 import {COLORS, SIZES} from '../../constant/theme';
@@ -42,29 +40,34 @@ const HoroscopeScreen = () => {
         imageStyle={{resizeMode: 'stretch'}}>
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.mainContainer}>
-            <View style={{marginTop: 10}}>
+            <View style={{marginTop: SIZES.width * 0.026}}>
               <HeaderSection />
             </View>
             <View style={styles.fleBox}>
               <BackButton placeholder={'Horoscope'} />
               <TouchableOpacity onPress={() => handlePopup()}>
-                <Icon name={'refresh'} size={20} color={'#000'} />
+                <Icon
+                  name={'refresh'}
+                  size={SIZES.width * 0.051}
+                  color={'#000'}
+                />
               </TouchableOpacity>
             </View>
             <View style={styles.imageContainer}>
               <Image source={images.Sagittarius} style={styles.image} />
             </View>
-            <View style={{alignItems: 'center', marginTop: 20}}>
+            <View
+              style={{alignItems: 'center', marginTop: SIZES.width * 0.051}}>
               <Text style={styles.headline}>Sagittarius</Text>
             </View>
             <View>
               <DaySelection />
             </View>
-            <View style={{marginTop: 20}}>
+            <View style={{marginTop: SIZES.width * 0.051}}>
               <Text style={styles.text}>09th feb 2024</Text>
               <View style={styles.border} />
             </View>
-            <View style={{marginTop: 20}}>
+            <View style={{marginTop: SIZES.width * 0.051}}>
               <Text style={styles.description}>
                 You may notice that you're in need of some serious self-care,
                 sweet Scorpion, as the sun and Uranus square off. Consider your
@@ -103,8 +106,8 @@ const HoroscopeScreen = () => {
                   {
                     color: '#475467',
                     textTransform: 'capitalize',
-                    paddingTop: 3,
-                    fontSize: 12,
+                    paddingTop: SIZES.width * 0.01,
+                    fontSize: SIZES.width * 0.031,
                   },
                 ]}>
                 Select Your Zodic Sign for horoscope
@@ -125,7 +128,7 @@ const HoroscopeScreen = () => {
               }, []).map((row, rowIndex) => (
                 <View
                   key={rowIndex}
-                  style={{flexDirection: 'row', padding: 10}}>
+                  style={{flexDirection: 'row', padding: SIZES.width * 0.026}}>
                   {row.map((item, itemIndex) => (
                     <TouchableOpacity
                       key={itemIndex}
@@ -136,17 +139,21 @@ const HoroscopeScreen = () => {
                             ? '#FFB443'
                             : 'white',
                         alignItems: 'center',
-                        paddingVertical: 15,
+                        paddingVertical: SIZES.width * 0.039,
                         borderRadius: 20,
                       }}
                       onPress={() => handleItemPress(rowIndex * 3 + itemIndex)}>
                       <Image
                         source={item.image}
-                        style={{width: 100, height: 100, marginBottom: 5}}
+                        style={{
+                          width: SIZES.width * 0.255,
+                          height: SIZES.width * 0.255,
+                          marginBottom: SIZES.width * 0.013,
+                        }}
                       />
                       <Text
                         style={{
-                          fontSize: 12,
+                          fontSize: SIZES.width * 0.031,
                           color:
                             selectedItem === rowIndex * 3 + itemIndex
                               ? '#fff'
@@ -162,7 +169,11 @@ const HoroscopeScreen = () => {
               <TouchableOpacity
                 style={styles.buttonContainer}
                 onPress={() => handlePopup()}>
-                <Text style={[styles.title, {fontWeight: '500', fontSize: 16}]}>
+                <Text
+                  style={[
+                    styles.title,
+                    {fontWeight: '500', fontSize: SIZES.width * 0.041},
+                  ]}>
                   Update
                 </Text>
               </TouchableOpacity>
@@ -181,11 +192,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   mainContainer: {
-    marginHorizontal: 20,
+    marginHorizontal: SIZES.width * 0.051,
   },
   maincontainer: {
-    height: 50,
-    marginTop: 10,
+    height: SIZES.width * 0.13,
+    marginTop: SIZES.width * 0.026,
     backgroundColor: '#FFB443',
     borderRadius: 15,
     alignItems: 'center',
@@ -195,12 +206,12 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'KantumruyPro-Regular',
     color: COLORS.black,
-    fontSize: 16,
+    fontSize: SIZES.width * 0.041,
   },
   imageContainer: {
-    marginTop: 20,
-    width: 150,
-    height: 150,
+    marginTop: SIZES.width * 0.051,
+    width: SIZES.width * 0.382,
+    height: SIZES.width * 0.382,
     alignSelf: 'center',
     borderRadius: 100,
   },
@@ -211,13 +222,13 @@ const styles = StyleSheet.create({
     borderRadius: 100,
   },
   headline: {
-    fontSize: 28,
+    fontSize: SIZES.width * 0.072,
     fontFamily: 'KantumruyPro-Regular',
     color: '#F76B1C',
   },
   text: {
     fontFamily: 'KantumruyPro-Regular',
-    fontSize: 20,
+    fontSize: SIZES.width * 0.051,
     color: '#171532',
     textTransform: 'capitalize',
   },
@@ -227,10 +238,10 @@ const styles = StyleSheet.create({
     borderColor: '#FFB443',
   },
   description: {
-    fontSize: 16,
+    fontSize: SIZES.width * 0.041,
     fontFamily: 'KantumruyPro-Regular',
     color: '#000',
-    lineHeight: 25,
+    lineHeight: SIZES.width * 0.064,
   },
   fleBox: {
     flexDirection: 'row',
@@ -251,19 +262,23 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     backgroundColor: '#fee4d4',
-    height: 80,
-    padding: 10,
-    paddingTop: 20,
+    height: SIZES.width * 0.205,
+    padding: SIZES.width * 0.026,
+    paddingTop: SIZES.width * 0.051,
   },
-  crossContainer: {position: 'absolute', right: 20, top: 20},
+  crossContainer: {
+    position: 'absolute',
+    right: SIZES.width * 0.051,
+    top: SIZES.width * 0.051,
+  },
   buttonContainer: {
-    height: 50,
-    marginTop: 20,
+    height: SIZES.width * 0.13,
+    marginTop: SIZES.width * 0.051,
     backgroundColor: '#FFB443',
     borderRadius: 15,
     alignItems: 'center',
     justifyContent: 'center',
-    marginHorizontal: 20,
-    marginBottom: 20,
+    marginHorizontal: SIZES.width * 0.051,
+    marginBottom: SIZES.width * 0.051,
   },
 });

@@ -41,6 +41,8 @@ const marriage_ring2 = require('../assets/images/marriage_ring2.png');
 const marriage_ring3 = require('../assets/images/marriage_ring3.png');
 const lagan_chart = require('../assets/images/lagan_chart.png');
 const table = require('../assets/images/table.png');
+const blogScreen = require('../assets/images/blogScreen.png');
+const blur = require('../assets/images/blur.png');
 
 // Zodic
 
@@ -113,4 +115,6 @@ export default {
   Cancer,
   Taurus,
   Gemini,
+  blogScreen,
+  blur,
 };

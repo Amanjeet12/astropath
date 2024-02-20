@@ -7,7 +7,7 @@ import {
   View,
 } from 'react-native';
 import React, {useState} from 'react';
-import {COLORS} from '../constant/theme';
+import {COLORS, SIZES} from '../constant/theme';
 import {images} from '../constant';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
@@ -43,13 +43,17 @@ const Dobtextinput = ({placeholder}) => {
       style={styles.mainContainer}
       onPress={showDatepicker}
       activeOpacity={0.7}>
-      <View style={{width: '90%', paddingLeft: 15}}>
+      <View style={{width: '90%', paddingLeft: SIZES.width * 0.039}}>
         <Text style={{color: '#000'}}>{showDate ? showDate : placeholder}</Text>
       </View>
       <View>
         <Image
           source={images.calendet_icon}
-          style={{width: 20, height: 20, resizeMode: 'contain'}}
+          style={{
+            width: SIZES.width * 0.051,
+            height: SIZES.width * 0.051,
+            resizeMode: 'contain',
+          }}
         />
       </View>
       {show && (
@@ -69,10 +73,10 @@ export default Dobtextinput;
 
 const styles = StyleSheet.create({
   mainContainer: {
-    height: 50,
+    height: SIZES.width * 0.13,
     backgroundColor: COLORS.white,
-    borderRadius: 15,
-    elevation: 4,
+    borderRadius: SIZES.width * 0.039,
+    elevation: SIZES.width * 0.01,
     flexDirection: 'row',
     alignItems: 'center',
   },

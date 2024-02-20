@@ -2,6 +2,7 @@ import {Image, StyleSheet, Text, View} from 'react-native';
 import React, {useState} from 'react';
 import {Dropdown} from 'react-native-element-dropdown';
 import {images} from '../constant';
+import {SIZES} from '../constant/theme';
 
 const data = [
   {label: 'Item 1', value: '1'},
@@ -48,11 +49,15 @@ const DashaSection = () => {
         </View> */}
       </View>
       <View style={styles.border} />
-      <View style={{marginTop: 10}}>
+      <View style={{marginTop: SIZES.width * 0.026}}>
         <View>
           <Image
             source={images.table}
-            style={{width: '100%', height: 350, resizeMode: 'contain'}}
+            style={{
+              width: '100%',
+              height: SIZES.width * 0.9,
+              resizeMode: 'contain',
+            }}
           />
         </View>
         <Text style={styles.description}>
@@ -76,30 +81,30 @@ export default DashaSection;
 
 const styles = StyleSheet.create({
   title: {
-    fontSize: 20,
+    fontSize: SIZES.width * 0.051,
     color: '#171532',
     fontFamily: 'KantumruyPro-Regular',
   },
   dropdown: {
-    height: 40,
+    height: SIZES.width * 0.102,
     borderColor: 'gray',
     borderWidth: 0.5,
-    paddingHorizontal: 8,
+    paddingHorizontal: SIZES.width * 0.021,
     borderRadius: 4,
   },
   placeholderStyle: {
-    fontSize: 12,
+    fontSize: SIZES.width * 0.031,
   },
   selectedTextStyle: {
-    fontSize: 12,
+    fontSize: SIZES.width * 0.031,
   },
   iconStyle: {
-    width: 20,
-    height: 20,
+    width: SIZES.width * 0.051,
+    height: SIZES.width * 0.051,
   },
   inputSearchStyle: {
-    height: 20,
-    fontSize: 12,
+    height: SIZES.width * 0.051,
+    fontSize: SIZES.width * 0.031,
   },
   flexBox: {
     flexDirection: 'row',
@@ -110,12 +115,12 @@ const styles = StyleSheet.create({
     height: 1,
     borderWidth: 0.5,
     borderColor: '#F39200',
-    marginTop: 5,
+    marginTop: SIZES.width * 0.013,
   },
   description: {
-    fontSize: 16,
+    fontSize: SIZES.width * 0.041,
     fontFamily: 'KantumruyPro-Regular',
     color: '#000',
-    lineHeight: 25,
+    lineHeight: SIZES.width * 0.064,
   },
 });

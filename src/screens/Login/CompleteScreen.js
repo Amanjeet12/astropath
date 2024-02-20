@@ -13,11 +13,17 @@ import {images} from '../../constant';
 import Custombutton from '../../components/Custombutton';
 
 const CompleteScreen = () => {
+  console.log(SIZES.width * 0.75);
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor={COLORS.white} barStyle={'dark-content'} />
       <View style={styles.mainContainer}>
-        <View style={{marginTop: 30, height: 300, width: '100%'}}>
+        <View
+          style={{
+            marginTop: SIZES.width * 0.077,
+            height: SIZES.width * 0.75,
+            width: '100%',
+          }}>
           <Image
             source={images.cpmplete_profile}
             style={{
@@ -27,7 +33,7 @@ const CompleteScreen = () => {
             }}
           />
         </View>
-        <View style={{alignItems: 'center', marginTop: 30}}>
+        <View style={{alignItems: 'center', marginTop: SIZES.width * 0.077}}>
           <Text style={styles.title}>Register Successful</Text>
           <Text style={[styles.description, {textAlign: 'center'}]}>
             You can now open Dashboard and connect{'\n'} to different
@@ -38,9 +44,9 @@ const CompleteScreen = () => {
       <View
         style={{
           position: 'absolute',
-          bottom: 20,
+          bottom: SIZES.width * 0.051,
           width: '100%',
-          paddingHorizontal: 20,
+          paddingHorizontal: SIZES.width * 0.051,
         }}>
         <Custombutton placeholder={'Go to home'} screen={'BottomTabScreen'} />
       </View>
@@ -57,14 +63,14 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: 'KantumruyPro-Bold',
-    fontSize: 30,
+    fontSize: SIZES.width * 0.077,
     color: '#000',
   },
   description: {
     fontFamily: 'KantumruyPro-Regular',
-    fontSize: 14,
+    fontSize: SIZES.width * 0.036,
     color: '#000',
-    marginTop: 10,
-    lineHeight: 22,
+    marginTop: SIZES.width * 0.026,
+    lineHeight: SIZES.width * 0.057,
   },
 });

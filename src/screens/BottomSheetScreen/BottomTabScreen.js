@@ -15,12 +15,14 @@ import OrderScreen from './OrderScreen';
 import AccountScreen from './AccountScreen';
 import {
   AddIcon,
+  AddIconFocuse,
+  AstrologerIcon,
+  AstrologerIconFocused,
   HomeIcon,
+  HomeIconFocused,
   LikedIcon,
-  LikedIconFocused,
   ProfileIcon,
-  TransactionFocusedIcon,
-  TransactionIcon,
+  ProfileIconFocused,
 } from '../SvgComponent/BottomSvgComponent';
 
 const Tab = createBottomTabNavigator();
@@ -63,7 +65,7 @@ const BottomTabScreen = () => {
             tabBarShowLabel: false,
             tabBarHideOnKeyboard: true,
             tabBarIcon: ({color, size, focused}) =>
-              focused ? <HomeIcon /> : <HomeIcon />,
+              focused ? <HomeIcon /> : <HomeIconFocused />,
           }}
         />
         <Tab.Screen
@@ -74,7 +76,7 @@ const BottomTabScreen = () => {
             tabBarHideOnKeyboard: true,
 
             tabBarIcon: ({color, size, focused}) =>
-              focused ? <LikedIcon /> : <LikedIcon />,
+              focused ? <AstrologerIconFocused /> : <AstrologerIcon />,
           }}
         />
         <Tab.Screen
@@ -85,7 +87,7 @@ const BottomTabScreen = () => {
             // tabBarStyle: {display: 'none'},
             tabBarHideOnKeyboard: true,
             tabBarIcon: ({color, size, focused}) =>
-              focused ? <AddIcon /> : <AddIcon />,
+              focused ? <AddIconFocuse /> : <AddIcon />,
           }}
         />
         <Tab.Screen
@@ -95,7 +97,7 @@ const BottomTabScreen = () => {
             tabBarShowLabel: false,
             tabBarHideOnKeyboard: true,
             tabBarIcon: ({color, size, focused}) =>
-              focused ? <ProfileIcon /> : <ProfileIcon />,
+              focused ? <ProfileIconFocused /> : <ProfileIcon />,
           }}
         />
       </Tab.Navigator>

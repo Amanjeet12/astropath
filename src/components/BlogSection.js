@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import React from 'react';
 import {images} from '../constant';
-import {COLORS} from '../constant/theme';
+import {COLORS, SIZES} from '../constant/theme';
 import useNavigateToScreen from './Navigation';
 import Icon from 'react-native-vector-icons/Entypo';
 import Eys from 'react-native-vector-icons/AntDesign';
@@ -27,12 +27,21 @@ const BlogSection = ({data}) => {
           <View key={index} style={styles.container}>
             <ImageBackground
               source={images.blog_bg}
-              style={{height: 232}}
+              style={{height: SIZES.width * 0.59}}
               imageStyle={{resizeMode: 'stretch'}}>
-              <View style={{padding: 15, flexDirection: 'row', gap: 10}}>
+              <View
+                style={{
+                  padding: SIZES.width * 0.039,
+                  flexDirection: 'row',
+                  gap: SIZES.width * 0.026,
+                }}>
                 <Image
                   source={item.image}
-                  style={{width: 85, height: 55, resizeMode: 'contain'}}
+                  style={{
+                    width: SIZES.width * 0.22,
+                    height: SIZES.width * 0.141,
+                    resizeMode: 'contain',
+                  }}
                 />
                 <View>
                   <Text style={styles.title}>{item.title}</Text>
@@ -42,37 +51,58 @@ const BlogSection = ({data}) => {
               <View>
                 <ScrollView
                   horizontal
-                  contentContainerStyle={{paddingHorizontal: 15}}
+                  contentContainerStyle={{
+                    paddingHorizontal: SIZES.width * 0.039,
+                  }}
                   style={{marginTop: 0}}>
                   {item.categories.map((category, index) => (
-                    <View key={index} style={{marginRight: 12}}>
+                    <View
+                      key={index}
+                      style={{marginRight: SIZES.width * 0.031}}>
                       <Text style={styles.category}>{category}</Text>
                     </View>
                   ))}
                 </ScrollView>
-                <View style={{padding: 15}}>
+                <View style={{padding: SIZES.width * 0.039}}>
                   <Text style={styles.description}>{item.description}</Text>
                 </View>
               </View>
 
-              <View style={{position: 'absolute', right: 6, top: 3}}>
+              <View
+                style={{
+                  position: 'absolute',
+                  right: SIZES.width * 0.016,
+                  top: 3,
+                }}>
                 <TouchableOpacity
                   style={styles.buttonContainer}
                   onPress={() => handleNavigation()}>
                   <Text style={styles.buttonText}>View</Text>
                   <Image
                     source={images.button_icon}
-                    style={{width: 15, height: 15, resizeMode: 'contain'}}
+                    style={{
+                      width: SIZES.width * 0.039,
+                      height: SIZES.width * 0.039,
+                      resizeMode: 'contain',
+                    }}
                   />
                 </TouchableOpacity>
               </View>
               <View style={styles.bottomContainer}>
                 <View style={styles.flexBox}>
-                  <Icon name={'back-in-time'} color={'#000'} size={16} />
+                  <Icon
+                    name={'back-in-time'}
+                    color={'#000'}
+                    size={SIZES.width * 0.041}
+                  />
                   <Text style={styles.bottomText}>Posted 2 days ago</Text>
                 </View>
                 <View style={styles.flexBox}>
-                  <Eys name={'eyeo'} color={'#000'} size={16} />
+                  <Eys
+                    name={'eyeo'}
+                    color={'#000'}
+                    size={SIZES.width * 0.041}
+                  />
                   <Text style={styles.bottomText}>1704</Text>
                 </View>
               </View>
@@ -88,12 +118,12 @@ export default BlogSection;
 
 const styles = StyleSheet.create({
   container: {
-    height: 232,
-    marginBottom: 20,
+    height: SIZES.width * 0.59,
+    marginBottom: SIZES.width * 0.051,
   },
   bottomText: {
     color: COLORS.black,
-    fontSize: 12,
+    fontSize: SIZES.width * 0.031,
     fontFamily: 'KantumruyPro-Regular',
     paddingTop: 3,
   },
@@ -102,53 +132,53 @@ const styles = StyleSheet.create({
     bottom: 0,
     width: '100%',
     backgroundColor: COLORS.white,
-    borderBottomRightRadius: 15,
-    borderBottomLeftRadius: 15,
-    height: 40,
+    borderBottomRightRadius: SIZES.width * 0.039,
+    borderBottomLeftRadius: SIZES.width * 0.039,
+    height: SIZES.width * 0.102,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
+    paddingHorizontal: SIZES.width * 0.041,
   },
   buttonText: {
     fontWeight: '500',
     color: COLORS.black,
   },
   buttonContainer: {
-    width: 85,
-    height: 50,
-    paddingHorizontal: 20,
-    paddingVertical: 8,
+    width: SIZES.width * 0.205,
+    height: SIZES.width * 0.13,
+    paddingHorizontal: SIZES.width * 0.051,
+    paddingVertical: SIZES.width * 0.021,
     borderWidth: 1,
-    borderRadius: 30,
+    borderRadius: SIZES.width * 0.077,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 5,
+    gap: SIZES.width * 0.013,
     backgroundColor: '#FFB443',
     justifyContent: 'center',
   },
   title: {
     fontFamily: 'KantumruyPro-Light',
-    fontSize: 12,
+    fontSize: SIZES.width * 0.031,
     color: '#494949',
   },
   publisher: {
     fontFamily: 'KantumruyPro-Light',
-    fontSize: 10,
+    fontSize: SIZES.width * 0.026,
     color: '#494949',
-    paddingTop: 8,
+    paddingTop: SIZES.width * 0.021,
   },
   category: {
-    fontSize: 12,
-    paddingHorizontal: 15,
+    fontSize: SIZES.width * 0.031,
+    paddingHorizontal: SIZES.width * 0.039,
     borderWidth: 0.5,
-    paddingVertical: 5,
-    borderRadius: 15,
+    paddingVertical: SIZES.width * 0.013,
+    borderRadius: SIZES.width * 0.039,
     backgroundColor: '#F39200',
     color: COLORS.white,
   },
   description: {
-    fontSize: 13,
+    fontSize: SIZES.width * 0.034,
     fontFamily: 'KantumruyPro-Light',
     color: '#494949',
   },

@@ -25,23 +25,31 @@ const MarraigeKundli = () => {
         imageStyle={{resizeMode: 'stretch'}}>
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.mainContainer}>
-            <View style={{marginTop: 10}}>
+            <View style={{marginTop: SIZES.width * 0.026}}>
               <HeaderSection />
             </View>
-            <View style={{width: 250}}>
+            <View style={{width: SIZES.width * 0.65}}>
               <BackButton placeholder={'Marraige Kundli'} />
             </View>
-            <View style={{marginTop: 30}}>
+            <View style={{marginTop: SIZES.width * 0.04}}>
               <Image
                 source={images.marriage_meter}
-                style={{width: '100%', height: 180, resizeMode: 'contain'}}
+                style={{
+                  width: '100%',
+                  height: SIZES.width * 0.46,
+                  resizeMode: 'contain',
+                }}
               />
             </View>
             <View style={styles.boxContainer}>
               <View style={{width: '20%', alignItems: 'center'}}>
                 <Image
                   source={images.marriage_ring1}
-                  style={{width: 64, height: 64, resizeMode: 'contain'}}
+                  style={{
+                    width: SIZES.width * 0.158,
+                    height: SIZES.width * 0.158,
+                    resizeMode: 'contain',
+                  }}
                 />
               </View>
               <View style={{width: '80%'}}>
@@ -57,7 +65,11 @@ const MarraigeKundli = () => {
               <View style={{width: '20%', alignItems: 'center'}}>
                 <Image
                   source={images.marriage_ring2}
-                  style={{width: 64, height: 64, resizeMode: 'contain'}}
+                  style={{
+                    width: SIZES.width * 0.158,
+                    height: SIZES.width * 0.158,
+                    resizeMode: 'contain',
+                  }}
                 />
               </View>
               <View style={{width: '80%'}}>
@@ -75,7 +87,11 @@ const MarraigeKundli = () => {
               <View style={{width: '20%', alignItems: 'center'}}>
                 <Image
                   source={images.marriage_ring3}
-                  style={{width: 64, height: 64, resizeMode: 'contain'}}
+                  style={{
+                    width: SIZES.width * 0.158,
+                    height: SIZES.width * 0.158,
+                    resizeMode: 'contain',
+                  }}
                 />
               </View>
               <View style={{width: '80%'}}>
@@ -103,27 +119,27 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   mainContainer: {
-    marginHorizontal: 20,
+    marginHorizontal: SIZES.width * 0.051,
   },
   boxContainer: {
     flexDirection: 'row',
     width: '100%',
-    height: 100,
+    height: SIZES.width * 0.255,
     backgroundColor: '#fff',
     alignItems: 'center',
-    gap: 10,
-    paddingHorizontal: 10,
-    borderRadius: 4,
-    marginTop: 20,
+    gap: SIZES.width * 0.026,
+    paddingHorizontal: SIZES.width * 0.026,
+    borderRadius: SIZES.width * 0.01,
+    marginTop: SIZES.width * 0.051,
   },
   title: {
     fontFamily: 'KantumruyPro-Bold',
-    fontSize: 16,
+    fontSize: SIZES.width * 0.041,
     color: '#D88200',
   },
   description: {
     fontFamily: 'KantumruyPro-Regular',
-    fontSize: 10,
+    fontSize: SIZES.width * 0.026,
     color: '#525252',
   },
 });

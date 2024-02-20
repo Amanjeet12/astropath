@@ -14,6 +14,7 @@ import BackButton from '../../components/BackButton';
 import {images} from '../../constant';
 import {SIZES} from '../../constant/theme';
 import Icon from 'react-native-vector-icons/Entypo';
+import {Blog} from '../../constant/data';
 
 const BlogScreen = () => {
   return (
@@ -25,24 +26,33 @@ const BlogScreen = () => {
         imageStyle={{resizeMode: 'stretch'}}>
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.mainContainer}>
-            <View style={{marginTop: 10}}>
+            <View style={{marginTop: SIZES.width * 0.026}}>
               <HeaderSection />
             </View>
-            <View style={{width: 250}}>
+            <View style={{width: SIZES.width * 0.648}}>
               <BackButton placeholder={'Blog'} />
             </View>
-            <View style={{marginTop: 20}}>
+            <View style={{marginTop: SIZES.width * 0.051}}>
               <Image
-                source={images.marriage_meter}
-                style={{width: '100%', height: 215, resizeMode: 'contain'}}
+                source={images.blogScreen}
+                style={{
+                  width: '100%',
+                  height: SIZES.width * 0.6,
+                  resizeMode: 'contain',
+                }}
               />
             </View>
-            <View>
+            <View style={{marginTop: SIZES.width * 0.025}}>
               <Text style={styles.title}>A Lively New Moon Aquarius</Text>
             </View>
+
             <View style={styles.flexBox}>
-              <Icon name={'back-in-time'} color={'#000'} size={16} />
-              <Text style={{fontSize: 12, color: '#000'}}>
+              <Icon
+                name={'back-in-time'}
+                color={'#000'}
+                size={SIZES.width * 0.041}
+              />
+              <Text style={{fontSize: SIZES.width * 0.031, color: '#000'}}>
                 Posted 2 days ago
               </Text>
             </View>
@@ -71,23 +81,23 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   mainContainer: {
-    marginHorizontal: 20,
+    marginHorizontal: SIZES.width * 0.051,
   },
   description: {
-    fontSize: 16,
+    fontSize: SIZES.width * 0.041,
     fontFamily: 'KantumruyPro-Regular',
     color: '#000',
-    lineHeight: 25,
-    marginTop: 20,
+    lineHeight: SIZES.width * 0.064,
+    marginTop: SIZES.width * 0.051,
   },
   title: {
     fontFamily: 'KantumruyPro-Regular',
-    fontSize: 22,
+    fontSize: SIZES.width * 0.057,
     color: '#000',
   },
   flexBox: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 5,
+    gap: SIZES.width * 0.013,
   },
 });

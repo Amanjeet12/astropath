@@ -1,13 +1,18 @@
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import {images} from '../constant';
+import {SIZES} from '../constant/theme';
 
 const LogoutButton = () => {
   return (
     <TouchableOpacity style={styles.buttonContainer} activeOpacity={0.6}>
       <Image
         source={images.logout}
-        style={{width: 20, height: 20, resizeMode: 'contain'}}
+        style={{
+          width: SIZES.width * 0.051,
+          height: SIZES.width * 0.051,
+          resizeMode: 'contain',
+        }}
       />
       <Text style={styles.button_text}>Logout</Text>
     </TouchableOpacity>
@@ -18,20 +23,20 @@ export default LogoutButton;
 
 const styles = StyleSheet.create({
   buttonContainer: {
-    width: 210,
-    height: 45,
+    width: SIZES.width * 0.51,
+    height: SIZES.width * 0.115,
     borderWidth: 1,
     backgroundColor: '#FFB443',
-    marginBottom: 50,
+    marginBottom: SIZES.width * 0.13,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 12,
+    borderRadius: SIZES.width * 0.039,
     flexDirection: 'row',
-    gap: 10,
+    gap: SIZES.width * 0.026,
     elevation: 4,
   },
   button_text: {
-    fontSize: 16,
+    fontSize: SIZES.width * 0.041,
     color: '#000',
     fontWeight: '500',
   },

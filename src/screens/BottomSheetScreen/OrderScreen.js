@@ -22,10 +22,10 @@ const OrderScreen = () => {
         imageStyle={{resizeMode: 'stretch'}}>
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.mainContainer}>
-            <View style={{marginTop: 10}}>
+            <View style={{marginTop: SIZES.width * 0.026}}>
               <HeaderSection />
             </View>
-            <View style={{marginTop: 20}}>
+            <View style={{marginTop: SIZES.width * 0.051}}>
               <Text style={styles.tagLine}>Recent orders and chats</Text>
               <View>
                 <OrderSection data={Order} />
@@ -45,10 +45,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   mainContainer: {
-    marginHorizontal: 20,
+    marginHorizontal: SIZES.width * 0.051,
   },
   tagLine: {
-    fontSize: 20,
+    fontSize: SIZES.width * 0.051,
     fontFamily: 'DMSerifDisplay-Regular',
     color: COLORS.black,
     textTransform: 'capitalize',

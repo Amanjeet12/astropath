@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
-import {COLORS} from '../constant/theme';
+import {COLORS, SIZES} from '../constant/theme';
 import {images} from '../constant';
 import Icon from 'react-native-vector-icons/Octicons';
 
@@ -15,18 +15,31 @@ const AstrologerComponent = ({data}) => {
               <View style={{width: '31%'}}>
                 <View>
                   <Image source={item.profile} style={styles.profile} />
-                  <View style={{position: 'absolute', bottom: 20, right: 5}}>
+                  <View
+                    style={{
+                      position: 'absolute',
+                      bottom: SIZES.width * 0.051,
+                      right: 5,
+                    }}>
                     <Image
                       source={images.verified_icon}
-                      style={{width: 20, height: 20, resizeMode: 'contain'}}
+                      style={{
+                        width: SIZES.width * 0.051,
+                        height: SIZES.width * 0.051,
+                        resizeMode: 'contain',
+                      }}
                     />
                   </View>
                   <View style={styles.ratingContainer}>
                     <Image
                       source={images.star_icon}
-                      style={{width: 20, height: 20, resizeMode: 'contain'}}
+                      style={{
+                        width: SIZES.width * 0.051,
+                        height: SIZES.width * 0.051,
+                        resizeMode: 'contain',
+                      }}
                     />
-                    <Text>5</Text>
+                    <Text style={{color: 'grey'}}>5</Text>
                   </View>
                 </View>
               </View>
@@ -41,14 +54,22 @@ const AstrologerComponent = ({data}) => {
               </View>
               <View style={{width: '25%', alignItems: 'flex-end'}}>
                 <View style={styles.statusContainer}>
-                  <Icon name="dot-fill" color={'#409261'} size={12} />
+                  <Icon
+                    name="dot-fill"
+                    color={'#409261'}
+                    size={SIZES.width * 0.031}
+                  />
                   <Text style={styles.status}>{item.status}</Text>
                 </View>
                 <TouchableOpacity style={styles.buttonContainer}>
                   <Text style={styles.buttonText}>View</Text>
                   <Image
                     source={images.button_icon}
-                    style={{width: 15, height: 15, resizeMode: 'contain'}}
+                    style={{
+                      width: SIZES.width * 0.039,
+                      height: SIZES.width * 0.039,
+                      resizeMode: 'contain',
+                    }}
                   />
                 </TouchableOpacity>
               </View>
@@ -64,17 +85,17 @@ export default AstrologerComponent;
 
 const styles = StyleSheet.create({
   container: {
-    height: 125,
+    height: SIZES.width * 0.32,
     backgroundColor: COLORS.white,
-    marginBottom: 20,
+    marginBottom: SIZES.width * 0.051,
     borderWidth: 1,
     borderColor: COLORS.black,
-    borderRadius: 12,
-    padding: 15,
+    borderRadius: SIZES.width * 0.031,
+    padding: SIZES.width * 0.039,
   },
   profile: {
-    width: 86,
-    height: 86,
+    width: SIZES.width * 0.22,
+    height: SIZES.width * 0.22,
     resizeMode: 'contain',
   },
   profile_name: {
@@ -84,47 +105,47 @@ const styles = StyleSheet.create({
   profile_categories: {
     color: '#707B81',
     fontFamily: 'KantumruyPro-Regular',
-    fontSize: 12,
+    fontSize: SIZES.width * 0.031,
     paddingTop: 3,
   },
   profile_language: {
     color: '#0D6EFD',
     fontFamily: 'KantumruyPro-Regular',
-    fontSize: 8,
+    fontSize: SIZES.width * 0.021,
   },
   profile_experience: {
     color: '#707B81',
     fontFamily: 'KantumruyPro-Regular',
-    fontSize: 10,
+    fontSize: SIZES.width * 0.026,
   },
   profile_rate: {
     color: '#000',
     fontFamily: 'KantumruyPro-Bold',
-    fontSize: 12,
+    fontSize: SIZES.width * 0.031,
     paddingTop: 5,
   },
   status: {
-    fontSize: 9,
+    fontSize: SIZES.width * 0.023,
     color: '#409261',
     fontFamily: 'KantumruyPro-Regular',
   },
   statusContainer: {
-    width: 60,
-    height: 20,
+    width: SIZES.width * 0.13,
+    height: SIZES.width * 0.051,
     backgroundColor: '#e9ffef',
     flexDirection: 'row',
     alignItems: 'center',
-    borderRadius: 12,
+    borderRadius: SIZES.width * 0.031,
     justifyContent: 'center',
     gap: 5,
   },
   buttonContainer: {
     position: 'absolute',
     bottom: 0,
-    paddingHorizontal: 20,
-    paddingVertical: 8,
+    paddingHorizontal: SIZES.width * 0.051,
+    paddingVertical: SIZES.width * 0.021,
     borderWidth: 1,
-    borderRadius: 30,
+    borderRadius: SIZES.width * 0.077,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 5,
@@ -139,11 +160,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 5,
     backgroundColor: '#fff',
-    paddingHorizontal: 10,
-    borderRadius: 10,
+    paddingHorizontal: SIZES.width * 0.026,
+    borderRadius: SIZES.width * 0.026,
     paddingVertical: 3,
-    bottom: -10,
+    bottom: -SIZES.width * 0.026,
     elevation: 3,
-    left: 20,
+    left: SIZES.width * 0.051,
   },
 });

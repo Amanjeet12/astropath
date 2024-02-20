@@ -23,7 +23,12 @@ const OtpScreen = () => {
       <StatusBar backgroundColor={COLORS.white} barStyle={'dark-content'} />
       <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
         <View style={{height: SIZES.height}}>
-          <View style={{marginTop: 30, height: '40%', width: '100%'}}>
+          <View
+            style={{
+              marginTop: SIZES.width * 0.077,
+              height: '40%',
+              width: '100%',
+            }}>
             <Image
               source={images.otp_image}
               style={{
@@ -42,23 +47,23 @@ const OtpScreen = () => {
               </Text>
             </View>
 
-            <View style={{marginTop: 30}}>
+            <View style={{marginTop: SIZES.width * 0.077}}>
               <Otptextinput />
             </View>
-            <View style={{marginTop: 10}}>
+            <View style={{marginTop: SIZES.width * 0.026}}>
               <Custombutton
                 placeholder={'Verify OTP'}
                 screen={'CompleteProfile'}
               />
             </View>
-            <View style={{marginTop: 20}}>
+            <View style={{marginTop: SIZES.width * 0.051}}>
               <Text style={[styles.description, {textAlign: 'center'}]}>
                 If you didn't receive a code!{' '}
                 <Text style={styles.linkText}>Resend</Text>
               </Text>
             </View>
 
-            <View style={{marginTop: 40}}>
+            <View style={{marginTop: SIZES.width * 0.102}}>
               <CustomeIconButton
                 icon={images.mobile_Icon}
                 placeholder={'Change phone number'}
@@ -82,20 +87,20 @@ const styles = StyleSheet.create({
     width: SIZES.width,
     height: '70%',
     backgroundColor: '#EDD498',
-    borderTopRightRadius: 32,
-    borderTopLeftRadius: 32,
-    marginTop: 30,
-    paddingTop: 28,
-    paddingHorizontal: 20,
+    borderTopRightRadius: SIZES.width * 0.082,
+    borderTopLeftRadius: SIZES.width * 0.082,
+    marginTop: SIZES.width * 0.077,
+    paddingTop: SIZES.width * 0.072,
+    paddingHorizontal: SIZES.width * 0.051,
   },
   title: {
     fontFamily: 'KantumruyPro-Bold',
-    fontSize: 20,
+    fontSize: SIZES.width * 0.051,
     color: '#000',
   },
   description: {
     fontFamily: 'KantumruyPro-Regular',
-    fontSize: 14,
+    fontSize: SIZES.width * 0.036,
     color: '#000',
   },
   linkText: {

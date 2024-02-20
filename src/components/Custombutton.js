@@ -1,6 +1,6 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
-import {COLORS} from '../constant/theme';
+import {COLORS, SIZES} from '../constant/theme';
 import useNavigateToScreen from './Navigation';
 
 const Custombutton = ({placeholder, screen}) => {
@@ -21,17 +21,17 @@ export default Custombutton;
 
 const styles = StyleSheet.create({
   maincontainer: {
-    height: 50,
-    marginTop: 10,
+    height: SIZES.width * 0.13,
+    marginTop: SIZES.width * 0.02,
     backgroundColor: '#FFB443',
-    borderRadius: 15,
+    borderRadius: SIZES.width * 0.039,
     alignItems: 'center',
     justifyContent: 'center',
-    elevation: 4,
+    elevation: SIZES.width * 0.01,
   },
   title: {
     fontFamily: 'KantumruyPro-Regular',
     color: COLORS.black,
-    fontSize: 16,
+    fontSize: SIZES.width * 0.041,
   },
 });

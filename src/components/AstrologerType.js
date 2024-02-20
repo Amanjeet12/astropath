@@ -22,15 +22,19 @@ const AstrologerType = ({data}) => {
   const renderItem = ({item}) => (
     <TouchableOpacity
       onPress={() => setSelectedImage(item)}
-      style={[styles.thumbnailSinglecontainer, {marginRight: 15}]}>
+      style={[
+        styles.thumbnailSinglecontainer,
+        {marginRight: SIZES.width * 0.039},
+      ]}>
       <Image source={item.image} style={[styles.thumbnail]} />
       <Text
         style={{
           textAlign: 'center',
           fontFamily: 'KantumruyPro-Regular',
-          fontSize: 14,
+          fontSize: SIZES.width * 0.036,
           color: '#000',
-          marginTop: 10,
+          marginTop: SIZES.width * 0.026,
+          paddingLeft: 1,
         }}>
         {item.title}
       </Text>
@@ -45,7 +49,7 @@ const AstrologerType = ({data}) => {
         keyExtractor={item => item.id}
         renderItem={renderItem}
         style={styles.thumbnailContainer}
-        contentContainerStyle={{paddingRight: 20}}
+        contentContainerStyle={{paddingRight: SIZES.width * 0.051}}
         showsHorizontalScrollIndicator={false}
       />
     </View>
@@ -56,25 +60,25 @@ export default AstrologerType;
 
 const styles = StyleSheet.create({
   thumbnailContainer: {
-    height: 130,
-    marginTop: 10,
-    paddingLeft: 20,
+    height: SIZES.width * 0.33,
+    marginTop: SIZES.width * 0.026,
+    paddingLeft: SIZES.width * 0.051,
   },
   thumbnail: {
-    width: 100,
-    height: 70,
+    width: SIZES.width * 0.2,
+    height: SIZES.width * 0.18,
     resizeMode: 'contain',
     justifyContent: 'center',
     borderRadius: SIZES.width * 0.026,
   },
   thumbnailSinglecontainer: {
-    width: 130,
-    height: 130,
+    width: SIZES.width * 0.33,
+    height: SIZES.width * 0.33,
     backgroundColor: '#fae1d0',
     paddingRight: SIZES.width * 0.026,
     alignItems: 'center',
-    borderRadius: 15,
-    paddingVertical: 15,
+    borderRadius: SIZES.width * 0.039,
+    paddingVertical: SIZES.width * 0.039,
     padding: 3,
   },
 });

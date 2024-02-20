@@ -1,6 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useState} from 'react';
+import {SIZES} from '../constant/theme';
 
 const DaySelection = () => {
   const [selected, setSelected] = useState('Yesterday');
@@ -20,7 +21,7 @@ const DaySelection = () => {
         <Text
           style={{
             color: selected === 'Yesterday' ? '#fff' : '#000',
-            fontSize: 12,
+            fontSize: SIZES.width * 0.031,
           }}>
           Yesterday
         </Text>
@@ -36,7 +37,7 @@ const DaySelection = () => {
         <Text
           style={{
             color: selected === 'Today' ? '#fff' : '#000',
-            fontSize: 12,
+            fontSize: SIZES.width * 0.031,
           }}>
           Today
         </Text>
@@ -52,7 +53,7 @@ const DaySelection = () => {
         <Text
           style={{
             color: selected === 'Tommorrow' ? '#fff' : '#000',
-            fontSize: 12,
+            fontSize: SIZES.width * 0.031,
           }}>
           Tommorrow
         </Text>
@@ -68,7 +69,7 @@ const DaySelection = () => {
         <Text
           style={{
             color: selected === 'Monthly' ? '#fff' : '#000',
-            fontSize: 12,
+            fontSize: SIZES.width * 0.031,
           }}>
           Monthly
         </Text>
@@ -84,16 +85,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-evenly',
-    marginTop: 20,
+    marginTop: SIZES.width * 0.051,
     backgroundColor: '#ece9e4',
     width: '100%',
-    height: 54,
+    height: SIZES.width * 0.141,
     alignSelf: 'center',
     borderRadius: 30,
   },
   singleContainer: {
-    paddingHorizontal: 15,
-    paddingVertical: 10,
+    paddingHorizontal: SIZES.width * 0.039,
+    paddingVertical: SIZES.width * 0.026,
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 30,
