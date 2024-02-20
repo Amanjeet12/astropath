@@ -168,3 +168,67 @@ export const language = [
     title: 'हिन्दी',
   },
 ];
+
+export const Zodic = [
+  {
+    id: '1',
+    image: images.Sagittarius,
+    title: 'Sagittarius',
+  },
+  {
+    id: '2',
+    image: images.Taurus,
+    title: 'Taurus',
+  },
+  {
+    id: '3',
+    image: images.Gemini,
+    title: 'Gemini',
+  },
+
+  {
+    id: '4',
+    image: images.Cancer,
+    title: 'Cancer',
+  },
+  {
+    id: '5',
+    image: images.Virgo,
+    title: 'Virgo',
+  },
+  {
+    id: '6',
+    image: images.Leo,
+    title: 'Leo',
+  },
+  {
+    id: '7',
+    image: images.Libra,
+    title: 'Libra',
+  },
+  {
+    id: '8',
+    image: images.Scorpio,
+    title: 'Scorpio',
+  },
+  {
+    id: '9',
+    image: images.Aries,
+    title: 'Aries',
+  },
+  {
+    id: '10',
+    image: images.Aquarius,
+    title: 'Aquarius',
+  },
+  {
+    id: '11',
+    image: images.Capicorn,
+    title: 'Capicorn',
+  },
+  {
+    id: '12',
+    image: images.Pisces,
+    title: 'Pisces',
+  },
+];

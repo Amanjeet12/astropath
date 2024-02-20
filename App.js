@@ -17,6 +17,7 @@ import KundliScreen from './src/screens/BottomSheetScreen/KundliScreen';
 import MarraigeKundli from './src/screens/BottomSheetScreen/MarraigeKundli';
 import SingleKundli from './src/screens/BottomSheetScreen/SingleKundli';
 import BlogScreen from './src/screens/BottomSheetScreen/BlogScreen';
+import HoroscopeScreen from './src/screens/BottomSheetScreen/HoroscopeScreen';
 
 const Stack = createStackNavigator();
 
@@ -141,6 +142,11 @@ const App = () => {
           options={{headerShown: false}}
           name="BlogScreen"
           component={BlogScreen}
+        />
+        <Stack.Screen
+          options={{headerShown: false}}
+          name="HoroscopeScreen"
+          component={HoroscopeScreen}
         />
       </Stack.Navigator>
     </NavigationContainer>

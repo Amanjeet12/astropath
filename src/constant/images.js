@@ -42,6 +42,21 @@ const marriage_ring3 = require('../assets/images/marriage_ring3.png');
 const lagan_chart = require('../assets/images/lagan_chart.png');
 const table = require('../assets/images/table.png');
 
+// Zodic
+
+const Sagittarius = require('../assets/images/icon/horo12.png');
+const Taurus = require('../assets/images/icon/horo11.png');
+const Gemini = require('../assets/images/icon/horo10.png');
+const Cancer = require('../assets/images/icon/horo9.png');
+const Virgo = require('../assets/images/icon/horo8.png');
+const Leo = require('../assets/images/icon/horo7.png');
+const Libra = require('../assets/images/icon/horo6.png');
+const Scorpio = require('../assets/images/icon/horo5.png');
+const Aries = require('../assets/images/icon/horo4.png');
+const Aquarius = require('../assets/images/icon/horo3.png');
+const Capicorn = require('../assets/images/icon/horo2.png');
+const Pisces = require('../assets/images/icon/horo1.png');
+
 export default {
   astropath_logo,
   onboarding1,
@@ -86,4 +101,16 @@ export default {
   marriage_ring3,
   lagan_chart,
   table,
+  Pisces,
+  Capicorn,
+  Aquarius,
+  Libra,
+  Leo,
+  Scorpio,
+  Sagittarius,
+  Aries,
+  Virgo,
+  Cancer,
+  Taurus,
+  Gemini,
 };

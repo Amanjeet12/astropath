@@ -3,8 +3,13 @@ import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import {COLORS} from '../constant/theme';
 import {images} from '../constant';
+import useNavigateToScreen from './Navigation';
 
 const HoroscopeSection = ({data}) => {
+  const navigation = useNavigateToScreen();
+  const handleNavigation = () => {
+    navigation('HoroscopeScreen');
+  };
   return (
     <View style={styles.container}>
       <View style={{flexDirection: 'row', alignItems: 'flex-start', gap: 20}}>
@@ -23,7 +28,9 @@ const HoroscopeSection = ({data}) => {
         <Text style={styles.description}>{data.description}</Text>
       </View>
       <View style={{alignItems: 'flex-end', marginTop: 10}}>
-        <TouchableOpacity style={styles.buttonContainer}>
+        <TouchableOpacity
+          style={styles.buttonContainer}
+          onPress={() => handleNavigation()}>
           <Text style={styles.buttonText}>View more</Text>
           <Image
             source={images.button_icon}
