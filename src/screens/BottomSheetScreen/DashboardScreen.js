@@ -18,6 +18,7 @@ import {Astrologer, Blog, Horoscope, Slider} from '../../constant/data';
 import AstrologerComponent from '../../components/AstrologerComponent';
 import HoroscopeSection from '../../components/HoroscopeSection';
 import BlogSection from '../../components/BlogSection';
+import PanchangSection from '../../components/PanchangSection';
 
 const DashboardScreen = () => {
   return (
@@ -34,11 +35,14 @@ const DashboardScreen = () => {
               <HeaderSection />
             </View>
             <View style={{marginTop: SIZES.width * 0.026}}>
+              <PanchangSection />
+            </View>
+            {/* <View style={{marginTop: SIZES.width * 0.026}}>
               <SearchSection placeholder={' Search Astrologer'} />
             </View>
             <View style={{marginTop: SIZES.width * 0.051}}>
               <BannerSection />
-            </View>
+            </View> */}
           </View>
           <View>
             <AstrologerType data={Slider} />

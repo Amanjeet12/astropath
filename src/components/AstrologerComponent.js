@@ -4,8 +4,13 @@ import React from 'react';
 import {COLORS, SIZES} from '../constant/theme';
 import {images} from '../constant';
 import Icon from 'react-native-vector-icons/Octicons';
+import {useNavigation} from '@react-navigation/native';
 
 const AstrologerComponent = ({data}) => {
+  const navigation = useNavigation();
+  const handlenavigation = item => {
+    navigation.navigate('SingleAstrologer', {item});
+  };
   return (
     <View>
       {data.map((item, index) => {
@@ -61,7 +66,9 @@ const AstrologerComponent = ({data}) => {
                   />
                   <Text style={styles.status}>{item.status}</Text>
                 </View>
-                <TouchableOpacity style={styles.buttonContainer}>
+                <TouchableOpacity
+                  style={styles.buttonContainer}
+                  onPress={() => handlenavigation(item)}>
                   <Text style={styles.buttonText}>View</Text>
                   <Image
                     source={images.button_icon}

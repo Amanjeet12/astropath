@@ -43,6 +43,12 @@ const lagan_chart = require('../assets/images/lagan_chart.png');
 const table = require('../assets/images/table.png');
 const blogScreen = require('../assets/images/blogScreen.png');
 const blur = require('../assets/images/blur.png');
+const god_icon = require('../assets/images/ganeshji_icon.png');
+const love_icon = require('../assets/images/loveIcon.png');
+const sawastik_icon = require('../assets/images/sawastikicon.png');
+const single_icon = require('../assets/images/singleIcon.png');
+const sunrise_icon = require('../assets/images/sunrise.png');
+const sunset_icon = require('../assets/images/sunset.png');
 
 // Zodic
 
@@ -117,4 +123,10 @@ export default {
   Gemini,
   blogScreen,
   blur,
+  god_icon,
+  love_icon,
+  sawastik_icon,
+  single_icon,
+  sunrise_icon,
+  sunset_icon,
 };
