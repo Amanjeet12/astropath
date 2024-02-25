@@ -1,13 +1,15 @@
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react/self-closing-comp */
-import React from 'react';
+import React, {useState} from 'react';
 import {
+  Alert,
   Image,
   SafeAreaView,
   StatusBar,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import {COLORS, SIZES} from '../../constant/theme';
@@ -16,8 +18,72 @@ import {images} from '../../constant';
 import Custombutton from '../../components/Custombutton';
 import CustomeIconButton from '../../components/CustomeIconButton';
 import Otptextinput from '../../components/Otptextinput';
+import WebMethods from '../api/WebMethods';
+import WebUrls from '../api/WebUrls';
+import Preferences from '../api/Preferences';
+import {err} from 'react-native-svg';
+import {useAuth} from '../../constant/Auth';
 
-const OtpScreen = () => {
+const OtpScreen = ({navigation, route}) => {
+  const {orderId, phoneNumber} = route.params;
+  console.log(orderId, phoneNumber);
+  const [otp, setOtp] = useState('');
+  const {login} = useAuth();
+
+  const handleOtp = number => {
+    setOtp(number);
+  };
+
+  const handleResendOption = () => {
+    try {
+      var params = {
+        orderId: orderId,
+      };
+
+      WebMethods.postRequest(WebUrls.url.resend_otp, params).then(response => {
+        if (response.data != null) {
+          const newOrderId = response.data.orderId;
+          console.log(newOrderId);
+        }
+      });
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
+
+  const handleOtpVerification = () => {
+    try {
+      var params = {
+        orderId: orderId,
+        otp: otp,
+        phone: '+91' + phoneNumber,
+      };
+      WebMethods.postRequest(WebUrls.url.verify_otp, params).then(response => {
+        if (response.data.error) {
+          Alert.alert(response.data.error);
+        } else {
+          try {
+            console.log('start');
+            Preferences.savePreferences(
+              Preferences.key.UserId,
+              response.data.id,
+            );
+            Preferences.savePreferences(
+              Preferences.key.Token,
+              response.data.token,
+            );
+            console.log('done');
+            login();
+          } catch {
+            console.log('error in saving data');
+          }
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor={COLORS.white} barStyle={'dark-content'} />
@@ -45,26 +111,46 @@ const OtpScreen = () => {
           </View>
 
           <View style={{marginTop: SIZES.width * 0.077}}>
-            <Otptextinput />
+            <Otptextinput onOtpFilled={handleOtp} />
           </View>
           <View style={{marginTop: SIZES.width * 0.026}}>
-            <Custombutton
-              placeholder={'Verify OTP'}
-              screen={'CompleteProfile'}
-            />
+            <TouchableOpacity
+              style={styles.maincontainer}
+              onPress={() => handleOtpVerification()}>
+              <Text style={styles.buttontitle}>Verify OTP</Text>
+            </TouchableOpacity>
           </View>
-          <View style={{marginTop: SIZES.width * 0.051}}>
-            <Text style={[styles.description, {textAlign: 'center'}]}>
-              If you didn't receive a code!{' '}
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <View style={{marginTop: SIZES.width * 0.051}}>
+              <Text style={[styles.description, {textAlign: 'center'}]}>
+                If you didn't receive a code!{' '}
+              </Text>
+            </View>
+            <TouchableOpacity
+              style={{marginTop: SIZES.width * 0.04}}
+              onPress={handleResendOption}>
               <Text style={styles.linkText}>Resend</Text>
-            </Text>
+            </TouchableOpacity>
           </View>
 
           <View style={{marginTop: SIZES.width * 0.102}}>
-            <CustomeIconButton
-              icon={images.mobile_Icon}
-              placeholder={'Change phone number'}
-            />
+            <TouchableOpacity
+              style={styles.mainContainer}
+              onPress={() => navigation.goBack()}>
+              <View style={styles.boxContainer}>
+                <View style={styles.imageContainer}>
+                  <Image source={images.mobile_Icon} style={styles.image} />
+                </View>
+                <View style={{width: '70%'}}>
+                  <Text style={styles.title2}>{'Change phone number'}</Text>
+                </View>
+              </View>
+            </TouchableOpacity>
           </View>
         </View>
       </KeyboardAwareScrollView>
@@ -102,5 +188,40 @@ const styles = StyleSheet.create({
   linkText: {
     color: '#F39200',
     textDecorationLine: 'underline',
+  },
+  maincontainer: {
+    height: SIZES.width * 0.13,
+    marginTop: SIZES.width * 0.02,
+    backgroundColor: '#FFB443',
+    borderRadius: SIZES.width * 0.039,
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: SIZES.width * 0.01,
+  },
+  buttontitle: {
+    fontFamily: 'KantumruyPro-Regular',
+    color: COLORS.black,
+    fontSize: SIZES.width * 0.041,
+  },
+  mainContainer: {
+    height: SIZES.width * 0.13,
+    borderWidth: 2,
+    borderRadius: SIZES.width * 0.039,
+  },
+  boxContainer: {flexDirection: 'row', alignItems: 'center', height: '100%'},
+  imageContainer: {
+    width: '30%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  image: {
+    width: SIZES.width * 0.077,
+    height: SIZES.width * 0.077,
+    resizeMode: 'contain',
+  },
+  title2: {
+    fontFamily: 'KantumruyPro-Regular',
+    color: '#000',
+    fontSize: SIZES.width * 0.036,
   },
 });

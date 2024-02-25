@@ -19,6 +19,8 @@ import AstrologerComponent from '../../components/AstrologerComponent';
 import HoroscopeSection from '../../components/HoroscopeSection';
 import BlogSection from '../../components/BlogSection';
 import PanchangSection from '../../components/PanchangSection';
+import KundliSecion from '../../components/KundliSecion';
+import ShowPopUp from '../../components/ShowPopUp';
 
 const DashboardScreen = () => {
   return (
@@ -29,7 +31,7 @@ const DashboardScreen = () => {
         source={images.mobile_bg}
         style={{width: SIZES.width, height: SIZES.height, flex: 1}}
         imageStyle={{resizeMode: 'stretch'}}>
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.mainContainer}>
             <View style={{marginTop: SIZES.width * 0.026}}>
               <HeaderSection />
@@ -37,27 +39,15 @@ const DashboardScreen = () => {
             <View style={{marginTop: SIZES.width * 0.026}}>
               <PanchangSection />
             </View>
-            {/* <View style={{marginTop: SIZES.width * 0.026}}>
-              <SearchSection placeholder={' Search Astrologer'} />
+            <View style={{marginTop: SIZES.width * 0.03}}>
+              <KundliSecion />
             </View>
-            <View style={{marginTop: SIZES.width * 0.051}}>
-              <BannerSection />
-            </View> */}
           </View>
-          <View>
+          {/* <View>
             <AstrologerType data={Slider} />
-          </View>
-          <View>
-            <View
-              style={[styles.mainContainer, {marginTop: SIZES.width * 0.051}]}>
-              <Text style={styles.tagLine}>Features Astrologer</Text>
-            </View>
-            <View
-              style={[styles.mainContainer, {marginTop: SIZES.width * 0.051}]}>
-              <AstrologerComponent data={Astrologer} />
-            </View>
-          </View>
-          <View style={styles.mainContainer}>
+          </View> */}
+          <View
+            style={[styles.mainContainer, {marginTop: SIZES.width * 0.026}]}>
             <HoroscopeSection data={Horoscope} />
           </View>
           <View>
@@ -68,6 +58,9 @@ const DashboardScreen = () => {
               style={[styles.mainContainer, {marginTop: SIZES.width * 0.051}]}>
               <BlogSection data={Blog} />
             </View>
+          </View>
+          <View>
+            <ShowPopUp />
           </View>
         </ScrollView>
       </ImageBackground>

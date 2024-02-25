@@ -1,10 +1,17 @@
+import React, {useState} from 'react';
 import {Image, StyleSheet, Text, TextInput, View} from 'react-native';
-import React from 'react';
-import {images} from '../constant';
 import Icon from 'react-native-vector-icons/AntDesign';
+import {images} from '../constant';
 import {SIZES} from '../constant/theme';
 
-const Flagtextinput = () => {
+const Flagtextinput = ({placeholder, onPhoneNumberChange}) => {
+  const [phoneNumber, setPhoneNumber] = useState('');
+
+  const handlePhoneNumberChange = text => {
+    setPhoneNumber(text);
+    onPhoneNumberChange(text);
+  };
+
   return (
     <View style={styles.mainContainer}>
       <View style={styles.flagContainer}>
@@ -14,11 +21,13 @@ const Flagtextinput = () => {
       </View>
       <View style={{width: '70%', paddingHorizontal: SIZES.width * 0.026}}>
         <TextInput
-          placeholder="Enter your mobile no"
+          placeholder={placeholder}
           keyboardAppearance="dark"
           keyboardType="number-pad"
           maxLength={SIZES.width * 0.026}
           style={{color: '#000'}}
+          value={phoneNumber}
+          onChangeText={handlePhoneNumberChange}
         />
       </View>
     </View>

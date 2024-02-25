@@ -3,29 +3,14 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useState} from 'react';
 import {SIZES} from '../constant/theme';
 
-const DaySelection = () => {
-  const [selected, setSelected] = useState('Yesterday');
+const DaySelection = ({onSelect}) => {
+  const [selected, setSelected] = useState('Today');
   const handleSelecter = option => {
     setSelected(option);
+    onSelect(option); // Pass selected option to parent component
   };
   return (
     <View style={styles.boxContainer}>
-      <TouchableOpacity
-        style={[
-          styles.singleContainer,
-          {
-            backgroundColor: selected === 'Yesterday' ? '#F39200' : '#ece9e4',
-          },
-        ]}
-        onPress={() => handleSelecter('Yesterday')}>
-        <Text
-          style={{
-            color: selected === 'Yesterday' ? '#fff' : '#000',
-            fontSize: SIZES.width * 0.031,
-          }}>
-          Yesterday
-        </Text>
-      </TouchableOpacity>
       <TouchableOpacity
         style={[
           styles.singleContainer,
@@ -46,6 +31,22 @@ const DaySelection = () => {
         style={[
           styles.singleContainer,
           {
+            backgroundColor: selected === 'Previous' ? '#F39200' : '#ece9e4',
+          },
+        ]}
+        onPress={() => handleSelecter('Previous')}>
+        <Text
+          style={{
+            color: selected === 'Previous' ? '#fff' : '#000',
+            fontSize: SIZES.width * 0.031,
+          }}>
+          Previous Day
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[
+          styles.singleContainer,
+          {
             backgroundColor: selected === 'Tommorrow' ? '#F39200' : '#ece9e4',
           },
         ]}
@@ -58,7 +59,7 @@ const DaySelection = () => {
           Tommorrow
         </Text>
       </TouchableOpacity>
-      <TouchableOpacity
+      {/* <TouchableOpacity
         style={[
           styles.singleContainer,
           {
@@ -73,7 +74,7 @@ const DaySelection = () => {
           }}>
           Monthly
         </Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 };

@@ -13,7 +13,6 @@ import {COLORS, SIZES} from '../../constant/theme';
 import {images} from '../../constant';
 
 const Splashscreen = () => {
-  const navigation = useNavigation();
   const [showActivityIndicator, setShowActivityIndicator] = useState(false);
   const logoScaleValue = useRef(new Animated.Value(1)).current;
   const indicatorTranslateY = useRef(new Animated.Value(0)).current;
@@ -37,14 +36,14 @@ const Splashscreen = () => {
       ]).start(() => {
         setShowActivityIndicator(true);
 
-        setTimeout(() => {
-          navigation.navigate('OnboardingScreen');
-        }, 1000);
+        // setTimeout(() => {
+        //   navigation.navigate('OnboardingScreen');
+        // }, 1000);
       });
     };
 
     startAnimation();
-  }, [logoScaleValue, indicatorTranslateY, navigation]);
+  }, [logoScaleValue, indicatorTranslateY]);
 
   return (
     <View style={styles.container}>

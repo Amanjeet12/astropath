@@ -5,7 +5,7 @@ import {SIZES} from '../constant/theme';
 
 const LogoutButton = () => {
   return (
-    <TouchableOpacity style={styles.buttonContainer} activeOpacity={0.6}>
+    <View style={styles.buttonContainer}>
       <Image
         source={images.logout}
         style={{
@@ -15,7 +15,7 @@ const LogoutButton = () => {
         }}
       />
       <Text style={styles.button_text}>Logout</Text>
-    </TouchableOpacity>
+    </View>
   );
 };
 

@@ -1,10 +1,14 @@
 /* eslint-disable react-native/no-inline-styles */
-import {Image, StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import {Alert, Image, StyleSheet, Text, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
 import {images} from '../constant';
 import {SIZES} from '../constant/theme';
+import WebUrls from '../screens/api/WebUrls';
+import WebMethods from '../screens/api/WebMethods';
 
 const PanchangSection = () => {
+  const [panchang, setPanchang] = useState('');
+  const [calledOnce, setCalledOnce] = useState(false);
   const getOrdinalSuffix = day => {
     if (day >= 11 && day <= 13) {
       return 'th';
@@ -31,6 +35,43 @@ const PanchangSection = () => {
   const formattedDate = `${dayOfMonth}${ordinalSuffix} ${month} 2024`;
   console.log(SIZES.height * 0.43);
 
+  useEffect(() => {
+    const callPanchang = () => {
+      try {
+        var params = {
+          name: 'amanjeet',
+          day: '5',
+          month: '1',
+          year: '2000',
+          hour: '1',
+          min: '12',
+          lat: '12.123',
+          lon: '123',
+          tzone: '5.5',
+        };
+        const token =
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdXBlcl9hZG1pbl91c2VyX2lkIjpudWxsLCJhc3Ryb2xvZ2VyX3VzZXJfaWQiOm51bGwsImN1c3RvbWVyX3VzZXJfaWQiOiI2NWRhZWIxZDEyYjlhYTQ3Mjk2YTg1YjgiLCJpYXQiOjE3MDg4NDU4NTN9.BnuhdqU2HBfnK4pyCBEYVr3bDnezteegc-hQnNHzEow';
+        WebMethods.postRequestWithHeader(
+          WebUrls.url.basic_panchang,
+          params,
+          token,
+        ).then(response => {
+          if (response.data != null) {
+            setPanchang(response.data);
+          } else {
+            console.log('error');
+          }
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    if (!calledOnce) {
+      callPanchang();
+      setCalledOnce(true);
+    }
+  }, [calledOnce]);
+
   const renderRepeatedData = data => {
     return data.map((item, index) => (
       <View
@@ -44,10 +85,10 @@ const PanchangSection = () => {
 
   // Usage
   const repeatedData = [
-    {label: 'Tithi', value: 'Krishna Pratipda'},
-    {label: 'Nakshatra', value: 'Vishakha'},
-    {label: 'Yog', value: 'Variyaan'},
-    {label: 'Karan', value: 'Baalav'},
+    {label: 'Tithi', value: panchang.tithi},
+    {label: 'Nakshatra', value: panchang.nakshatra},
+    {label: 'Yog', value: panchang.yog},
+    {label: 'Karan', value: panchang.karan},
   ];
 
   return (
@@ -75,7 +116,7 @@ const PanchangSection = () => {
             fontSize: SIZES.width * 0.0893,
             color: '#F39200',
           }}>
-          THU
+          {panchang ? panchang.day.substring(0, 3) : null}
         </Text>
         <Text
           style={{
@@ -90,13 +131,13 @@ const PanchangSection = () => {
         <View style={{alignItems: 'center'}}>
           <Image source={images.sunrise_icon} style={styles.icon} />
           <Text style={styles.text2}>Vedic Sunrise</Text>
-          <Text style={{color: '#000'}}>“09:20:19”</Text>
+          <Text style={{color: '#000'}}>{panchang.vedic_sunrise}</Text>
         </View>
 
         <View style={{alignItems: 'center'}}>
           <Image source={images.sunset_icon} style={styles.icon} />
-          <Text style={styles.text2}>Vedic Sunrise</Text>
-          <Text style={{color: '#000'}}>“09:20:19”</Text>
+          <Text style={styles.text2}>Vedic Sunset</Text>
+          <Text style={{color: '#000'}}>{panchang.vedic_sunset}</Text>
         </View>
       </View>
       <View style={{marginTop: SIZES.width * 0.034}}>

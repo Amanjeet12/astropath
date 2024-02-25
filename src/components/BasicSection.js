@@ -1,72 +1,108 @@
-/* eslint-disable react-native/no-inline-styles */
-import {StyleSheet, Text, View} from 'react-native';
-import React, {useState} from 'react';
-import {Dropdown} from 'react-native-element-dropdown';
+import React, {useEffect, useState} from 'react';
+import {ActivityIndicator, StyleSheet, Text, View} from 'react-native';
+import WebMethods from '../screens/api/WebMethods';
+import WebUrls from '../screens/api/WebUrls';
 import {SIZES} from '../constant/theme';
-
-const data = [
-  {label: 'Item 1', value: '1'},
-  {label: 'Item 2', value: '2'},
-  {label: 'Item 3', value: '3'},
-  {label: 'Item 4', value: '4'},
-  {label: 'Item 5', value: '5'},
-  {label: 'Item 6', value: '6'},
-  {label: 'Item 7', value: '7'},
-  {label: 'Item 8', value: '8'},
-];
+import TableComponent from './TableComponent';
 
 const BasicSection = () => {
-  const [value, setValue] = useState(null);
-  const [isFocus, setIsFocus] = useState(false);
+  const [panchang, setPanchang] = useState(null);
+  const [astroDetail, setAstroDetail] = useState(null);
+  const [manglik_report, setManglik_report] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const token =
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdXBlcl9hZG1pbl91c2VyX2lkIjpudWxsLCJhc3Ryb2xvZ2VyX3VzZXJfaWQiOm51bGwsImN1c3RvbWVyX3VzZXJfaWQiOiI2NWRhZWIxZDEyYjlhYTQ3Mjk2YTg1YjgiLCJpYXQiOjE3MDg4NDU4NTN9.BnuhdqU2HBfnK4pyCBEYVr3bDnezteegc-hQnNHzEow';
+      const params = {
+        name: 'amanjeet',
+        day: '1',
+        month: '2',
+        year: '2000',
+        hour: '1',
+        min: '12',
+        lat: '12.123',
+        lon: '123',
+        tzone: '5.5',
+      };
+
+      const [panchangData, astroDetailData, manglikReportData] =
+        await Promise.all([
+          WebMethods.postRequestWithHeader(
+            WebUrls.url.basic_panchang,
+            params,
+            token,
+          ),
+          WebMethods.postRequestWithHeader(
+            WebUrls.url.astro_details,
+            params,
+            token,
+          ),
+          WebMethods.postRequestWithHeader(
+            WebUrls.url.manglik_report,
+            params,
+            token,
+          ),
+        ]);
+
+      setPanchang(panchangData.data);
+      setAstroDetail(astroDetailData.data);
+      setManglik_report(manglikReportData.data.manglik_report);
+    } catch (error) {
+      console.log('Error fetching data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
+
   return (
     <>
-      <View style={styles.flexBox}>
-        <View>
-          <Text style={styles.title}>General</Text>
-        </View>
-        <View style={{width: SIZES.width * 0.31, backgroundColor: '#fff'}}>
-          <Dropdown
-            style={[styles.dropdown, isFocus && {borderColor: 'blue'}]}
-            placeholderStyle={styles.placeholderStyle}
-            selectedTextStyle={styles.selectedTextStyle}
-            inputSearchStyle={styles.inputSearchStyle}
-            iconStyle={styles.iconStyle}
-            itemContainerStyle={{}}
-            itemTextStyle={{
-              fontSize: SIZES.width * 0.031,
-              padding: 0,
-              color: 'grey',
-            }}
-            data={data}
-            maxHeight={150}
-            labelField="label"
-            valueField="value"
-            placeholder={!isFocus ? 'Select' : '...'}
-            value={value}
-            onFocus={() => setIsFocus(true)}
-            onBlur={() => setIsFocus(false)}
-            onChange={item => {
-              setValue(item.value);
-              setIsFocus(false);
-            }}
-          />
-        </View>
-      </View>
-      <View style={styles.border} />
-      <View style={{marginTop: SIZES.width * 0.051}}>
-        <Text style={styles.description}>
-          You may notice that you're in need of some serious self-care, sweet
-          Scorpion, as the sun and Uranus square off. Consider your options
-          before pursuing the day, taking a mental health breather if your
-          schedule or work situation allows the reprieve. You'll have a chance
-          to fully let go when your needs are met, thanks to a helpful union
-          between the Aquarius moon and transformative Pluto. This cosmic
-          climate also encourages domestic tidying, and you'll crave
-          organization when Mercury activates later today. Emotional yet
-          therapeutic conversations may emerge, making it important to speak
-          from the heart while encouraging loved ones to do the same.
-        </Text>
-      </View>
+      {panchang && (
+        <>
+          <View style={styles.flexBox}>
+            <Text style={styles.title}>Panchang Details</Text>
+          </View>
+          <View style={styles.border} />
+          <View style={{marginTop: SIZES.width * 0.051}}>
+            <TableComponent data={panchang} />
+          </View>
+        </>
+      )}
+      {manglik_report && (
+        <>
+          <View style={[styles.flexBox, {marginTop: SIZES.width * 0.051}]}>
+            <Text style={styles.title}>Mangalik report</Text>
+          </View>
+          <View style={styles.border} />
+          <View style={{marginVertical: SIZES.width * 0.051}}>
+            <Text style={styles.description}>{manglik_report}</Text>
+          </View>
+        </>
+      )}
+      {astroDetail && (
+        <>
+          <View style={[styles.flexBox, {marginTop: SIZES.width * 0.051}]}>
+            <Text style={styles.title}>Astro Details</Text>
+          </View>
+          <View style={styles.border} />
+          <View style={{marginVertical: SIZES.width * 0.051}}>
+            <TableComponent data={astroDetail} />
+          </View>
+        </>
+      )}
     </>
   );
 };
@@ -78,30 +114,6 @@ const styles = StyleSheet.create({
     fontSize: SIZES.width * 0.051,
     color: '#171532',
     fontFamily: 'KantumruyPro-Regular',
-  },
-  dropdown: {
-    height: SIZES.width * 0.102,
-    borderColor: 'gray',
-    borderWidth: 0.5,
-    paddingHorizontal: SIZES.width * 0.021,
-    borderRadius: SIZES.width * 0.01,
-  },
-  placeholderStyle: {
-    fontSize: SIZES.width * 0.031,
-    color: 'grey',
-  },
-  selectedTextStyle: {
-    fontSize: SIZES.width * 0.031,
-    color: 'grey',
-  },
-  iconStyle: {
-    width: SIZES.width * 0.051,
-    height: SIZES.width * 0.051,
-  },
-  inputSearchStyle: {
-    height: SIZES.width * 0.051,
-    fontSize: SIZES.width * 0.031,
-    color: 'grey',
   },
   flexBox: {
     flexDirection: 'row',
@@ -118,6 +130,5 @@ const styles = StyleSheet.create({
     fontSize: SIZES.width * 0.041,
     fontFamily: 'KantumruyPro-Regular',
     color: '#000',
-    lineHeight: SIZES.width * 0.064,
   },
 });

@@ -1,11 +1,13 @@
 /* eslint-disable react-native/no-inline-styles */
 import {
+  Alert,
   Image,
   ImageBackground,
   ScrollView,
   StatusBar,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import React from 'react';
@@ -15,8 +17,32 @@ import HeaderSection from '../../components/HeaderSection';
 import ProfileSection from '../../components/ProfileSection';
 import CustomeDesignNavigation from '../../components/CustomeDesignNavigation';
 import LogoutButton from '../../components/LogoutButton';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useAuth} from '../../constant/Auth';
 
 const AccountScreen = () => {
+  const {logout} = useAuth();
+
+  const handleLogout = async () => {
+    Alert.alert(
+      'Confirm Logout',
+      'Are you sure you want to log out?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Logout',
+          onPress: async () => {
+            await AsyncStorage.clear().then(() => console.log('Cleared'));
+            logout();
+          },
+        },
+      ],
+      {cancelable: false},
+    );
+  };
   return (
     <>
       <StatusBar backgroundColor={'#f7f1e1'} barStyle={'dark-content'} />
@@ -60,11 +86,6 @@ const AccountScreen = () => {
                     icon={images.language}
                     screen={'LanguageScreen'}
                   />
-                  <CustomeDesignNavigation
-                    title={'Notification'}
-                    icon={images.notification}
-                    screen={'DashboardScreen'}
-                  />
                 </View>
               </View>
             </View>
@@ -94,8 +115,16 @@ const AccountScreen = () => {
                 </View>
               </View>
             </View>
-            <View style={{marginTop: SIZES.width * 0.13, alignItems: 'center'}}>
-              <LogoutButton />
+            <View style={{alignItems: 'center'}}>
+              <TouchableOpacity
+                style={{
+                  marginTop: SIZES.width * 0.13,
+                  width: SIZES.width * 0.51,
+                }}
+                activeOpacity={1}
+                onPress={handleLogout}>
+                <LogoutButton />
+              </TouchableOpacity>
             </View>
           </View>
         </ScrollView>

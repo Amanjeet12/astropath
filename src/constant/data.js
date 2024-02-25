@@ -169,66 +169,65 @@ export const language = [
   },
 ];
 
-export const Zodic = [
+export const Zodiac = [
   {
     id: '1',
     image: images.Sagittarius,
-    title: 'Sagittarius',
+    title: 'sagittarius',
   },
   {
     id: '2',
     image: images.Taurus,
-    title: 'Taurus',
+    title: 'taurus',
   },
   {
     id: '3',
     image: images.Gemini,
-    title: 'Gemini',
+    title: 'gemini',
   },
-
   {
     id: '4',
     image: images.Cancer,
-    title: 'Cancer',
+    title: 'cancer',
   },
   {
     id: '5',
     image: images.Virgo,
-    title: 'Virgo',
+    title: 'virgo',
   },
   {
     id: '6',
     image: images.Leo,
-    title: 'Leo',
+    title: 'leo',
   },
   {
     id: '7',
     image: images.Libra,
-    title: 'Libra',
+    title: 'libra',
   },
   {
     id: '8',
     image: images.Scorpio,
-    title: 'Scorpio',
+    title: 'scorpio',
   },
   {
     id: '9',
     image: images.Aries,
-    title: 'Aries',
+    title: 'aries',
   },
   {
     id: '10',
     image: images.Aquarius,
-    title: 'Aquarius',
+    title: 'aquarius',
   },
   {
     id: '11',
     image: images.Capicorn,
-    title: 'Capicorn',
+    title: 'capricorn',
   },
   {
     id: '12',
     image: images.Pisces,
-    title: 'Pisces',
+    title: 'pisces',
   },
 ];

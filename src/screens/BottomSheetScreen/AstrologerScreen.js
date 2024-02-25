@@ -17,7 +17,7 @@ const AstrologerScreen = () => {
               fontFamily: 'DMSerifDisplay-Regular',
               color: '#000',
             }}>
-            Comming Soon
+            Coming Soon
           </Text>
         </View>
       </ImageBackground>

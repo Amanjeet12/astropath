@@ -11,7 +11,7 @@ const HeaderSection = () => {
       <View>
         <Astropath_logo />
       </View>
-      <TouchableOpacity style={styles.walletContainer}>
+      {/* <TouchableOpacity style={styles.walletContainer}>
         <Text style={styles.title}>₹ 4,00</Text>
         <Image
           source={images.wallet_icon}
@@ -21,7 +21,7 @@ const HeaderSection = () => {
             resizeMode: 'contain',
           }}
         />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 };

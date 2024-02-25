@@ -1,13 +1,15 @@
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react/self-closing-comp */
-import React from 'react';
+import React, {useState} from 'react';
 import {
+  Alert,
   Image,
   SafeAreaView,
   StatusBar,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import {COLORS, SIZES} from '../../constant/theme';
@@ -16,8 +18,39 @@ import {images} from '../../constant';
 import Flagtextinput from '../../components/Flagtextinput';
 import Custombutton from '../../components/Custombutton';
 import CustomeIconButton from '../../components/CustomeIconButton';
+import WebMethods from '../api/WebMethods';
+import WebUrls from '../api/WebUrls';
 
-const LoginScreen = () => {
+const LoginScreen = ({navigation}) => {
+  const [phoneNumber, setPhoneNumber] = useState('');
+
+  const handlePhoneNumberChange = number => {
+    setPhoneNumber(number);
+  };
+  const handleNavigation = () => {
+    if (!phoneNumber) {
+      Alert.alert('Enter phone no');
+      return;
+    }
+    try {
+      var params = {
+        phone: '+91' + phoneNumber,
+      };
+
+      WebMethods.postRequest(WebUrls.url.otp_send, params).then(response => {
+        if (response.data.error) {
+          Alert.alert(response.data.error);
+          return;
+        } else if (response.data !== null) {
+          const orderId = response.data.orderId;
+          navigation.navigate('OtpScreen', {orderId, phoneNumber});
+        } else Alert.alert('error try again');
+      });
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
+
   const Divider = ({Placeholder}) => {
     return (
       <View style={styles.dividerContainer}>
@@ -57,10 +90,17 @@ const LoginScreen = () => {
           </View>
 
           <View style={{marginTop: SIZES.width * 0.039}}>
-            <Flagtextinput />
+            <Flagtextinput
+              placeholder={'Enter the mobile no'}
+              onPhoneNumberChange={handlePhoneNumberChange}
+            />
           </View>
           <View style={{marginTop: SIZES.width * 0.026}}>
-            <Custombutton placeholder={'SEND OTP'} screen={'OtpScreen'} />
+            <TouchableOpacity
+              style={styles.maincontainer}
+              onPress={() => handleNavigation()}>
+              <Text style={styles.buttontitle}>SEND OTP</Text>
+            </TouchableOpacity>
           </View>
           <View style={{marginTop: SIZES.width * 0.051}}>
             <Divider Placeholder={'or'} />
@@ -133,5 +173,19 @@ const styles = StyleSheet.create({
   linkText: {
     color: '#F39200',
     textDecorationLine: 'underline',
+  },
+  maincontainer: {
+    height: SIZES.width * 0.13,
+    marginTop: SIZES.width * 0.02,
+    backgroundColor: '#FFB443',
+    borderRadius: SIZES.width * 0.039,
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: SIZES.width * 0.01,
+  },
+  buttontitle: {
+    fontFamily: 'KantumruyPro-Regular',
+    color: COLORS.black,
+    fontSize: SIZES.width * 0.041,
   },
 });

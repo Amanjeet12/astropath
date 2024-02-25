@@ -1,77 +1,93 @@
-import {Image, StyleSheet, Text, View} from 'react-native';
-import React, {useState} from 'react';
+/* eslint-disable react/no-unstable-nested-components */
+import {
+  ActivityIndicator,
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+import React, {useEffect, useState} from 'react';
 import {Dropdown} from 'react-native-element-dropdown';
 import {images} from '../constant';
 import {SIZES} from '../constant/theme';
-
-const data = [
-  {label: 'Item 1', value: '1'},
-  {label: 'Item 2', value: '2'},
-  {label: 'Item 3', value: '3'},
-  {label: 'Item 4', value: '4'},
-  {label: 'Item 5', value: '5'},
-  {label: 'Item 6', value: '6'},
-  {label: 'Item 7', value: '7'},
-  {label: 'Item 8', value: '8'},
-];
+import WebUrls from '../screens/api/WebUrls';
+import WebMethods from '../screens/api/WebMethods';
+import DashaTableItem from './DashaTableItem';
 
 const DashaSection = () => {
   const [value, setValue] = useState(null);
-  const [isFocus, setIsFocus] = useState(false);
+  const [dasha, setDasha] = useState('');
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const token =
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdXBlcl9hZG1pbl91c2VyX2lkIjpudWxsLCJhc3Ryb2xvZ2VyX3VzZXJfaWQiOm51bGwsImN1c3RvbWVyX3VzZXJfaWQiOiI2NWRhZWIxZDEyYjlhYTQ3Mjk2YTg1YjgiLCJpYXQiOjE3MDg4NDU4NTN9.BnuhdqU2HBfnK4pyCBEYVr3bDnezteegc-hQnNHzEow';
+      const params = {
+        name: 'amanjeet',
+        day: '1',
+        month: '2',
+        year: '2000',
+        hour: '1',
+        min: '12',
+        lat: '12.123',
+        lon: '123',
+        tzone: '5.5',
+      };
+
+      const [dashaData] = await Promise.all([
+        WebMethods.postRequestWithHeader(
+          WebUrls.url.major_vdasha,
+          params,
+          token,
+        ),
+      ]);
+
+      setDasha(dashaData.data);
+      console.log(dashaData.data);
+    } catch (error) {
+      console.log('Error fetching data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
+
   return (
     <>
       <View style={styles.flexBox}>
         <View>
-          <Text style={styles.title}>Mahadasha Chart</Text>
+          <Text style={styles.title}>Dasha Chart</Text>
         </View>
-        {/* <View style={{width: 120, backgroundColor: '#fff'}}>
-          <Dropdown
-            style={[styles.dropdown, isFocus && {borderColor: 'blue'}]}
-            placeholderStyle={styles.placeholderStyle}
-            selectedTextStyle={styles.selectedTextStyle}
-            inputSearchStyle={styles.inputSearchStyle}
-            iconStyle={styles.iconStyle}
-            itemContainerStyle={{}}
-            itemTextStyle={{fontSize: 12, padding: 0}}
-            data={data}
-            maxHeight={150}
-            labelField="label"
-            valueField="value"
-            placeholder={!isFocus ? 'Select' : '...'}
-            value={value}
-            onFocus={() => setIsFocus(true)}
-            onBlur={() => setIsFocus(false)}
-            onChange={item => {
-              setValue(item.value);
-              setIsFocus(false);
-            }}
-          />
-        </View> */}
       </View>
       <View style={styles.border} />
-      <View style={{marginTop: SIZES.width * 0.026}}>
-        <View>
-          <Image
-            source={images.table}
-            style={{
-              width: '100%',
-              height: SIZES.width * 0.9,
-              resizeMode: 'contain',
-            }}
-          />
-        </View>
-        <Text style={styles.description}>
-          You may notice that you're in need of some serious self-care, sweet
-          Scorpion, as the sun and Uranus square off. Consider your options
-          before pursuing the day, taking a mental health breather if your
-          schedule or work situation allows the reprieve. You'll have a chance
-          to fully let go when your needs are met, thanks to a helpful union
-          between the Aquarius moon and transformative Pluto. This cosmic
-          climate also encourages domestic tidying, and you'll crave
-          organization when Mercury activates later today. Emotional yet
-          therapeutic conversations may emerge, making it important to speak
-          from the heart while encouraging loved ones to do the same.
-        </Text>
+      <View style={{marginVertical: SIZES.width * 0.051, borderWidth: 0.5}}>
+        <FlatList
+          data={dasha}
+          scrollEnabled={false}
+          renderItem={({item}) => <DashaTableItem item={item} />}
+          ListHeaderComponent={() => (
+            <View style={styles.header}>
+              <Text style={styles.headerText}>Planet</Text>
+              <Text style={styles.headerText}>Planet_id</Text>
+              <Text style={styles.headerText}>Start</Text>
+              <Text style={styles.headerText}>end</Text>
+            </View>
+          )}
+        />
       </View>
     </>
   );
@@ -122,5 +138,17 @@ const styles = StyleSheet.create({
     fontFamily: 'KantumruyPro-Regular',
     color: '#000',
     lineHeight: SIZES.width * 0.064,
+  },
+  header: {
+    flexDirection: 'row',
+    backgroundColor: '#f2f2f2',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+    paddingVertical: 5,
+  },
+  headerText: {
+    flex: 1,
+    textAlign: 'center',
+    fontSize: 12,
   },
 });
