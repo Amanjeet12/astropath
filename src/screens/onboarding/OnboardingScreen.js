@@ -100,7 +100,7 @@ const OnboardingScreen = ({navigation}) => {
             style={{
               width: SIZES.width - SIZES.width * 0.1,
               height: SIZES.width * 0.15,
-              backgroundColor: '#F7CF4E',
+              backgroundColor: '#FFB443',
               alignItems: 'center',
               justifyContent: 'center',
               borderRadius: SIZES.width * 0.8,
@@ -142,7 +142,7 @@ const OnboardingScreen = ({navigation}) => {
               strokeWidth={strokeWidth}
             />
             <Circle
-              stroke={'#000'}
+              stroke={'#843c14'}
               cx={center}
               cy={center}
               r={radius}
@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
     width: SIZES.width * 0.211,
     height: SIZES.width * 0.211,
     borderRadius: SIZES.width * 0.13,
-    backgroundColor: '#F7CF4E',
+    backgroundColor: '#FFB443',
     justifyContent: 'center',
     alignItems: 'center',
   },

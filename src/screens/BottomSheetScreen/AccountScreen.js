@@ -58,7 +58,7 @@ const AccountScreen = () => {
             <View style={{marginTop: SIZES.width * 0.051}}>
               <ProfileSection />
             </View>
-            <View style={{marginTop: SIZES.width * 0.051}}>
+            {/* <View style={{marginTop: SIZES.width * 0.051}}>
               <Text style={styles.profile_name}>User Name</Text>
               <Text
                 style={[
@@ -67,7 +67,7 @@ const AccountScreen = () => {
                 ]}>
                 tSingh102
               </Text>
-            </View>
+            </View> */}
             <View
               style={{
                 marginTop: SIZES.width * 0.051,

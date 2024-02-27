@@ -6,6 +6,10 @@ const Preferences = {
     Role: 'user',
     UserId: 'userid',
     Token: 'token',
+    Name: 'username',
+    userLatitude: 'userLatitude',
+    userLongitude: 'userLongitude',
+    phone: 'phone',
   },
 
   async savePreferences(key, value) {

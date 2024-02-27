@@ -14,12 +14,17 @@ import {SIZES} from '../constant/theme';
 import WebUrls from '../screens/api/WebUrls';
 import WebMethods from '../screens/api/WebMethods';
 import DashaTableItem from './DashaTableItem';
+import Preferences from '../screens/api/Preferences';
 
-const DashaSection = () => {
-  const [value, setValue] = useState(null);
+const DashaSection = ({name, value, showDateTime, showDate, lat, lon}) => {
+  console.log(lat, lon);
   const [dasha, setDasha] = useState('');
 
   const [loading, setLoading] = useState(true);
+  const [hour, minute] = showDateTime.split(':');
+
+  // Parse date to get day, month, and year
+  const [month, day, year] = showDate.split('/');
 
   useEffect(() => {
     fetchData();
@@ -27,30 +32,40 @@ const DashaSection = () => {
 
   const fetchData = async () => {
     try {
-      const token =
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdXBlcl9hZG1pbl91c2VyX2lkIjpudWxsLCJhc3Ryb2xvZ2VyX3VzZXJfaWQiOm51bGwsImN1c3RvbWVyX3VzZXJfaWQiOiI2NWRhZWIxZDEyYjlhYTQ3Mjk2YTg1YjgiLCJpYXQiOjE3MDg4NDU4NTN9.BnuhdqU2HBfnK4pyCBEYVr3bDnezteegc-hQnNHzEow';
-      const params = {
-        name: 'amanjeet',
-        day: '1',
-        month: '2',
-        year: '2000',
-        hour: '1',
-        min: '12',
-        lat: '12.123',
-        lon: '123',
-        tzone: '5.5',
-      };
+      let token;
 
-      const [dashaData] = await Promise.all([
-        WebMethods.postRequestWithHeader(
-          WebUrls.url.major_vdasha,
-          params,
-          token,
-        ),
-      ]);
+      try {
+        token = await Preferences.getPreferences(Preferences.key.Token);
+      } catch (error) {
+        console.error('Error getting latitude and longitude:', error);
+        return;
+      }
 
-      setDasha(dashaData.data);
-      console.log(dashaData.data);
+      if (token) {
+        const params = {
+          name,
+          day,
+          month,
+          year,
+          hour,
+          min: minute,
+          lat: lat,
+          lon: lon,
+          tzone: '5.5',
+        };
+        const [dashaData] = await Promise.all([
+          WebMethods.postRequestWithHeader(
+            WebUrls.url.major_vdasha,
+            params,
+            token,
+          ),
+        ]);
+
+        setDasha(dashaData.data);
+        console.log(dashaData.data);
+      } else {
+        console.log('Latitude, longitude, or token is null');
+      }
     } catch (error) {
       console.log('Error fetching data:', error);
     } finally {
@@ -150,5 +165,6 @@ const styles = StyleSheet.create({
     flex: 1,
     textAlign: 'center',
     fontSize: 12,
+    color: '#000',
   },
 });

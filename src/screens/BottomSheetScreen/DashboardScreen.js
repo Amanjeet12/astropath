@@ -7,7 +7,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import {COLORS, SIZES} from '../../constant/theme';
 import HeaderSection from '../../components/HeaderSection';
 import {images} from '../../constant';
@@ -23,6 +23,10 @@ import KundliSecion from '../../components/KundliSecion';
 import ShowPopUp from '../../components/ShowPopUp';
 
 const DashboardScreen = () => {
+  const [refresh, setRefresh] = useState(false);
+  const handleRefresh = () => {
+    setRefresh(!refresh);
+  };
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor={'#f7f1e1'} barStyle={'dark-content'} />
@@ -48,7 +52,7 @@ const DashboardScreen = () => {
           </View> */}
           <View
             style={[styles.mainContainer, {marginTop: SIZES.width * 0.026}]}>
-            <HoroscopeSection data={Horoscope} />
+            <HoroscopeSection data={Horoscope} refresh={refresh} />
           </View>
           <View>
             <View style={[styles.mainContainer]}>
@@ -60,7 +64,7 @@ const DashboardScreen = () => {
             </View>
           </View>
           <View>
-            <ShowPopUp />
+            <ShowPopUp onHandle={handleRefresh} />
           </View>
         </ScrollView>
       </ImageBackground>

@@ -1,13 +1,40 @@
 /* eslint-disable react-native/no-inline-styles */
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {images} from '../constant';
 import Icon from 'react-native-vector-icons/Feather';
 import useNavigateToScreen from './Navigation';
 import {SIZES} from '../constant/theme';
+import Preferences from '../screens/api/Preferences';
+import {useIsFocused} from '@react-navigation/native';
 
 const ProfileSection = () => {
+  const focused = useIsFocused();
   const navigateToScreen = useNavigateToScreen();
+
+  const [name, setName] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+
+  useEffect(() => {
+    fetchName();
+  }, [focused]);
+
+  const fetchName = async () => {
+    try {
+      const latitude = await Preferences.getPreferences(
+        Preferences.key.userLatitude,
+      );
+      const name = await Preferences.getPreferences(Preferences.key.Name);
+      const phone = await Preferences.getPreferences(Preferences.key.phone);
+
+      console.log('Name:', name);
+      setName(name);
+      setPhoneNumber(phone);
+    } catch (error) {
+      console.log('Error fetching name:', error);
+    }
+  };
+
   const handleNavigation = () => {
     navigateToScreen('UpdateProfileScreen');
   };
@@ -16,7 +43,7 @@ const ProfileSection = () => {
     <View style={styles.mainContainer}>
       <View style={{width: '40%'}}>
         <Image
-          source={images.Profile2}
+          source={images.profile_image}
           style={{
             width: SIZES.width * 0.31,
             height: SIZES.width * 0.31,
@@ -25,9 +52,9 @@ const ProfileSection = () => {
         />
       </View>
       <View style={{width: '50%', paddingTop: SIZES.width * 0.026}}>
-        <Text style={styles.Profile}>Tanmay Singh</Text>
-        <Text style={styles.profile2}>+91 7717744558</Text>
-        <Text style={styles.profile2}>tanmay@gmail.com</Text>
+        <Text style={styles.Profile}>{name ? name : `UserName`}</Text>
+        <Text style={styles.profile2}>{phoneNumber ? phoneNumber : null}</Text>
+        {/* <Text style={styles.profile2}>tanmay@gmail.com</Text> */}
       </View>
       <TouchableOpacity
         style={{

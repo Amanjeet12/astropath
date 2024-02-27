@@ -19,11 +19,13 @@ import ChartsSection from '../../components/ChartsSection';
 import AshtakvargaSSection from '../../components/AshtakvargaSSection';
 import DashaSection from '../../components/DashaSection';
 
-const SingleKundli = () => {
+const SingleKundli = ({route}) => {
   const [selected, setSelected] = useState('Basic');
   const handleSelecter = option => {
     setSelected(option);
   };
+  const {name, value, showDateTime, showDate, lat, lon} = route.params;
+  console.log('params', name, value, showDateTime, showDate, lat, lon);
 
   return (
     <>
@@ -77,17 +79,16 @@ const SingleKundli = () => {
                 style={[
                   styles.singleContainer,
                   {
-                    backgroundColor:
-                      selected === 'Ashtakvarga' ? '#F39200' : '#fff',
+                    backgroundColor: selected === 'KP' ? '#F39200' : '#fff',
                   },
                 ]}
-                onPress={() => handleSelecter('Ashtakvarga')}>
+                onPress={() => handleSelecter('KP')}>
                 <Text
                   style={{
-                    color: selected === 'Ashtakvarga' ? '#fff' : '#000',
+                    color: selected === 'KP' ? '#fff' : '#000',
                     fontSize: SIZES.width * 0.031,
                   }}>
-                  Ashtakvarga
+                  KP
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -109,13 +110,41 @@ const SingleKundli = () => {
             </View>
             <View style={{marginTop: SIZES.width * 0.077}}>
               {selected === 'Basic' ? (
-                <BasicSection />
+                <BasicSection
+                  name={name}
+                  value={value}
+                  showDateTime={showDateTime}
+                  showDate={showDate}
+                  lat={lat}
+                  lon={lon}
+                />
               ) : selected === 'Charts' ? (
-                <ChartsSection />
-              ) : selected === 'Ashtakvarga' ? (
-                <AshtakvargaSSection />
+                <ChartsSection
+                  name={name}
+                  value={value}
+                  showDateTime={showDateTime}
+                  showDate={showDate}
+                  lat={lat}
+                  lon={lon}
+                />
+              ) : selected === 'KP' ? (
+                <AshtakvargaSSection
+                  name={name}
+                  value={value}
+                  showDateTime={showDateTime}
+                  showDate={showDate}
+                  lat={lat}
+                  lon={lon}
+                />
               ) : (
-                <DashaSection />
+                <DashaSection
+                  name={name}
+                  value={value}
+                  showDateTime={showDateTime}
+                  showDate={showDate}
+                  lat={lat}
+                  lon={lon}
+                />
               )}
             </View>
           </View>

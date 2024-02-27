@@ -4,12 +4,18 @@ import WebMethods from '../screens/api/WebMethods';
 import WebUrls from '../screens/api/WebUrls';
 import {SIZES} from '../constant/theme';
 import TableComponent from './TableComponent';
+import Preferences from '../screens/api/Preferences';
 
-const BasicSection = () => {
+const BasicSection = ({name, value, showDateTime, showDate, lat, lon}) => {
+  console.log(lat, lon);
   const [panchang, setPanchang] = useState(null);
   const [astroDetail, setAstroDetail] = useState(null);
   const [manglik_report, setManglik_report] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [hour, minute] = showDateTime.split(':');
+
+  // Parse date to get day, month, and year
+  const [month, day, year] = showDate.split('/');
 
   useEffect(() => {
     fetchData();
@@ -17,42 +23,53 @@ const BasicSection = () => {
 
   const fetchData = async () => {
     try {
-      const token =
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdXBlcl9hZG1pbl91c2VyX2lkIjpudWxsLCJhc3Ryb2xvZ2VyX3VzZXJfaWQiOm51bGwsImN1c3RvbWVyX3VzZXJfaWQiOiI2NWRhZWIxZDEyYjlhYTQ3Mjk2YTg1YjgiLCJpYXQiOjE3MDg4NDU4NTN9.BnuhdqU2HBfnK4pyCBEYVr3bDnezteegc-hQnNHzEow';
-      const params = {
-        name: 'amanjeet',
-        day: '1',
-        month: '2',
-        year: '2000',
-        hour: '1',
-        min: '12',
-        lat: '12.123',
-        lon: '123',
-        tzone: '5.5',
-      };
+      let token;
 
-      const [panchangData, astroDetailData, manglikReportData] =
-        await Promise.all([
-          WebMethods.postRequestWithHeader(
-            WebUrls.url.basic_panchang,
-            params,
-            token,
-          ),
-          WebMethods.postRequestWithHeader(
-            WebUrls.url.astro_details,
-            params,
-            token,
-          ),
-          WebMethods.postRequestWithHeader(
-            WebUrls.url.manglik_report,
-            params,
-            token,
-          ),
-        ]);
+      try {
+        token = await Preferences.getPreferences(Preferences.key.Token);
+      } catch (error) {
+        console.error('Error getting latitude and longitude:', error);
+        return;
+      }
 
-      setPanchang(panchangData.data);
-      setAstroDetail(astroDetailData.data);
-      setManglik_report(manglikReportData.data.manglik_report);
+      if (token) {
+        const params = {
+          name,
+          day,
+          month,
+          year,
+          hour,
+          min: minute,
+          lat: lat,
+          lon: lon,
+          tzone: '5.5',
+        };
+
+        const [panchangData, astroDetailData, manglikReportData] =
+          await Promise.all([
+            WebMethods.postRequestWithHeader(
+              WebUrls.url.basic_panchang,
+              params,
+              token,
+            ),
+            WebMethods.postRequestWithHeader(
+              WebUrls.url.astro_details,
+              params,
+              token,
+            ),
+            WebMethods.postRequestWithHeader(
+              WebUrls.url.manglik_report,
+              params,
+              token,
+            ),
+          ]);
+
+        setPanchang(panchangData.data);
+        setAstroDetail(astroDetailData.data);
+        setManglik_report(manglikReportData.data.manglik_report);
+      } else {
+        console.log('Latitude, longitude, or token is null');
+      }
     } catch (error) {
       console.log('Error fetching data:', error);
     } finally {

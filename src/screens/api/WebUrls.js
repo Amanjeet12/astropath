@@ -3,9 +3,10 @@ const WebUrls = {
     LOcal_URL: 'http://13.60.35.232:8000/',
 
     //consumer auth url
-    otp_send: 'customer/customer/otp',
-    resend_otp: 'customer/customer/resendOtp',
-    verify_otp: 'customer/customer/otpVerify',
+    otp_send: 'backend/customer/otp',
+    resend_otp: 'backend/customer/resendOtp',
+    verify_otp: 'backend/customer/otpVerify',
+    user_detail: 'customer/customer/profile',
 
     // kundali url
     basic_panchang: 'kundali/backend/basic_panchang',
@@ -26,6 +27,12 @@ const WebUrls = {
     // planet
     planets: 'kundali/backend/planets',
     major_vdasha: 'kundali/backend/major_vdasha',
+
+    // match
+    match_birth_details: 'kundali/backend/match_birth_details',
+    match_making_report: 'kundali/backend/match_making_report',
+    match_manglik_report: 'kundali/backend/match_manglik_report',
+    match_ashtakoot_points: 'kundali/backend/match_ashtakoot_points',
   },
 };
 

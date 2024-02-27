@@ -59,7 +59,7 @@ const DaySelection = ({onSelect}) => {
           Tommorrow
         </Text>
       </TouchableOpacity>
-      {/* <TouchableOpacity
+      <TouchableOpacity
         style={[
           styles.singleContainer,
           {
@@ -74,7 +74,7 @@ const DaySelection = ({onSelect}) => {
           }}>
           Monthly
         </Text>
-      </TouchableOpacity> */}
+      </TouchableOpacity>
     </View>
   );
 };

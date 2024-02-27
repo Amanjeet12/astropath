@@ -61,6 +61,8 @@ const HoroscopeScreen = ({route}) => {
       fetchUrl = WebUrls.url.today_horoscope;
     } else if (selectedItem === 'Tommorrow') {
       fetchUrl = WebUrls.url.tommorrow_horoscope;
+    } else {
+      fetchUrl = WebUrls.url.monthly_horoscope;
     }
 
     try {
@@ -136,84 +138,110 @@ const HoroscopeScreen = ({route}) => {
               </View>
             ) : (
               <>
-                <View style={{marginTop: SIZES.width * 0.051}}>
-                  <Text style={styles.text}>09th feb 2024</Text>
-                  <View style={styles.border} />
-                </View>
-                <View
-                  style={{
-                    marginTop: SIZES.width * 0.051,
-                    flexDirection: 'row',
-                    flexWrap: 'wrap',
-                  }}>
-                  <Text
-                    style={[
-                      styles.description,
-                      {fontWeight: '700', marginBottom: 10},
-                    ]}>
-                    "Emotions"
-                  </Text>
-                  <Text style={styles.description}>
-                    {horoscope.prediction
-                      ? horoscope.prediction.emotions
-                      : null}
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    marginTop: SIZES.width * 0.051,
-                    flexDirection: 'row',
-                    flexWrap: 'wrap',
-                  }}>
-                  <Text
-                    style={[
-                      styles.description,
-                      {fontWeight: '700', marginBottom: 10},
-                    ]}>
-                    "Health"
-                  </Text>
-                  <Text style={styles.description}>
-                    {horoscope.prediction ? horoscope.prediction.health : null}
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    marginTop: SIZES.width * 0.051,
-                    flexDirection: 'row',
-                    flexWrap: 'wrap',
-                  }}>
-                  <Text
-                    style={[
-                      styles.description,
-                      {fontWeight: '700', marginBottom: 10},
-                    ]}>
-                    "Personal Life"
-                  </Text>
-                  <Text style={styles.description}>
-                    {horoscope.prediction
-                      ? horoscope.prediction.personal_life
-                      : null}
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    marginTop: SIZES.width * 0.051,
-                    flexDirection: 'row',
-                    flexWrap: 'wrap',
-                  }}>
-                  <Text
-                    style={[
-                      styles.description,
-                      {fontWeight: '700', marginBottom: 10},
-                    ]}>
-                    "Profession"
-                  </Text>
-                  <Text style={styles.description}>
-                    {horoscope.prediction
-                      ? horoscope.prediction.profession
-                      : null}
-                  </Text>
-                </View>
+                {currentDaySelected === 'Monthly' ? (
+                  <>
+                    <View
+                      style={{
+                        marginTop: SIZES.width * 0.051,
+                        flexDirection: 'row',
+                        flexWrap: 'wrap',
+                      }}>
+                      <Text
+                        style={[
+                          styles.description,
+                          {fontWeight: '700', marginBottom: 10},
+                        ]}></Text>
+                      <Text style={styles.description}>
+                        {horoscope.prediction ? horoscope.prediction : null}
+                      </Text>
+                    </View>
+                  </>
+                ) : (
+                  <>
+                    <View style={{marginTop: SIZES.width * 0.051}}>
+                      <Text style={styles.text}>
+                        {horoscope.prediction_date}
+                      </Text>
+                      <View style={styles.border} />
+                    </View>
+                    <View
+                      style={{
+                        marginTop: SIZES.width * 0.051,
+                        flexDirection: 'row',
+                        flexWrap: 'wrap',
+                      }}>
+                      <Text
+                        style={[
+                          styles.description,
+                          {fontWeight: '700', marginBottom: 10},
+                        ]}>
+                        "Emotions"
+                      </Text>
+                      <Text style={styles.description}>
+                        {horoscope.prediction
+                          ? horoscope.prediction.emotions
+                          : null}
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        marginTop: SIZES.width * 0.051,
+                        flexDirection: 'row',
+                        flexWrap: 'wrap',
+                      }}>
+                      <Text
+                        style={[
+                          styles.description,
+                          {fontWeight: '700', marginBottom: 10},
+                        ]}>
+                        "Health"
+                      </Text>
+                      <Text style={styles.description}>
+                        {horoscope.prediction
+                          ? horoscope.prediction.health
+                          : null}
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        marginTop: SIZES.width * 0.051,
+                        flexDirection: 'row',
+                        flexWrap: 'wrap',
+                      }}>
+                      <Text
+                        style={[
+                          styles.description,
+                          {fontWeight: '700', marginBottom: 10},
+                        ]}>
+                        "Personal Life"
+                      </Text>
+                      <Text style={styles.description}>
+                        {horoscope.prediction
+                          ? horoscope.prediction.personal_life
+                          : null}
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        marginTop: SIZES.width * 0.051,
+                        flexDirection: 'row',
+                        flexWrap: 'wrap',
+                      }}>
+                      <Text
+                        style={[
+                          styles.description,
+                          {fontWeight: '700', marginBottom: 10},
+                        ]}>
+                        "Profession"
+                      </Text>
+                      <Text style={styles.description}>
+                        {horoscope.prediction
+                          ? horoscope.prediction.profession
+                          : null}
+                      </Text>
+                    </View>
+                  </>
+                )}
               </>
             )}
           </View>
@@ -359,6 +387,7 @@ const styles = StyleSheet.create({
     fontSize: SIZES.width * 0.072,
     fontFamily: 'KantumruyPro-Regular',
     color: '#F76B1C',
+    textTransform: 'uppercase',
   },
   text: {
     fontFamily: 'KantumruyPro-Regular',

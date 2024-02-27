@@ -1,18 +1,22 @@
 /* eslint-disable react-native/no-inline-styles */
 import {ActivityIndicator, Image, StyleSheet, Text, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {Dropdown} from 'react-native-element-dropdown';
 import {images} from '../constant';
 import {SIZES} from '../constant/theme';
 import WebMethods from '../screens/api/WebMethods';
 import WebUrls from '../screens/api/WebUrls';
 import {SvgXml} from 'react-native-svg';
+import Preferences from '../screens/api/Preferences';
 
-const ChartsSection = () => {
+const ChartsSection = ({name, value, showDateTime, showDate, lat, lon}) => {
   const [love_chart, setLove_chart] = useState('');
   const [lagan_chart, setLagan_chart] = useState('');
   const [marraige_chart, setMarraige_chart] = useState('');
   const [loading, setLoading] = useState(true);
+  const [hour, minute] = showDateTime.split(':');
+
+  // Parse date to get day, month, and year
+  const [month, day, year] = showDate.split('/');
 
   useEffect(() => {
     fetchData();
@@ -20,37 +24,38 @@ const ChartsSection = () => {
 
   const fetchData = async () => {
     try {
-      const token =
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdXBlcl9hZG1pbl91c2VyX2lkIjpudWxsLCJhc3Ryb2xvZ2VyX3VzZXJfaWQiOm51bGwsImN1c3RvbWVyX3VzZXJfaWQiOiI2NWRhZWIxZDEyYjlhYTQ3Mjk2YTg1YjgiLCJpYXQiOjE3MDg4NDU4NTN9.BnuhdqU2HBfnK4pyCBEYVr3bDnezteegc-hQnNHzEow';
-      const params = {
-        name: 'amanjeet',
-        day: '1',
-        month: '2',
-        year: '2000',
-        hour: '1',
-        min: '12',
-        lat: '12.123',
-        lon: '123',
-        tzone: '5.5',
-      };
+      let token;
 
-      const [laganData, loveData, marraigeData] = await Promise.all([
+      try {
+        token = await Preferences.getPreferences(Preferences.key.Token);
+      } catch (error) {
+        console.error('Error getting latitude and longitude:', error);
+        return;
+      }
+
+      if (token) {
+        const params = {
+          name,
+          day,
+          month,
+          year,
+          hour,
+          min: minute,
+          lat: lat,
+          lon: lon,
+          tzone: '5.5',
+        };
+
         WebMethods.postRequestWithHeader(
           WebUrls.url.lagan_chart,
           params,
           token,
-        ),
-        WebMethods.postRequestWithHeader(WebUrls.url.life_chart, params, token),
-        WebMethods.postRequestWithHeader(
-          WebUrls.url.marraige_chart,
-          params,
-          token,
-        ),
-      ]);
-
-      setLagan_chart(laganData.data.svg);
-      setLove_chart(loveData.data.svg);
-      setMarraige_chart(marraigeData.data.svg);
+        ).then(response => {
+          setLagan_chart(response.data.svg);
+        });
+      } else {
+        console.log('Latitude, longitude, or token is null');
+      }
     } catch (error) {
       console.log('Error fetching data:', error);
     } finally {
@@ -80,44 +85,6 @@ const ChartsSection = () => {
             <View>
               <SvgXml
                 xml={lagan_chart}
-                width="100%"
-                height={SIZES.width * 0.9}
-              />
-            </View>
-          </View>
-        </>
-      )}
-      {love_chart && (
-        <>
-          <View style={[styles.flexBox, {marginTop: SIZES.width * 0.05}]}>
-            <View>
-              <Text style={styles.title}>love Chart</Text>
-            </View>
-          </View>
-          <View style={styles.border} />
-          <View style={{marginTop: SIZES.width * 0.026}}>
-            <View>
-              <SvgXml
-                xml={love_chart}
-                width="100%"
-                height={SIZES.width * 0.9}
-              />
-            </View>
-          </View>
-        </>
-      )}
-      {marraige_chart && (
-        <>
-          <View style={[styles.flexBox, {marginTop: SIZES.width * 0.05}]}>
-            <View>
-              <Text style={styles.title}>Marraige Chart</Text>
-            </View>
-          </View>
-          <View style={styles.border} />
-          <View style={{marginTop: SIZES.width * 0.026}}>
-            <View>
-              <SvgXml
-                xml={marraige_chart}
                 width="100%"
                 height={SIZES.width * 0.9}
               />

@@ -17,7 +17,7 @@ import {Zodiac} from '../constant/data';
 import {SIZES} from '../constant/theme';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const ShowPopUp = () => {
+const ShowPopUp = ({onHandle}) => {
   const [show, setShow] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
 
@@ -28,6 +28,7 @@ const ShowPopUp = () => {
     try {
       await AsyncStorage.setItem('Zodic', selectedItemIdString);
       setShow(!show);
+      onHandle(true);
     } catch (error) {
       console.log(error);
     }

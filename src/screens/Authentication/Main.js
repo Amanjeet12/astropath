@@ -19,7 +19,7 @@ const Main = () => {
     return <Splashscreen />;
   }
 
-  return <>{isLoggedIn ? <AppNavigator /> : <AppNavigator />}</>;
+  return <>{isLoggedIn ? <AppNavigator /> : <AuthNavigator />}</>;
 };
 
 export default Main;

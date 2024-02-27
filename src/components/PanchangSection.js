@@ -5,10 +5,12 @@ import {images} from '../constant';
 import {SIZES} from '../constant/theme';
 import WebUrls from '../screens/api/WebUrls';
 import WebMethods from '../screens/api/WebMethods';
+import Preferences from '../screens/api/Preferences';
 
 const PanchangSection = () => {
   const [panchang, setPanchang] = useState('');
   const [calledOnce, setCalledOnce] = useState(false);
+  const [formattedDate, setFormateDate] = useState('');
   const getOrdinalSuffix = day => {
     if (day >= 11 && day <= 13) {
       return 'th';
@@ -25,47 +27,73 @@ const PanchangSection = () => {
     }
   };
 
-  const date = new Date();
-  const days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
-  const dayOfWeek = days[date.getDay()];
-  const month = date.toLocaleString('default', {month: 'short'});
-  const dayOfMonth = date.getDate();
-  const ordinalSuffix = getOrdinalSuffix(dayOfMonth);
+  const getCurrentDateTime = () => {
+    const date = new Date();
+    const day = date.getDate().toString();
+    const month = (date.getMonth() + 1).toString(); // Month is zero-based, so we add 1
+    const year = date.getFullYear().toString();
+    const hour = date.getHours().toString();
+    const minute = date.getMinutes().toString();
+    const ordinalSuffix = getOrdinalSuffix(date.getDate());
 
-  const formattedDate = `${dayOfMonth}${ordinalSuffix} ${month} 2024`;
-  console.log(SIZES.height * 0.43);
+    const formattedDate = `${day}${ordinalSuffix} ${month} ${year}`;
+
+    return {day, month, year, hour, minute, formattedDate};
+  };
+  // Usage in a different component
 
   useEffect(() => {
-    const callPanchang = () => {
+    const callPanchang = async () => {
       try {
-        var params = {
-          name: 'amanjeet',
-          day: '5',
-          month: '1',
-          year: '2000',
-          hour: '1',
-          min: '12',
-          lat: '12.123',
-          lon: '123',
-          tzone: '5.5',
-        };
-        const token =
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdXBlcl9hZG1pbl91c2VyX2lkIjpudWxsLCJhc3Ryb2xvZ2VyX3VzZXJfaWQiOm51bGwsImN1c3RvbWVyX3VzZXJfaWQiOiI2NWRhZWIxZDEyYjlhYTQ3Mjk2YTg1YjgiLCJpYXQiOjE3MDg4NDU4NTN9.BnuhdqU2HBfnK4pyCBEYVr3bDnezteegc-hQnNHzEow';
-        WebMethods.postRequestWithHeader(
-          WebUrls.url.basic_panchang,
-          params,
-          token,
-        ).then(response => {
-          if (response.data != null) {
-            setPanchang(response.data);
-          } else {
-            console.log('error');
-          }
-        });
+        const {day, month, year, hour, minute, formattedDate} =
+          getCurrentDateTime();
+        let latitude, longitude, token;
+        try {
+          latitude = await Preferences.getPreferences(
+            Preferences.key.userLatitude,
+          );
+          longitude = await Preferences.getPreferences(
+            Preferences.key.userLongitude,
+          );
+          token = await Preferences.getPreferences(Preferences.key.Token);
+        } catch (error) {
+          console.error('Error getting latitude and longitude:', error);
+        }
+
+        if (latitude && longitude && token) {
+          const params = {
+            name: 'user',
+            day,
+            month,
+            year,
+            hour,
+            min: minute,
+            lat: latitude,
+            lon: longitude,
+            tzone: '5.5',
+          };
+
+          console.log(params);
+          WebMethods.postRequestWithHeader(
+            WebUrls.url.basic_panchang,
+            params,
+            token,
+          ).then(response => {
+            if (response.data != null) {
+              setPanchang(response.data);
+              setFormateDate(formattedDate);
+            } else {
+              console.log('error');
+            }
+          });
+        } else {
+          console.log('Latitude, longitude, or token is null');
+        }
       } catch (error) {
         console.log(error);
       }
     };
+
     if (!calledOnce) {
       callPanchang();
       setCalledOnce(true);
@@ -144,7 +172,7 @@ const PanchangSection = () => {
         {renderRepeatedData(repeatedData)}
         <View style={{position: 'absolute', bottom: 0, right: 0}}>
           <Image
-            source={images.god_icon}
+            source={images.kalash}
             style={{
               width: SIZES.width * 0.23,
               height: SIZES.width * 0.24,

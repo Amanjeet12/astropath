@@ -12,6 +12,8 @@ import WalletScreen from '../BottomSheetScreen/WalletScreen';
 import UpdateProfileScreen from '../BottomSheetScreen/UpdateProfileScreen';
 import BottomTabScreen from '../BottomSheetScreen/BottomTabScreen';
 import SingleKundaliForm from '../BottomSheetScreen/SingleKundaliForm';
+import MarraigeScreenForm from '../BottomSheetScreen/MarraigeScreenForm';
+import SearchPlaceScreen from '../BottomSheetScreen/SearchPlaceScreen';
 
 const Stack = createStackNavigator();
 
@@ -120,6 +122,16 @@ const AppNavigator = () => {
         options={{headerShown: false}}
         name="SingleKundaliForm"
         component={SingleKundaliForm}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="MarraigeScreenForm"
+        component={MarraigeScreenForm}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="SearchPlaceScreen"
+        component={SearchPlaceScreen}
       />
     </Stack.Navigator>
   );

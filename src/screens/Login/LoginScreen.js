@@ -16,10 +16,10 @@ import {COLORS, SIZES} from '../../constant/theme';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {images} from '../../constant';
 import Flagtextinput from '../../components/Flagtextinput';
-import Custombutton from '../../components/Custombutton';
 import CustomeIconButton from '../../components/CustomeIconButton';
 import WebMethods from '../api/WebMethods';
 import WebUrls from '../api/WebUrls';
+import Preferences from '../api/Preferences';
 
 const LoginScreen = ({navigation}) => {
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -27,7 +27,7 @@ const LoginScreen = ({navigation}) => {
   const handlePhoneNumberChange = number => {
     setPhoneNumber(number);
   };
-  const handleNavigation = () => {
+  const handleNavigation = async () => {
     if (!phoneNumber) {
       Alert.alert('Enter phone no');
       return;
@@ -38,11 +38,11 @@ const LoginScreen = ({navigation}) => {
       };
 
       WebMethods.postRequest(WebUrls.url.otp_send, params).then(response => {
-        if (response.data.error) {
+        if (response.payload.error) {
           Alert.alert(response.data.error);
           return;
-        } else if (response.data !== null) {
-          const orderId = response.data.orderId;
+        } else if (response.payload !== null) {
+          const orderId = response.payload.orderId;
           navigation.navigate('OtpScreen', {orderId, phoneNumber});
         } else Alert.alert('error try again');
       });
@@ -80,7 +80,7 @@ const LoginScreen = ({navigation}) => {
           />
         </View>
 
-        <View style={[styles.bottomContainer, {height: SIZES.height / 1.9}]}>
+        <View style={[styles.bottomContainer, {height: SIZES.height / 1.7}]}>
           <View>
             <Text style={styles.title}>Hi Welcome!</Text>
             <Text style={styles.description}>Submit your mobile number</Text>

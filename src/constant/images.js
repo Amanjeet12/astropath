@@ -49,6 +49,7 @@ const sawastik_icon = require('../assets/images/sawastikicon.png');
 const single_icon = require('../assets/images/singleIcon.png');
 const sunrise_icon = require('../assets/images/sunrise.png');
 const sunset_icon = require('../assets/images/sunset.png');
+const kalash = require('../assets/images/kalash.png');
 
 // Zodic
 
@@ -129,4 +130,5 @@ export default {
   single_icon,
   sunrise_icon,
   sunset_icon,
+  kalash,
 };

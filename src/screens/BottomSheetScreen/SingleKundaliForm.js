@@ -34,9 +34,11 @@ const SingleKundaliForm = ({navigation}) => {
   const [modeTime, setModeTime] = useState('date');
   const [showDateTime, setShowDateTime] = useState('');
   const [name, setName] = useState('');
-
-  const [value, setValue] = useState(null);
+  const [place, setPlace] = useState('');
+  const [value, setValue] = useState(data[0].label); // Selects 'Male' by default
   const [isFocus, setIsFocus] = useState(false);
+  const [lat, setLat] = useState('');
+  const [lon, setLon] = useState('');
 
   const showMode = currentMode => {
     if (Platform.OS === 'android') {
@@ -84,11 +86,39 @@ const SingleKundaliForm = ({navigation}) => {
   };
   const handleNavigation = () => {
     try {
-      navigation.navigate('SingleKundli');
+      console.log(name, value, showDateTime, showDate, lat, lon);
+      navigation.navigate('SingleKundli', {
+        name,
+        value,
+        showDateTime,
+        showDate,
+        lat,
+        lon,
+      });
+      setName(null);
+      setValue(null);
+      setShowDateTime(null);
+      setShowDate(null);
+      setLat(null);
+      setLon(null);
     } catch (error) {
       console.log('erroring', error);
     }
   };
+
+  const handlePlaceSelect = (placeName, lat, lng) => {
+    setPlace(placeName);
+    setLat(lat);
+    setLon(lng);
+    console.log(placeName, lat, lng);
+  };
+
+  const handleNavigateToSearchPlaceScreen = () => {
+    navigation.navigate('SearchPlaceScreen', {
+      onPlaceSelect: handlePlaceSelect,
+    });
+  };
+
   return (
     <View style={{flex: 1}}>
       <StatusBar backgroundColor={'#f7f1e1'} barStyle={'dark-content'} />
@@ -127,7 +157,7 @@ const SingleKundaliForm = ({navigation}) => {
                     color: COLORS.black,
                   }}
                   keyboardType="default"
-                  placeholderTextColor={'grey'}
+                  placeholderTextColor={'#000'}
                   onChangeText={text => setName(text)}
                 />
               </View>
@@ -139,11 +169,13 @@ const SingleKundaliForm = ({navigation}) => {
                   style={[styles.dropdown, isFocus && {borderColor: 'blue'}]}
                   placeholderStyle={{
                     fontSize: SIZES.width * 0.036,
-                    color: 'grey',
+                    color: '#000',
+                    paddingLeft: SIZES.width * 0.026,
                   }}
                   selectedTextStyle={{
                     fontSize: SIZES.width * 0.036,
-                    color: 'grey',
+                    color: '#000',
+                    paddingLeft: SIZES.width * 0.026,
                   }}
                   itemTextStyle={{
                     fontSize: SIZES.width * 0.031,
@@ -172,7 +204,7 @@ const SingleKundaliForm = ({navigation}) => {
                 onPress={showTimepicker}
                 activeOpacity={0.7}>
                 <View style={{width: '90%', paddingLeft: SIZES.width * 0.039}}>
-                  <Text style={{color: 'grey'}}>
+                  <Text style={{color: '#000'}}>
                     {showDateTime ? showDateTime : 'Enter Birth Time'}
                   </Text>
                 </View>
@@ -194,7 +226,7 @@ const SingleKundaliForm = ({navigation}) => {
                 onPress={showDatepicker}
                 activeOpacity={0.7}>
                 <View style={{width: '90%', paddingLeft: SIZES.width * 0.046}}>
-                  <Text style={{color: 'grey'}}>
+                  <Text style={{color: '#000'}}>
                     {showDate ? showDate : 'Enter DOB'}
                   </Text>
                 </View>
@@ -221,16 +253,21 @@ const SingleKundaliForm = ({navigation}) => {
             </View>
             <View style={{marginTop: SIZES.width * 0.026}}>
               <Text style={styles.title}>Place of Birth</Text>
-              <View style={styles.mainContainer}>
-                <TextInput
-                  placeholder={'Enter your Full Name'}
-                  style={{
-                    paddingLeft: SIZES.width * 0.051,
-                    color: COLORS.black,
-                  }}
-                  keyboardType="default"
-                  placeholderTextColor={'grey'}
-                />
+              <View style={{marginTop: SIZES.width * 0.026}}>
+                <TouchableOpacity
+                  style={[styles.mainContainer2]}
+                  onPress={() => handleNavigateToSearchPlaceScreen()}>
+                  <View
+                    style={{
+                      paddingLeft: SIZES.width * 0.051,
+                      color: COLORS.black,
+                      textTransform: 'capitalize',
+                    }}>
+                    <Text style={{fontSize: 14, color: '#000'}}>
+                      {place ? place : `Enter Birth place`}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
               </View>
             </View>
             <View style={styles.button_position}>
@@ -276,14 +313,14 @@ const styles = StyleSheet.create({
     height: SIZES.width * 0.13,
     marginTop: SIZES.width * 0.051,
     backgroundColor: '#FFB443',
-    borderRadius: SIZES.width * 0.039,
+    borderRadius: SIZES.width * 0.01,
     alignItems: 'center',
     justifyContent: 'center',
   },
   mainContainer2: {
     height: SIZES.width * 0.13,
     backgroundColor: COLORS.white,
-    borderRadius: SIZES.width * 0.021,
+    borderRadius: SIZES.width * 0.01,
     flexDirection: 'row',
     alignItems: 'center',
     marginVertical: SIZES.width * 0.013,
@@ -296,7 +333,7 @@ const styles = StyleSheet.create({
     height: SIZES.width * 0.13,
     borderColor: 'gray',
     borderWidth: 0.1,
-    borderRadius: 8,
+    // borderRadius: 8,
     paddingHorizontal: 8,
   },
 });

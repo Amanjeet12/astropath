@@ -10,9 +10,9 @@ import WebMethods from '../screens/api/WebMethods';
 import WebUrls from '../screens/api/WebUrls';
 import {useNavigation} from '@react-navigation/native';
 import {useIsFocused} from '@react-navigation/native';
-const HoroscopeSection = ({data}) => {
+const HoroscopeSection = ({data, refresh}) => {
   const focused = useIsFocused();
-  console.log(focused);
+  console.log(refresh);
   const navigation = useNavigation();
   const [selectedItem, setSelectedItem] = useState(null);
   const [todayHoroscope, setTodayHoroscope] = useState('');
@@ -38,6 +38,10 @@ const HoroscopeSection = ({data}) => {
     console.log('horoscope');
     fetchData();
   }, [focused]);
+
+  if (refresh) {
+    fetchData();
+  }
 
   useEffect(() => {
     if (selectedItem !== null && Zodiac[selectedItem] !== undefined) {
@@ -163,6 +167,7 @@ const styles = StyleSheet.create({
     gap: SIZES.width * 0.013,
     backgroundColor: '#FFB443',
     justifyContent: 'center',
+    borderColor: '#843c14',
   },
   buttonText: {
     fontWeight: '600',

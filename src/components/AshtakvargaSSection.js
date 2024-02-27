@@ -16,12 +16,22 @@ import TableComponent from './TableComponent';
 import WebMethods from '../screens/api/WebMethods';
 import WebUrls from '../screens/api/WebUrls';
 import AstrologyTableItem from './AstrologyTableItem';
+import Preferences from '../screens/api/Preferences';
 
-const AshtakvargaSSection = () => {
-  const [value, setValue] = useState(null);
+const AshtakvargaSSection = ({
+  name,
+  value,
+  showDateTime,
+  showDate,
+  lat,
+  lon,
+}) => {
   const [planet, setPlanet] = useState(false);
-
   const [loading, setLoading] = useState(true);
+  const [hour, minute] = showDateTime.split(':');
+
+  // Parse date to get day, month, and year
+  const [month, day, year] = showDate.split('/');
 
   useEffect(() => {
     fetchData();
@@ -29,26 +39,37 @@ const AshtakvargaSSection = () => {
 
   const fetchData = async () => {
     try {
-      const token =
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdXBlcl9hZG1pbl91c2VyX2lkIjpudWxsLCJhc3Ryb2xvZ2VyX3VzZXJfaWQiOm51bGwsImN1c3RvbWVyX3VzZXJfaWQiOiI2NWRhZWIxZDEyYjlhYTQ3Mjk2YTg1YjgiLCJpYXQiOjE3MDg4NDU4NTN9.BnuhdqU2HBfnK4pyCBEYVr3bDnezteegc-hQnNHzEow';
-      const params = {
-        name: 'amanjeet',
-        day: '1',
-        month: '2',
-        year: '2000',
-        hour: '1',
-        min: '12',
-        lat: '12.123',
-        lon: '123',
-        tzone: '5.5',
-      };
+      let token;
 
-      const [planetData] = await Promise.all([
-        WebMethods.postRequestWithHeader(WebUrls.url.planets, params, token),
-      ]);
+      try {
+        token = await Preferences.getPreferences(Preferences.key.Token);
+      } catch (error) {
+        console.error('Error getting latitude and longitude:', error);
+        return;
+      }
 
-      setPlanet(planetData.data);
-      console.log(planetData.data);
+      if (token) {
+        const params = {
+          name,
+          day,
+          month,
+          year,
+          hour,
+          min: minute,
+          lat: lat,
+          lon: lon,
+          tzone: '5.5',
+        };
+
+        const [planetData] = await Promise.all([
+          WebMethods.postRequestWithHeader(WebUrls.url.planets, params, token),
+        ]);
+
+        setPlanet(planetData.data);
+        console.log(planetData.data);
+      } else {
+        console.log('Latitude, longitude, or token is null');
+      }
     } catch (error) {
       console.log('Error fetching data:', error);
     } finally {
@@ -153,5 +174,6 @@ const styles = StyleSheet.create({
     flex: 1,
     textAlign: 'center',
     fontSize: 12,
+    color: '#000',
   },
 });

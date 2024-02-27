@@ -13,7 +13,7 @@ const KundliSecion = () => {
       <View style={styles.boxContainer}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Image source={images.single_icon} style={styles.images} />
-          <Text style={styles.text1}>Single Kundli</Text>
+          <Text style={styles.text1}>Free Kundli</Text>
         </View>
         <TouchableOpacity
           style={styles.button}
@@ -30,7 +30,9 @@ const KundliSecion = () => {
           <Image source={images.love_icon} style={styles.images} />
           <Text style={styles.text1}>Match Making{'\n'}Kundli</Text>
         </View>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate('MarraigeScreenForm')}>
           <Icon
             name="arrow-top-right"
             size={SIZES.width * 0.051}

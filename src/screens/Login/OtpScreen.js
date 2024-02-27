@@ -52,33 +52,36 @@ const OtpScreen = ({navigation, route}) => {
   };
 
   const handleOtpVerification = () => {
+    const phone = '+91' + phoneNumber;
     try {
       var params = {
         orderId: orderId,
         otp: otp,
-        phone: '+91' + phoneNumber,
+        phone: phone,
       };
-      WebMethods.postRequest(WebUrls.url.verify_otp, params).then(response => {
-        if (response.data.error) {
-          Alert.alert(response.data.error);
-        } else {
-          try {
-            console.log('start');
-            Preferences.savePreferences(
-              Preferences.key.UserId,
-              response.data.id,
-            );
-            Preferences.savePreferences(
-              Preferences.key.Token,
-              response.data.token,
-            );
-            console.log('done');
-            login();
-          } catch {
-            console.log('error in saving data');
+      WebMethods.postRequest(WebUrls.url.verify_otp, params).then(
+        async response => {
+          if (response.payload.error) {
+            Alert.alert(response.payload.error);
+          } else {
+            console.log(response);
+            try {
+              await Preferences.savePreferences(
+                Preferences.key.UserId,
+                response.id,
+              );
+              await Preferences.savePreferences(
+                Preferences.key.Token,
+                response.jwt_token,
+              );
+              await Preferences.savePreferences(Preferences.key.phone, phone);
+              login();
+            } catch {
+              console.log('error in saving data');
+            }
           }
-        }
-      });
+        },
+      );
     } catch (error) {
       console.log(error);
     }
@@ -102,7 +105,7 @@ const OtpScreen = ({navigation, route}) => {
           />
         </View>
 
-        <View style={[styles.bottomContainer, {height: SIZES.height / 1.9}]}>
+        <View style={[styles.bottomContainer, {height: SIZES.height / 1.7}]}>
           <View>
             <Text style={styles.title}>OTP Verification</Text>
             <Text style={styles.description}>

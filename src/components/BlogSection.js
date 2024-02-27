@@ -156,6 +156,7 @@ const styles = StyleSheet.create({
     gap: SIZES.width * 0.013,
     backgroundColor: '#FFB443',
     justifyContent: 'center',
+    borderColor: '#843c14',
   },
   title: {
     fontFamily: 'KantumruyPro-Light',
@@ -176,6 +177,7 @@ const styles = StyleSheet.create({
     borderRadius: SIZES.width * 0.039,
     backgroundColor: '#F39200',
     color: COLORS.white,
+    borderColor: '#843c14',
   },
   description: {
     fontSize: SIZES.width * 0.034,
