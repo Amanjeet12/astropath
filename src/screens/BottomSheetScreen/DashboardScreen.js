@@ -6,16 +6,13 @@ import {
   StyleSheet,
   Text,
   View,
+  RefreshControl,
 } from 'react-native';
 import React, {useState} from 'react';
 import {COLORS, SIZES} from '../../constant/theme';
 import HeaderSection from '../../components/HeaderSection';
 import {images} from '../../constant';
-import BannerSection from '../../components/BannerSection';
-import SearchSection from '../../components/SearchSection';
-import AstrologerType from '../../components/AstrologerType';
-import {Astrologer, Blog, Horoscope, Slider} from '../../constant/data';
-import AstrologerComponent from '../../components/AstrologerComponent';
+import {Blog, Horoscope} from '../../constant/data';
 import HoroscopeSection from '../../components/HoroscopeSection';
 import BlogSection from '../../components/BlogSection';
 import PanchangSection from '../../components/PanchangSection';
@@ -24,35 +21,47 @@ import ShowPopUp from '../../components/ShowPopUp';
 
 const DashboardScreen = () => {
   const [refresh, setRefresh] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const onRefresh = () => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  };
+
   const handleRefresh = () => {
     setRefresh(!refresh);
   };
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor={'#f7f1e1'} barStyle={'dark-content'} />
-
       <ImageBackground
         source={images.mobile_bg}
         style={{width: SIZES.width, height: SIZES.height, flex: 1}}
         imageStyle={{resizeMode: 'stretch'}}>
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }>
           <View style={styles.mainContainer}>
             <View style={{marginTop: SIZES.width * 0.026}}>
               <HeaderSection />
             </View>
             <View style={{marginTop: SIZES.width * 0.026}}>
-              <PanchangSection />
+              <PanchangSection refreshing={refreshing} />
             </View>
             <View style={{marginTop: SIZES.width * 0.03}}>
               <KundliSecion />
             </View>
           </View>
-          {/* <View>
-            <AstrologerType data={Slider} />
-          </View> */}
           <View
             style={[styles.mainContainer, {marginTop: SIZES.width * 0.026}]}>
-            <HoroscopeSection data={Horoscope} refresh={refresh} />
+            <HoroscopeSection
+              data={Horoscope}
+              refresh={refresh}
+              refreshing={refreshing}
+            />
           </View>
           <View>
             <View style={[styles.mainContainer]}>

@@ -24,7 +24,7 @@ const Flagtextinput = ({placeholder, onPhoneNumberChange}) => {
           placeholder={placeholder}
           keyboardAppearance="dark"
           keyboardType="number-pad"
-          maxLength={SIZES.width * 0.026}
+          maxLength={10}
           style={{color: '#000'}}
           value={phoneNumber}
           onChangeText={handlePhoneNumberChange}

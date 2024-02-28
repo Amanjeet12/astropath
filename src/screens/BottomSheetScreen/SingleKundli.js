@@ -14,10 +14,10 @@ import {COLORS, SIZES} from '../../constant/theme';
 import {images} from '../../constant';
 import HeaderSection from '../../components/HeaderSection';
 import BackButton from '../../components/BackButton';
-import BasicSection from '../../components/BasicSection';
 import ChartsSection from '../../components/ChartsSection';
 import AshtakvargaSSection from '../../components/AshtakvargaSSection';
 import DashaSection from '../../components/DashaSection';
+import BasicSection from '../../components/BasicSection';
 
 const SingleKundli = ({route}) => {
   const [selected, setSelected] = useState('Basic');

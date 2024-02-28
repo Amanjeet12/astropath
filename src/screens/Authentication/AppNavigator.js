@@ -35,33 +35,33 @@ const AppNavigator = () => {
           close: {
             animation: 'timing',
             config: {
-              duration: 400,
+              duration: 100,
             },
           },
         },
-        cardStyleInterpolator: ({current, next, layouts}) => {
-          return {
-            cardStyle: {
-              transform: [
-                {
-                  translateX: current.progress.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [layouts.screen.width, 0],
-                  }),
-                },
-                {
-                  translateX: next
-                    ? next.progress.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: [0, -layouts.screen.width],
-                      })
-                    : 0,
-                },
-              ],
-            },
-            overflow: 'visible',
-          };
-        },
+        // cardStyleInterpolator: ({current, next, layouts}) => {
+        //   return {
+        //     cardStyle: {
+        //       transform: [
+        //         {
+        //           translateX: current.progress.interpolate({
+        //             inputRange: [0, 1],
+        //             outputRange: [layouts.screen.width, 0],
+        //           }),
+        //         },
+        //         {
+        //           translateX: next
+        //             ? next.progress.interpolate({
+        //                 inputRange: [0, 1],
+        //                 outputRange: [0, -layouts.screen.width],
+        //               })
+        //             : 0,
+        //         },
+        //       ],
+        //     },
+        //     overflow: 'visible',
+        //   };
+        // },
       }}>
       <Stack.Screen
         options={{headerShown: false}}

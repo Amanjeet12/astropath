@@ -16,7 +16,7 @@ const ChartsSection = ({name, value, showDateTime, showDate, lat, lon}) => {
   const [hour, minute] = showDateTime.split(':');
 
   // Parse date to get day, month, and year
-  const [month, day, year] = showDate.split('/');
+  const [day, month, year] = showDate.split('/'); // in mobile
 
   useEffect(() => {
     fetchData();
@@ -25,7 +25,6 @@ const ChartsSection = ({name, value, showDateTime, showDate, lat, lon}) => {
   const fetchData = async () => {
     try {
       let token;
-
       try {
         token = await Preferences.getPreferences(Preferences.key.Token);
       } catch (error) {

@@ -6,42 +6,35 @@ import {SIZES} from '../constant/theme';
 import TableComponent from './TableComponent';
 import Preferences from '../screens/api/Preferences';
 
-const BasicSection = ({name, value, showDateTime, showDate, lat, lon}) => {
-  console.log(lat, lon);
-  const [panchang, setPanchang] = useState(null);
-  const [astroDetail, setAstroDetail] = useState(null);
-  const [manglik_report, setManglik_report] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [hour, minute] = showDateTime.split(':');
+const BasicSection = React.memo(
+  ({name, value, showDateTime, showDate, lat, lon}) => {
+    const [panchang, setPanchang] = useState(null);
+    const [astroDetail, setAstroDetail] = useState(null);
+    const [manglik_report, setManglik_report] = useState(null);
+    const [loading, setLoading] = useState(true);
 
-  // Parse date to get day, month, and year
-  const [month, day, year] = showDate.split('/');
+    useEffect(() => {
+      fetchData();
+    }, []);
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const fetchData = async () => {
-    try {
-      let token;
-
+    const fetchData = async () => {
       try {
-        token = await Preferences.getPreferences(Preferences.key.Token);
-      } catch (error) {
-        console.error('Error getting latitude and longitude:', error);
-        return;
-      }
+        let token = await Preferences.getPreferences(Preferences.key.Token);
 
-      if (token) {
+        if (!token) {
+          console.log('Token is null');
+          return;
+        }
+
         const params = {
           name,
-          day,
-          month,
-          year,
-          hour,
-          min: minute,
-          lat: lat,
-          lon: lon,
+          day: showDate.split('/')[0],
+          month: showDate.split('/')[1],
+          year: showDate.split('/')[2],
+          hour: showDateTime.split(':')[0],
+          min: showDateTime.split(':')[1],
+          lat,
+          lon,
           tzone: '5.5',
         };
 
@@ -64,65 +57,63 @@ const BasicSection = ({name, value, showDateTime, showDate, lat, lon}) => {
             ),
           ]);
 
-        setPanchang(panchangData.data);
-        setAstroDetail(astroDetailData.data);
-        setManglik_report(manglikReportData.data.manglik_report);
-      } else {
-        console.log('Latitude, longitude, or token is null');
+        setPanchang(panchangData?.data);
+        setAstroDetail(astroDetailData?.data);
+        setManglik_report(manglikReportData?.data?.manglik_report);
+      } catch (error) {
+        console.log('Error fetching data:', error);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.log('Error fetching data:', error);
-    } finally {
-      setLoading(false);
+    };
+
+    if (loading) {
+      return (
+        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+          <ActivityIndicator size="large" />
+        </View>
+      );
     }
-  };
 
-  if (loading) {
     return (
-      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-        <ActivityIndicator size="large" />
-      </View>
+      <>
+        {panchang && (
+          <>
+            <View style={styles.flexBox}>
+              <Text style={styles.title}>Panchang Details</Text>
+            </View>
+            <View style={styles.border} />
+            <View style={{marginTop: SIZES.width * 0.051}}>
+              <TableComponent data={panchang} />
+            </View>
+          </>
+        )}
+        {manglik_report && (
+          <>
+            <View style={[styles.flexBox, {marginTop: SIZES.width * 0.051}]}>
+              <Text style={styles.title}>Mangalik report</Text>
+            </View>
+            <View style={styles.border} />
+            <View style={{marginVertical: SIZES.width * 0.051}}>
+              <Text style={styles.description}>{manglik_report}</Text>
+            </View>
+          </>
+        )}
+        {astroDetail && (
+          <>
+            <View style={[styles.flexBox, {marginTop: SIZES.width * 0.051}]}>
+              <Text style={styles.title}>Astro Details</Text>
+            </View>
+            <View style={styles.border} />
+            <View style={{marginVertical: SIZES.width * 0.051}}>
+              <TableComponent data={astroDetail} />
+            </View>
+          </>
+        )}
+      </>
     );
-  }
-
-  return (
-    <>
-      {panchang && (
-        <>
-          <View style={styles.flexBox}>
-            <Text style={styles.title}>Panchang Details</Text>
-          </View>
-          <View style={styles.border} />
-          <View style={{marginTop: SIZES.width * 0.051}}>
-            <TableComponent data={panchang} />
-          </View>
-        </>
-      )}
-      {manglik_report && (
-        <>
-          <View style={[styles.flexBox, {marginTop: SIZES.width * 0.051}]}>
-            <Text style={styles.title}>Mangalik report</Text>
-          </View>
-          <View style={styles.border} />
-          <View style={{marginVertical: SIZES.width * 0.051}}>
-            <Text style={styles.description}>{manglik_report}</Text>
-          </View>
-        </>
-      )}
-      {astroDetail && (
-        <>
-          <View style={[styles.flexBox, {marginTop: SIZES.width * 0.051}]}>
-            <Text style={styles.title}>Astro Details</Text>
-          </View>
-          <View style={styles.border} />
-          <View style={{marginVertical: SIZES.width * 0.051}}>
-            <TableComponent data={astroDetail} />
-          </View>
-        </>
-      )}
-    </>
-  );
-};
+  },
+);
 
 export default BasicSection;
 

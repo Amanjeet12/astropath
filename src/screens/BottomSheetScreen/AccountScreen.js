@@ -35,14 +35,27 @@ const AccountScreen = () => {
         {
           text: 'Logout',
           onPress: async () => {
-            await AsyncStorage.clear().then(() => console.log('Cleared'));
-            logout();
+            const keysToRemove = [
+              'isLoggedIn',
+              'UserId',
+              'Token',
+              'Name',
+              'phone',
+            ];
+            try {
+              await AsyncStorage.multiRemove(keysToRemove);
+              console.log('Items removed successfully.');
+              logout();
+            } catch (error) {
+              console.error('Error removing items:', error);
+            }
           },
         },
       ],
       {cancelable: false},
     );
   };
+
   return (
     <>
       <StatusBar backgroundColor={'#f7f1e1'} barStyle={'dark-content'} />

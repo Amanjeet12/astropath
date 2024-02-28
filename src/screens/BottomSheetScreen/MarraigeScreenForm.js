@@ -8,6 +8,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  ToastAndroid,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -33,11 +34,28 @@ const MarraigeScreenForm = ({navigation}) => {
   const [dateTime, setDateTime] = useState(new Date());
   const [modeTime, setModeTime] = useState('date');
   const [showDateTime, setShowDateTime] = useState('');
-  const [showDateTimeF, setShowDateTimeF] = useState('');
-  const [showDateF, setShowDateF] = useState('');
+  const [name_m, setName_m] = useState('');
+  const [place_m, setPlace_m] = useState('');
+  const [lon_m, setLon_m] = useState('');
+  const [lat_m, setLat_m] = useState('');
+  //female
 
-  const [value, setValue] = useState(null);
-  const [isFocus, setIsFocus] = useState(false);
+  const [name_f, setName_f] = useState('');
+  const [place_f, setPlace_f] = useState('');
+  const [lon_f, setLon_f] = useState('');
+  const [lat_f, setLat_f] = useState('');
+  const [show_f, setShow_f] = useState(false);
+  const [date_f, setDate_f] = useState(new Date());
+  const [mode_f, setMode_f] = useState('date');
+  const [showDate_f, setShowDate_f] = useState('');
+  const [showTime_f, setShowTime_f] = useState(false);
+  const [dateTime_f, setDateTime_f] = useState(new Date());
+  const [modeTime_f, setModeTime_f] = useState('date');
+  const [showDateTime_f, setShowDateTime_f] = useState('');
+
+  const setToastMsg = msg => {
+    ToastAndroid.showWithGravity(msg, ToastAndroid.SHORT, ToastAndroid.BOTTOM);
+  };
 
   const showMode = currentMode => {
     if (Platform.OS === 'android') {
@@ -61,7 +79,6 @@ const MarraigeScreenForm = ({navigation}) => {
   };
 
   // Time
-
   const showModeTime = currentMode => {
     if (Platform.OS === 'android') {
       setShowTime(false);
@@ -83,13 +100,125 @@ const MarraigeScreenForm = ({navigation}) => {
     const timeString = `${hours}:${minutes < 10 ? '0' : ''}${minutes}`;
     setShowDateTime(timeString);
   };
+
+  //female
+
+  const showMode_f = currentMode => {
+    if (Platform.OS === 'android') {
+      setShow_f(false);
+    }
+    setMode_f(currentMode);
+  };
+
+  const showDatepicker_f = () => {
+    showMode_f('date');
+    setShow_f(true);
+  };
+
+  const onChange_f = (event, selectedDate) => {
+    const currentDate = selectedDate;
+    setShow_f(false);
+    setDate_f(currentDate);
+    let filter = currentDate;
+    const dateToSave = currentDate.toLocaleDateString(); // convert date to string
+    setShowDate_f(dateToSave);
+  };
+
+  // Time
+  const showModeTime_f = currentMode => {
+    if (Platform.OS === 'android') {
+      setShowTime_f(false);
+    }
+    setModeTime_f(currentMode);
+  };
+
+  const showTimepicker_f = () => {
+    showModeTime_f('time');
+    setShowTime_f(true);
+  };
+
+  const onChangeTime_f = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setShowTime_f(false);
+    setDateTime_f(currentDate);
+    const hours = currentDate.getHours();
+    const minutes = currentDate.getMinutes();
+    const timeString = `${hours}:${minutes < 10 ? '0' : ''}${minutes}`;
+    setShowDateTime_f(timeString);
+  };
+
   const handleNavigation = () => {
-    try {
-      navigation.navigate('MarraigeKundli');
-    } catch (error) {
-      console.log('erroring', error);
+    if (
+      name_m &&
+      lat_m &&
+      lon_m &&
+      showDate &&
+      showDateTime &&
+      name_f &&
+      lat_f &&
+      lon_f &&
+      showDate_f &&
+      showDateTime_f
+    ) {
+      console.log(
+        name_m,
+        lat_m,
+        lon_m,
+        showDate,
+        showDateTime,
+        name_f,
+        lat_f,
+        lon_f,
+        showDate_f,
+        showDateTime_f,
+      );
+      try {
+        navigation.navigate('MarraigeKundli', {
+          name_m,
+          lat_m,
+          lon_m,
+          showDate,
+          showDateTime,
+          name_f,
+          lat_f,
+          lon_f,
+          showDate_f,
+          showDateTime_f,
+        });
+      } catch (error) {
+        console.log('erroring', error);
+      }
+    } else {
+      console.log('Some values are missing');
+      setToastMsg('Some values are missing');
     }
   };
+
+  const handlePlaceSelect = (placeName, lat, lng) => {
+    setPlace_m(placeName);
+    setLat_m(lat);
+    setLon_m(lng);
+    console.log(placeName, lat, lng);
+  };
+
+  const handleNavigateToSearchPlaceScreen = () => {
+    navigation.navigate('SearchPlaceScreen', {
+      onPlaceSelect: handlePlaceSelect,
+    });
+  };
+  const handlePlaceSelectF = (placeName, lat, lng) => {
+    setPlace_f(placeName);
+    setLat_f(lat);
+    setLon_f(lng);
+    console.log(placeName, lat, lng);
+  };
+
+  const handleNavigateToSearchPlaceScreenF = () => {
+    navigation.navigate('SearchPlaceScreen', {
+      onPlaceSelect: handlePlaceSelectF,
+    });
+  };
+
   return (
     <>
       <View style={{flex: 1}}>
@@ -128,7 +257,8 @@ const MarraigeScreenForm = ({navigation}) => {
                       color: COLORS.black,
                     }}
                     keyboardType="default"
-                    placeholderTextColor={'grey'}
+                    placeholderTextColor={'#000'}
+                    onChangeText={text => setName_m(text)}
                   />
                 </View>
               </View>
@@ -140,7 +270,7 @@ const MarraigeScreenForm = ({navigation}) => {
                   activeOpacity={0.7}>
                   <View
                     style={{width: '90%', paddingLeft: SIZES.width * 0.039}}>
-                    <Text style={{color: 'grey'}}>
+                    <Text style={{color: '#000'}}>
                       {showDateTime ? showDateTime : 'Enter Birth Time'}
                     </Text>
                   </View>
@@ -163,7 +293,7 @@ const MarraigeScreenForm = ({navigation}) => {
                   activeOpacity={0.7}>
                   <View
                     style={{width: '90%', paddingLeft: SIZES.width * 0.046}}>
-                    <Text style={{color: 'grey'}}>
+                    <Text style={{color: '#000'}}>
                       {showDate ? showDate : 'Enter DOB'}
                     </Text>
                   </View>
@@ -190,16 +320,21 @@ const MarraigeScreenForm = ({navigation}) => {
               </View>
               <View style={{marginTop: SIZES.width * 0.026}}>
                 <Text style={styles.title}>Place of Birth</Text>
-                <View style={styles.mainContainer}>
-                  <TextInput
-                    placeholder={'Enter your Full Name'}
-                    style={{
-                      paddingLeft: SIZES.width * 0.051,
-                      color: COLORS.black,
-                    }}
-                    keyboardType="default"
-                    placeholderTextColor={'grey'}
-                  />
+                <View style={{marginTop: SIZES.width * 0.026}}>
+                  <TouchableOpacity
+                    style={[styles.mainContainer2]}
+                    onPress={() => handleNavigateToSearchPlaceScreen()}>
+                    <View
+                      style={{
+                        paddingLeft: SIZES.width * 0.051,
+                        color: COLORS.black,
+                        textTransform: 'capitalize',
+                      }}>
+                      <Text style={{fontSize: 14, color: '#000'}}>
+                        {place_m ? place_m : `Enter Birth place`}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
                 </View>
               </View>
               {/* // girl details */}
@@ -225,29 +360,31 @@ const MarraigeScreenForm = ({navigation}) => {
                       color: COLORS.black,
                     }}
                     keyboardType="default"
-                    placeholderTextColor={'grey'}
+                    placeholderTextColor={'#000'}
+                    onChangeText={text => setName_f(text)}
                   />
                 </View>
               </View>
+
               <View style={{marginTop: SIZES.width * 0.026}}>
                 <Text style={styles.title}>Time of Birth</Text>
                 <TouchableOpacity
                   style={styles.mainContainer2}
-                  onPress={showTimepicker}
+                  onPress={showTimepicker_f}
                   activeOpacity={0.7}>
                   <View
                     style={{width: '90%', paddingLeft: SIZES.width * 0.039}}>
-                    <Text style={{color: 'grey'}}>
-                      {showDateTime ? showDateTime : 'Enter Birth Time'}
+                    <Text style={{color: '#000'}}>
+                      {showDateTime_f ? showDateTime_f : 'Enter Birth Time'}
                     </Text>
                   </View>
-                  {showTime && (
+                  {showTime_f && (
                     <DateTimePicker
                       testID="dateTimePicker"
                       value={dateTime}
                       mode={modeTime}
                       is24Hour={true}
-                      onChange={onChangeTime}
+                      onChange={onChangeTime_f}
                     />
                   )}
                 </TouchableOpacity>
@@ -256,12 +393,12 @@ const MarraigeScreenForm = ({navigation}) => {
                 <Text style={styles.title}>Date of Birth</Text>
                 <TouchableOpacity
                   style={styles.mainContainer2}
-                  onPress={showDatepicker}
+                  onPress={showDatepicker_f}
                   activeOpacity={0.7}>
                   <View
                     style={{width: '90%', paddingLeft: SIZES.width * 0.046}}>
-                    <Text style={{color: 'grey'}}>
-                      {showDate ? showDate : 'Enter DOB'}
+                    <Text style={{color: '#000'}}>
+                      {showDate_f ? showDate_f : 'Enter DOB'}
                     </Text>
                   </View>
                   <View>
@@ -274,29 +411,34 @@ const MarraigeScreenForm = ({navigation}) => {
                       }}
                     />
                   </View>
-                  {show && (
+                  {show_f && (
                     <DateTimePicker
                       testID="dateTimePicker"
                       value={date}
                       mode={mode}
                       is24Hour={true}
-                      onChange={onChange}
+                      onChange={onChange_f}
                     />
                   )}
                 </TouchableOpacity>
               </View>
               <View style={{marginTop: SIZES.width * 0.026}}>
                 <Text style={styles.title}>Place of Birth</Text>
-                <View style={styles.mainContainer}>
-                  <TextInput
-                    placeholder={'Enter your birth place'}
-                    style={{
-                      paddingLeft: SIZES.width * 0.051,
-                      color: COLORS.black,
-                    }}
-                    keyboardType="default"
-                    placeholderTextColor={'grey'}
-                  />
+                <View style={{marginTop: SIZES.width * 0.026}}>
+                  <TouchableOpacity
+                    style={[styles.mainContainer2]}
+                    onPress={() => handleNavigateToSearchPlaceScreenF()}>
+                    <View
+                      style={{
+                        paddingLeft: SIZES.width * 0.051,
+                        color: COLORS.black,
+                        textTransform: 'capitalize',
+                      }}>
+                      <Text style={{fontSize: 14, color: '#000'}}>
+                        {place_f ? place_f : `Enter Birth place`}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
                 </View>
               </View>
               <View style={styles.button_position}>

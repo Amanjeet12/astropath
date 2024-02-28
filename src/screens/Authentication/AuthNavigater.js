@@ -1,6 +1,6 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import Splashscreen from '../onboarding/SplashScreen';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import OnboardingScreen from '../onboarding/OnboardingScreen';
 import LoginScreen from '../Login/LoginScreen';
 import OtpScreen from '../Login/OtpScreen';
@@ -10,6 +10,21 @@ import CompleteScreen from '../Login/CompleteScreen';
 const Stack = createStackNavigator();
 
 const AuthNavigator = () => {
+  const [isFirstTime, setIsFirstTime] = useState(false);
+
+  useEffect(() => {
+    const checkFirstTime = async () => {
+      const isFirstTime = await AsyncStorage.getItem('isFirstTime');
+      setIsFirstTime(!isFirstTime);
+    };
+    checkFirstTime();
+  }, []);
+
+  const handleOnboardingComplete = async () => {
+    await AsyncStorage.setItem('isFirstTime', 'true');
+    setIsFirstTime(false);
+  };
+
   return (
     <Stack.Navigator
       screenOptions={{
@@ -55,30 +70,33 @@ const AuthNavigator = () => {
           };
         },
       }}>
+      {isFirstTime && (
+        <Stack.Screen
+          name="OnboardingScreen"
+          component={OnboardingScreen}
+          options={{headerShown: false}}
+          initialParams={{onComplete: handleOnboardingComplete}}
+        />
+      )}
       <Stack.Screen
-        options={{headerShown: false}}
-        name="OnboardingScreen"
-        component={OnboardingScreen}
-      />
-      <Stack.Screen
-        options={{headerShown: false}}
         name="LoginScreen"
         component={LoginScreen}
+        options={{headerShown: false}}
       />
       <Stack.Screen
-        options={{headerShown: false}}
         name="OtpScreen"
         component={OtpScreen}
+        options={{headerShown: false}}
       />
       <Stack.Screen
-        options={{headerShown: false}}
         name="CompleteProfile"
         component={CompleteProfile}
+        options={{headerShown: false}}
       />
       <Stack.Screen
-        options={{headerShown: false}}
         name="CompleteScreen"
         component={CompleteScreen}
+        options={{headerShown: false}}
       />
     </Stack.Navigator>
   );

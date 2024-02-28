@@ -92,9 +92,10 @@ const styles = StyleSheet.create({
     height: SIZES.width * 0.141,
     alignSelf: 'center',
     borderRadius: 30,
+    paddingHorizontal: 10,
   },
   singleContainer: {
-    paddingHorizontal: SIZES.width * 0.039,
+    paddingHorizontal: SIZES.width * 0.03,
     paddingVertical: SIZES.width * 0.026,
     alignItems: 'center',
     justifyContent: 'center',

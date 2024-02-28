@@ -19,12 +19,28 @@ import BackButton from '../../components/BackButton';
 import WebMethods from '../api/WebMethods';
 import WebUrls from '../api/WebUrls';
 import {AnimatedCircularProgress} from 'react-native-circular-progress';
+import Preferences from '../api/Preferences';
 
-const MarraigeKundli = () => {
-  const [loading, setLoading] = useState(false);
+const MarraigeKundli = ({route}) => {
+  const {
+    name_m,
+    lat_m,
+    lon_m,
+    showDate,
+    showDateTime,
+    name_f,
+    lat_f,
+    lon_f,
+    showDate_f,
+    showDateTime_f,
+  } = route.params;
+  const [loading, setLoading] = useState(true);
   const [birth_detail, setBirth_detail] = useState(null);
-  const [matching_report, setMatching_report] = useState(null);
-  const [manglik_report, setManglik_report] = useState(null);
+
+  const [m_hour, m_min] = showDateTime.split(':');
+  const [m_day, m_month, m_year] = showDate.split('/');
+  const [f_hour, f_min] = showDateTime_f.split(':');
+  const [f_day, f_month, f_year] = showDate_f.split('/');
 
   useEffect(() => {
     if (birth_detail == null) {
@@ -34,25 +50,31 @@ const MarraigeKundli = () => {
 
   const fetchData = async () => {
     try {
-      const token =
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdXBlcl9hZG1pbl91c2VyX2lkIjpudWxsLCJhc3Ryb2xvZ2VyX3VzZXJfaWQiOm51bGwsImN1c3RvbWVyX3VzZXJfaWQiOiI2NWRhZWIxZDEyYjlhYTQ3Mjk2YTg1YjgiLCJpYXQiOjE3MDg4NDU4NTN9.BnuhdqU2HBfnK4pyCBEYVr3bDnezteegc-hQnNHzEow';
+      let token;
+      try {
+        token = await Preferences.getPreferences(Preferences.key.Token);
+      } catch (error) {
+        console.error('Error getting latitude and longitude:', error);
+        return;
+      }
+
       const params = {
-        name: 'ttt',
-        m_day: '10',
-        m_month: '5',
-        m_year: '1990',
-        m_hour: '11',
-        m_min: '55',
-        m_lat: '19.20',
-        m_lon: '25.2',
+        name: name_m,
+        m_day,
+        m_hour,
+        m_min,
+        m_month,
+        m_year,
+        m_lat: lat_m,
+        m_lon: lon_m,
         m_tzone: '5.5',
-        f_day: '10',
-        f_month: '5',
-        f_year: '1990',
-        f_hour: '11',
-        f_min: '55',
-        f_lat: '19.20',
-        f_lon: '25.2',
+        f_day,
+        f_hour,
+        f_month,
+        f_min,
+        f_year,
+        f_lat: lat_f,
+        f_lon: lon_f,
         f_tzone: '5.5',
       };
 
@@ -72,75 +94,6 @@ const MarraigeKundli = () => {
     }
   };
 
-  const data = {
-    data: {
-      bhakut: {
-        description:
-          'Constructive Ability / Constructivism / Society and Couple',
-        female_koot_attribute: 'Scorpio',
-        male_koot_attribute: 'Scorpio',
-        received_points: 7,
-        total_points: 7,
-      },
-      conclusion: {
-        report:
-          'The match has scored 28 points outs of 36 points. This is a reasonably good score. Moreover,your rashi lords are friendly with each other thereby signifying mental compatibility and mutual affection between the two. Hence, this is a favourable Ashtakoota match.',
-        status: true,
-      },
-      gan: {
-        description: 'Temperament',
-        female_koot_attribute: 'Rakshasa',
-        male_koot_attribute: 'Rakshasa',
-        received_points: 6,
-        total_points: 6,
-      },
-      maitri: {
-        description: 'Friendship',
-        female_koot_attribute: 'Mars',
-        male_koot_attribute: 'Mars',
-        received_points: 5,
-        total_points: 5,
-      },
-      nadi: {
-        description: 'Progeny / Excess',
-        female_koot_attribute: 'Ant',
-        male_koot_attribute: 'Ant',
-        received_points: 0,
-        total_points: 8,
-      },
-      tara: {
-        description: 'Comfort - Prosperity - Health',
-        female_koot_attribute: 'Vishakha',
-        male_koot_attribute: 'Vishakha',
-        received_points: 3,
-        total_points: 3,
-      },
-      total: {minimum_required: 18, received_points: 28, total_points: 36},
-      varna: {
-        description: 'Natural Refinement  / Work',
-        female_koot_attribute: 'Vipra',
-        male_koot_attribute: 'Vipra',
-        received_points: 1,
-        total_points: 1,
-      },
-      vashya: {
-        description: 'Innate Giving / Attraction  towards each other',
-        female_koot_attribute: 'Keetak',
-        male_koot_attribute: 'Keetak',
-        received_points: 2,
-        total_points: 2,
-      },
-      yoni: {
-        description: 'Intimate Physical',
-        female_koot_attribute: 'Vyaaghra',
-        male_koot_attribute: 'Vyaaghra',
-        received_points: 4,
-        total_points: 4,
-      },
-    },
-    msg: 'Successfully Fetched data',
-    success: 1,
-  };
   const ProgressCircle = ({
     label,
     receivedPoints,
@@ -205,6 +158,25 @@ const MarraigeKundli = () => {
                       resizeMode: 'contain',
                     }}
                   />
+                  <View
+                    style={{
+                      position: 'absolute',
+                      bottom: -20,
+                      paddingVertical: 10,
+                      paddingHorizontal: 18,
+                      backgroundColor: '#ffcf87',
+                      borderRadius: 30,
+                      left: 130,
+                      right: 130,
+                      alignItems:'center'
+                    }}>
+                    <View>
+                      <Text style={{fontSize: 20, color: '#000'}}>
+                        36{' '}
+                        <Text style={{fontSize: 14, color: '#000'}}>/ 36</Text>
+                      </Text>
+                    </View>
+                  </View>
                 </View>
                 <View style={styles.boxContainer}>
                   <ProgressCircle

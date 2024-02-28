@@ -1,6 +1,16 @@
 import WebUrls from './WebUrls';
+import NetInfo from '@react-native-community/netinfo';
 
 const WebMethods = {
+  async checkconnectivity() {
+    await NetInfo.fetch().then(state => {
+      if (state.type == 'none') {
+        return true;
+      } else {
+        return false;
+      }
+    });
+  },
   postRequest: (webUrl, params) => {
     const url = WebUrls.url.LOcal_URL + webUrl;
     console.log('url==>', url);

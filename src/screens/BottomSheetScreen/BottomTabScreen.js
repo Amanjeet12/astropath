@@ -65,7 +65,7 @@ const BottomTabScreen = () => {
             tabBarShowLabel: false,
             tabBarHideOnKeyboard: true,
             tabBarIcon: ({color, size, focused}) =>
-              focused ? <HomeIcon /> : <HomeIconFocused />,
+              focused ? <HomeIconFocused /> : <HomeIcon />,
           }}
         />
         <Tab.Screen

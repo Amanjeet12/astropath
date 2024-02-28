@@ -19,18 +19,21 @@ import Preferences from '../screens/api/Preferences';
 const DashaSection = ({name, value, showDateTime, showDate, lat, lon}) => {
   console.log(lat, lon);
   const [dasha, setDasha] = useState('');
+  const [refreshing, setRefreshing] = useState(false);
 
   const [loading, setLoading] = useState(true);
   const [hour, minute] = showDateTime.split(':');
 
   // Parse date to get day, month, and year
-  const [month, day, year] = showDate.split('/');
+  console.log('showDate', showDate);
+  const [day, month, year] = showDate.split('/'); // in mobile
 
   useEffect(() => {
     fetchData();
   }, []);
 
   const fetchData = async () => {
+    setRefreshing(true);
     try {
       let token;
 
@@ -70,16 +73,20 @@ const DashaSection = ({name, value, showDateTime, showDate, lat, lon}) => {
       console.log('Error fetching data:', error);
     } finally {
       setLoading(false);
+      setTimeout(() => {
+        // After refreshing logic
+        setRefreshing(false);
+      }, 2000); // Example: set refreshing to false after 2 seconds
     }
   };
 
-  if (loading) {
-    return (
-      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+  //       <ActivityIndicator size="large" />
+  //     </View>
+  //   );
+  // }
 
   return (
     <>
@@ -91,6 +98,8 @@ const DashaSection = ({name, value, showDateTime, showDate, lat, lon}) => {
       <View style={styles.border} />
       <View style={{marginVertical: SIZES.width * 0.051, borderWidth: 0.5}}>
         <FlatList
+          refreshing={refreshing}
+          onRefresh={fetchData}
           data={dasha}
           scrollEnabled={false}
           renderItem={({item}) => <DashaTableItem item={item} />}

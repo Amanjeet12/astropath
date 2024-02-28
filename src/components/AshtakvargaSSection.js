@@ -31,7 +31,7 @@ const AshtakvargaSSection = ({
   const [hour, minute] = showDateTime.split(':');
 
   // Parse date to get day, month, and year
-  const [month, day, year] = showDate.split('/');
+  const [day, month, year] = showDate.split('/'); // in mobile
 
   useEffect(() => {
     fetchData();

@@ -1,6 +1,3 @@
-/* eslint-disable react/no-unstable-nested-components */
-/* eslint-disable react-native/no-inline-styles */
-/* eslint-disable react/self-closing-comp */
 import React, {useState} from 'react';
 import {
   Alert,
@@ -11,6 +8,8 @@ import {
   Text,
   TouchableOpacity,
   View,
+  ActivityIndicator,
+  ToastAndroid,
 } from 'react-native';
 import {COLORS, SIZES} from '../../constant/theme';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
@@ -23,21 +22,29 @@ import Preferences from '../api/Preferences';
 
 const LoginScreen = ({navigation}) => {
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const setToastMsg = msg => {
+    ToastAndroid.showWithGravity(msg, ToastAndroid.SHORT, ToastAndroid.BOTTOM);
+  };
 
   const handlePhoneNumberChange = number => {
     setPhoneNumber(number);
   };
+
   const handleNavigation = async () => {
     if (!phoneNumber) {
-      Alert.alert('Enter phone no');
+      setToastMsg('Enter phone no');
       return;
     }
     try {
+      setLoading(true); // Set loading to true while fetching data
       var params = {
         phone: '+91' + phoneNumber,
       };
 
       WebMethods.postRequest(WebUrls.url.otp_send, params).then(response => {
+        setLoading(false); // Set loading back to false after data is fetched
         if (response.payload.error) {
           Alert.alert(response.data.error);
           return;
@@ -48,6 +55,7 @@ const LoginScreen = ({navigation}) => {
       });
     } catch (error) {
       console.log('error', error);
+      setLoading(false); // Set loading back to false if an error occurs
     }
   };
 
@@ -98,8 +106,13 @@ const LoginScreen = ({navigation}) => {
           <View style={{marginTop: SIZES.width * 0.026}}>
             <TouchableOpacity
               style={styles.maincontainer}
+              disabled={loading}
               onPress={() => handleNavigation()}>
-              <Text style={styles.buttontitle}>SEND OTP</Text>
+              {loading ? (
+                <ActivityIndicator color={COLORS.black} />
+              ) : (
+                <Text style={styles.buttontitle}>SEND OTP</Text>
+              )}
             </TouchableOpacity>
           </View>
           <View style={{marginTop: SIZES.width * 0.051}}>
@@ -134,7 +147,6 @@ const styles = StyleSheet.create({
   },
   bottomContainer: {
     width: SIZES.width,
-    // height: '70%',
     backgroundColor: '#EDD498',
     borderTopRightRadius: SIZES.width * 0.082,
     borderTopLeftRadius: SIZES.width * 0.082,

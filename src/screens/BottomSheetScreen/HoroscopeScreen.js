@@ -11,6 +11,7 @@ import {
   View,
   Modal,
   ActivityIndicator,
+  ToastAndroid,
 } from 'react-native';
 import React, {useState} from 'react';
 import {COLORS, SIZES} from '../../constant/theme';
@@ -24,7 +25,7 @@ import Cross from 'react-native-vector-icons/AntDesign';
 import WebMethods from '../api/WebMethods';
 import WebUrls from '../api/WebUrls';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {err} from 'react-native-svg';
+import Preferences from '../api/Preferences';
 
 const HoroscopeScreen = ({route}) => {
   const {todayHoroscope, selectedItem} = route.params;
@@ -33,13 +34,16 @@ const HoroscopeScreen = ({route}) => {
   const [horoscope, setHoroscope] = useState(todayHoroscope);
   const [loading, setloading] = useState(false);
   const [currentDaySelected, setCurrentDaySelected] = useState('');
+  const setToastMsg = msg => {
+    ToastAndroid.showWithGravity(msg, ToastAndroid.SHORT, ToastAndroid.BOTTOM);
+  };
 
   const handleItemPress = index => {
     console.log(index);
     setSelectedItems(index);
   };
   const handlePopup = async () => {
-    const selectedItemIdString = selectedItems.toString(); // Convert selectedItem to a string
+    const selectedItemIdString = selectedItems.toString();
 
     try {
       await AsyncStorage.setItem('Zodic', selectedItemIdString);
@@ -51,7 +55,7 @@ const HoroscopeScreen = ({route}) => {
     setShow(!show);
   };
 
-  const handleSelection = selectedItem => {
+  const handleSelection = async selectedItem => {
     setCurrentDaySelected(selectedItem);
     setloading(true);
     let fetchUrl = '';
@@ -71,9 +75,13 @@ const HoroscopeScreen = ({route}) => {
         tzone: '5.5',
       };
 
-      const token =
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdXBlcl9hZG1pbl91c2VyX2lkIjpudWxsLCJhc3Ryb2xvZ2VyX3VzZXJfaWQiOm51bGwsImN1c3RvbWVyX3VzZXJfaWQiOiI2NWRhZWIxZDEyYjlhYTQ3Mjk2YTg1YjgiLCJpYXQiOjE3MDg4NDU4NTN9.BnuhdqU2HBfnK4pyCBEYVr3bDnezteegc-hQnNHzEow';
-
+      let token;
+      try {
+        token = await Preferences.getPreferences(Preferences.key.Token);
+      } catch (error) {
+        console.error('Error getting latitude and longitude:', error);
+        return;
+      }
       WebMethods.postRequestWithHeader(fetchUrl, params, token).then(
         response => {
           if (response.data != null) {
@@ -145,6 +153,7 @@ const HoroscopeScreen = ({route}) => {
                         marginTop: SIZES.width * 0.051,
                         flexDirection: 'row',
                         flexWrap: 'wrap',
+                        marginBottom: 50,
                       }}>
                       <Text
                         style={[
@@ -226,6 +235,7 @@ const HoroscopeScreen = ({route}) => {
                         marginTop: SIZES.width * 0.051,
                         flexDirection: 'row',
                         flexWrap: 'wrap',
+                        marginBottom: 50,
                       }}>
                       <Text
                         style={[
@@ -428,6 +438,8 @@ const styles = StyleSheet.create({
     height: SIZES.width * 0.205,
     padding: SIZES.width * 0.026,
     paddingTop: SIZES.width * 0.051,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
   },
   crossContainer: {
     position: 'absolute',

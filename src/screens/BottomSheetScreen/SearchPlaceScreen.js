@@ -68,6 +68,7 @@ const SearchPlaceScreen = () => {
             paddingHorizontal: 10,
             fontSize: 15,
             flex: 1,
+            color: '#000',
           },
           poweredContainer: {
             justifyContent: 'flex-end',

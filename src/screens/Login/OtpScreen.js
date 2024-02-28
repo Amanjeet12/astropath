@@ -1,7 +1,4 @@
-/* eslint-disable react/no-unstable-nested-components */
-/* eslint-disable react-native/no-inline-styles */
-/* eslint-disable react/self-closing-comp */
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Alert,
   Image,
@@ -11,28 +8,37 @@ import {
   Text,
   TouchableOpacity,
   View,
+  ActivityIndicator,
+  ToastAndroid,
 } from 'react-native';
 import {COLORS, SIZES} from '../../constant/theme';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {images} from '../../constant';
-import Custombutton from '../../components/Custombutton';
-import CustomeIconButton from '../../components/CustomeIconButton';
 import Otptextinput from '../../components/Otptextinput';
 import WebMethods from '../api/WebMethods';
 import WebUrls from '../api/WebUrls';
 import Preferences from '../api/Preferences';
-import {err} from 'react-native-svg';
 import {useAuth} from '../../constant/Auth';
 
 const OtpScreen = ({navigation, route}) => {
   const {orderId, phoneNumber} = route.params;
-  console.log(orderId, phoneNumber);
   const [otp, setOtp] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [resendCounter, setResendCounter] = useState(60); // Initial counter value, in seconds
   const {login} = useAuth();
+
+  const setToastMsg = msg => {
+    ToastAndroid.showWithGravity(msg, ToastAndroid.SHORT, ToastAndroid.BOTTOM);
+  };
 
   const handleOtp = number => {
     setOtp(number);
   };
+
+  useEffect(() => {
+    startResendTimer();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleResendOption = () => {
     try {
@@ -44,6 +50,8 @@ const OtpScreen = ({navigation, route}) => {
         if (response.data != null) {
           const newOrderId = response.data.orderId;
           console.log(newOrderId);
+          setResendCounter(60);
+          startResendTimer();
         }
       });
     } catch (error) {
@@ -51,9 +59,25 @@ const OtpScreen = ({navigation, route}) => {
     }
   };
 
+  const startResendTimer = () => {
+    const timer = setInterval(() => {
+      setResendCounter(prevCounter => prevCounter - 1);
+    }, 1000);
+
+    setTimeout(() => {
+      clearInterval(timer);
+    }, 60000); // Stop the timer after 60 seconds
+  };
+
   const handleOtpVerification = () => {
     const phone = '+91' + phoneNumber;
+    if (!otp) {
+      setToastMsg('Enter your otp');
+      return;
+    }
     try {
+      setLoading(true);
+
       var params = {
         orderId: orderId,
         otp: otp,
@@ -61,10 +85,13 @@ const OtpScreen = ({navigation, route}) => {
       };
       WebMethods.postRequest(WebUrls.url.verify_otp, params).then(
         async response => {
-          if (response.payload.error) {
-            Alert.alert(response.payload.error);
+          console.log(response);
+          setLoading(false);
+          if (response.error) {
+            setToastMsg(response.error);
+          } else if (response.reason === 'Incorrect OTP!') {
+            setToastMsg(response.reason);
           } else {
-            console.log(response);
             try {
               await Preferences.savePreferences(
                 Preferences.key.UserId,
@@ -83,6 +110,7 @@ const OtpScreen = ({navigation, route}) => {
         },
       );
     } catch (error) {
+      setLoading(false); // Set loading back to false if an error occurs
       console.log(error);
     }
   };
@@ -119,8 +147,13 @@ const OtpScreen = ({navigation, route}) => {
           <View style={{marginTop: SIZES.width * 0.026}}>
             <TouchableOpacity
               style={styles.maincontainer}
-              onPress={() => handleOtpVerification()}>
-              <Text style={styles.buttontitle}>Verify OTP</Text>
+              onPress={() => handleOtpVerification()}
+              disabled={loading}>
+              {loading ? (
+                <ActivityIndicator color={COLORS.black} />
+              ) : (
+                <Text style={styles.buttontitle}>Verify OTP</Text>
+              )}
             </TouchableOpacity>
           </View>
           <View
@@ -136,8 +169,13 @@ const OtpScreen = ({navigation, route}) => {
             </View>
             <TouchableOpacity
               style={{marginTop: SIZES.width * 0.04}}
-              onPress={handleResendOption}>
-              <Text style={styles.linkText}>Resend</Text>
+              onPress={handleResendOption}
+              disabled={resendCounter > 0}>
+              <Text style={styles.linkText}>
+                {resendCounter > 0
+                  ? `Resend OTP in ${resendCounter} seconds`
+                  : 'Resend OTP'}
+              </Text>
             </TouchableOpacity>
           </View>
 

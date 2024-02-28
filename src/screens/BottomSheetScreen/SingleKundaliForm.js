@@ -8,6 +8,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  ToastAndroid,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -39,6 +40,10 @@ const SingleKundaliForm = ({navigation}) => {
   const [isFocus, setIsFocus] = useState(false);
   const [lat, setLat] = useState('');
   const [lon, setLon] = useState('');
+
+  const setToastMsg = msg => {
+    ToastAndroid.showWithGravity(msg, ToastAndroid.SHORT, ToastAndroid.BOTTOM);
+  };
 
   const showMode = currentMode => {
     if (Platform.OS === 'android') {
@@ -86,21 +91,20 @@ const SingleKundaliForm = ({navigation}) => {
   };
   const handleNavigation = () => {
     try {
-      console.log(name, value, showDateTime, showDate, lat, lon);
-      navigation.navigate('SingleKundli', {
-        name,
-        value,
-        showDateTime,
-        showDate,
-        lat,
-        lon,
-      });
-      setName(null);
-      setValue(null);
-      setShowDateTime(null);
-      setShowDate(null);
-      setLat(null);
-      setLon(null);
+      if (name && value && showDateTime && showDate && lat && lon) {
+        console.log(name, value, showDateTime, showDate, lat, lon);
+        navigation.navigate('SingleKundli', {
+          name,
+          value,
+          showDateTime,
+          showDate,
+          lat,
+          lon,
+        });
+      } else {
+        console.log('Some values are missing');
+        setToastMsg('All feilds are compalsary');
+      }
     } catch (error) {
       console.log('erroring', error);
     }
@@ -142,7 +146,12 @@ const SingleKundaliForm = ({navigation}) => {
                   borderBottomWidth: 2,
                   borderColor: '#F39200',
                 }}>
-                <Text style={{fontSize: 21, fontFamily: '', color: '#000'}}>
+                <Text
+                  style={{
+                    fontSize: SIZES.width * 0.051,
+                    fontFamily: '',
+                    color: '#000',
+                  }}>
                   Create a new kundli
                 </Text>
               </View>
@@ -155,6 +164,7 @@ const SingleKundaliForm = ({navigation}) => {
                   style={{
                     paddingLeft: SIZES.width * 0.051,
                     color: COLORS.black,
+                    fontSize: SIZES.width * 0.036,
                   }}
                   keyboardType="default"
                   placeholderTextColor={'#000'}
@@ -204,7 +214,7 @@ const SingleKundaliForm = ({navigation}) => {
                 onPress={showTimepicker}
                 activeOpacity={0.7}>
                 <View style={{width: '90%', paddingLeft: SIZES.width * 0.039}}>
-                  <Text style={{color: '#000'}}>
+                  <Text style={{color: '#000', fontSize: SIZES.width * 0.036}}>
                     {showDateTime ? showDateTime : 'Enter Birth Time'}
                   </Text>
                 </View>
@@ -226,7 +236,7 @@ const SingleKundaliForm = ({navigation}) => {
                 onPress={showDatepicker}
                 activeOpacity={0.7}>
                 <View style={{width: '90%', paddingLeft: SIZES.width * 0.046}}>
-                  <Text style={{color: '#000'}}>
+                  <Text style={{color: '#000', fontSize: SIZES.width * 0.036}}>
                     {showDate ? showDate : 'Enter DOB'}
                   </Text>
                 </View>
@@ -263,7 +273,8 @@ const SingleKundaliForm = ({navigation}) => {
                       color: COLORS.black,
                       textTransform: 'capitalize',
                     }}>
-                    <Text style={{fontSize: 14, color: '#000'}}>
+                    <Text
+                      style={{fontSize: SIZES.width * 0.036, color: '#000'}}>
                       {place ? place : `Enter Birth place`}
                     </Text>
                   </View>

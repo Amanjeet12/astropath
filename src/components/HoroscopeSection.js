@@ -1,25 +1,29 @@
+/* eslint-disable react/self-closing-comp */
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {COLORS, SIZES} from '../constant/theme';
 import {images} from '../constant';
-import useNavigateToScreen from './Navigation';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Zodiac} from '../constant/data';
 import WebMethods from '../screens/api/WebMethods';
 import WebUrls from '../screens/api/WebUrls';
 import {useNavigation} from '@react-navigation/native';
 import {useIsFocused} from '@react-navigation/native';
-const HoroscopeSection = ({data, refresh}) => {
+import Preferences from '../screens/api/Preferences';
+import LinearGradient from 'react-native-linear-gradient';
+import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
+const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
+
+const HoroscopeSection = ({data, refresh, refreshing}) => {
   const focused = useIsFocused();
-  console.log(refresh);
   const navigation = useNavigation();
   const [selectedItem, setSelectedItem] = useState(null);
   const [todayHoroscope, setTodayHoroscope] = useState('');
+  const [loading, setLoading] = useState(true);
 
-  const handleNavigaion = () => {
-    navigation.navigate('HoroscopeScreen', {todayHoroscope, selectedItem});
-  };
+  console.log('refreshingb', refreshing);
 
   const fetchData = async () => {
     try {
@@ -27,7 +31,6 @@ const HoroscopeSection = ({data, refresh}) => {
       if (zodicNumber !== null) {
         const selectedItemnumber = parseInt(zodicNumber);
         setSelectedItem(selectedItemnumber);
-        console.log(zodicNumber);
       }
     } catch (error) {
       console.log(error);
@@ -35,13 +38,9 @@ const HoroscopeSection = ({data, refresh}) => {
   };
 
   useEffect(() => {
-    console.log('horoscope');
+    console.log('refreshing');
     fetchData();
-  }, [focused]);
-
-  if (refresh) {
-    fetchData();
-  }
+  }, [focused, refresh]);
 
   useEffect(() => {
     if (selectedItem !== null && Zodiac[selectedItem] !== undefined) {
@@ -49,15 +48,21 @@ const HoroscopeSection = ({data, refresh}) => {
     }
   }, [selectedItem]);
 
-  const fetchHeroscope = () => {
+  useEffect(() => {
+    if (refreshing) {
+      fetchHeroscope();
+    }
+  }, [refreshing]);
+
+  const fetchHeroscope = async () => {
+    setLoading(true);
     try {
-      var params = {
+      const params = {
         zodiacName: Zodiac[selectedItem].title,
         tzone: '5.5',
       };
 
-      const token =
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdXBlcl9hZG1pbl91c2VyX2lkIjpudWxsLCJhc3Ryb2xvZ2VyX3VzZXJfaWQiOm51bGwsImN1c3RvbWVyX3VzZXJfaWQiOiI2NWRhZWIxZDEyYjlhYTQ3Mjk2YTg1YjgiLCJpYXQiOjE3MDg4NDU4NTN9.BnuhdqU2HBfnK4pyCBEYVr3bDnezteegc-hQnNHzEow';
+      const token = await Preferences.getPreferences(Preferences.key.Token);
 
       WebMethods.postRequestWithHeader(
         WebUrls.url.today_horoscope,
@@ -69,63 +74,83 @@ const HoroscopeSection = ({data, refresh}) => {
         } else {
           console.log('error');
         }
+        setLoading(false);
       });
-      console.log(params);
     } catch (error) {
-      console.log('erroring');
+      console.log('erroring', error);
+      setLoading(false);
     }
   };
 
+  const handleNavigaion = () => {
+    navigation.navigate('HoroscopeScreen', {todayHoroscope, selectedItem});
+  };
+
   return (
-    <View style={styles.container}>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'flex-start',
-          gap: SIZES.width * 0.051,
-        }}>
-        <View>
-          <Image
-            source={selectedItem ? Zodiac[selectedItem].image : data.image}
+    <>
+      {loading ? (
+        <ShimmerPlaceHolder
+          style={{
+            height: SIZES.width * 0.6,
+            width: '100%',
+            marginBottom: 10,
+            borderRadius: 10,
+          }}
+          shimmerColors={['#fae3d2', '#FFD0AC', '#FFD0AC']}
+          visible={!loading}></ShimmerPlaceHolder>
+      ) : (
+        <View style={styles.container}>
+          <View
             style={{
-              width: SIZES.width * 0.205,
-              height: SIZES.width * 0.205,
-              resizeMode: 'contain',
-            }}
-          />
+              flexDirection: 'row',
+              alignItems: 'flex-start',
+              gap: SIZES.width * 0.051,
+            }}>
+            <View>
+              <Image
+                source={selectedItem ? Zodiac[selectedItem].image : data.image}
+                style={{
+                  width: SIZES.width * 0.205,
+                  height: SIZES.width * 0.205,
+                  resizeMode: 'contain',
+                }}
+              />
+            </View>
+            <View style={{paddingTop: SIZES.width * 0.026}}>
+              <Text style={styles.title}>{data.title}</Text>
+              <Text style={styles.date}>
+                {todayHoroscope.prediction_date
+                  ? todayHoroscope.prediction_date
+                  : null}
+              </Text>
+            </View>
+          </View>
+          <View style={{marginTop: SIZES.width * 0.02}}>
+            <Text style={styles.description} numberOfLines={4}>
+              {todayHoroscope.prediction
+                ? todayHoroscope.prediction.emotions
+                : null}
+            </Text>
+          </View>
+          <View
+            style={{alignItems: 'flex-end', marginTop: SIZES.width * 0.026}}>
+            <TouchableOpacity
+              style={styles.buttonContainer}
+              onPress={() => handleNavigaion()}>
+              <Text style={styles.buttonText}>View more</Text>
+              <Image
+                source={images.button_icon}
+                style={{
+                  width: SIZES.width * 0.039,
+                  height: SIZES.width * 0.039,
+                  resizeMode: 'contain',
+                }}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
-        <View style={{paddingTop: SIZES.width * 0.026}}>
-          <Text style={styles.title}>{data.title}</Text>
-          <Text style={styles.date}>
-            {todayHoroscope.prediction_date
-              ? todayHoroscope.prediction_date
-              : null}
-          </Text>
-        </View>
-      </View>
-      <View style={{marginTop: SIZES.width * 0.013}}>
-        <Text style={styles.description} numberOfLines={4}>
-          {todayHoroscope.prediction
-            ? todayHoroscope.prediction.emotions
-            : null}
-        </Text>
-      </View>
-      <View style={{alignItems: 'flex-end', marginTop: SIZES.width * 0.026}}>
-        <TouchableOpacity
-          style={styles.buttonContainer}
-          onPress={() => handleNavigaion()}>
-          <Text style={styles.buttonText}>View more</Text>
-          <Image
-            source={images.button_icon}
-            style={{
-              width: SIZES.width * 0.039,
-              height: SIZES.width * 0.039,
-              resizeMode: 'contain',
-            }}
-          />
-        </TouchableOpacity>
-      </View>
-    </View>
+      )}
+    </>
   );
 };
 
@@ -154,7 +179,7 @@ const styles = StyleSheet.create({
     fontFamily: 'KantumruyPro-Regular',
     fontSize: SIZES.width * 0.031,
     color: '#444444',
-    lineHeight: SIZES.width * 0.044,
+    // lineHeight: SIZES.width * 0.044,
   },
   buttonContainer: {
     width: 150,
