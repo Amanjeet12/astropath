@@ -28,10 +28,18 @@ const AshtakvargaSSection = ({
 }) => {
   const [planet, setPlanet] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [hour, minute] = showDateTime.split(':');
+  const dateTimeObject = new Date(showDateTime);
+  const dateObject = new Date(showDate);
 
-  // Parse date to get day, month, and year
-  const [day, month, year] = showDate.split('/'); // in mobile
+  // Extracting time parts
+  const hour = dateTimeObject.getUTCHours().toString();
+  const minute = dateTimeObject.getUTCMinutes().toString();
+  const second = dateTimeObject.getUTCSeconds().toString();
+
+  // Extracting date parts
+  const day = dateObject.getUTCDate().toString();
+  const month = (dateObject.getUTCMonth() + 1).toString();
+  const year = dateObject.getUTCFullYear().toString();
 
   useEffect(() => {
     fetchData();
@@ -51,10 +59,10 @@ const AshtakvargaSSection = ({
       if (token) {
         const params = {
           name,
-          day,
-          month,
-          year,
-          hour,
+          day: day,
+          month: month,
+          year: year,
+          hour: hour,
           min: minute,
           lat: lat,
           lon: lon,

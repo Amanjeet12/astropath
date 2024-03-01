@@ -268,7 +268,11 @@ const HoroscopeScreen = ({route}) => {
               <Text
                 style={[
                   styles.title,
-                  {fontWeight: '700', textTransform: 'capitalize'},
+                  {
+                    fontWeight: '700',
+                    textTransform: 'capitalize',
+                    color: '#000',
+                  },
                 ]}>
                 select Your Zodic Sign
               </Text>

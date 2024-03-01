@@ -25,7 +25,6 @@ const WebMethods = {
       body: JSON.stringify(params),
     })
       .then(response => {
-        console.log(':::::', response);
         if (!response.ok) {
           console.log('server error ');
           return null;

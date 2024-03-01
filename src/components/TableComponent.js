@@ -14,8 +14,22 @@ const TableComponent = ({data}) => {
 
 const Row = ({label, value}) => (
   <View style={styles.row}>
-    <Text style={styles.label}>{label}:</Text>
-    <Text style={styles.value}>{value}</Text>
+    {label === 'ascendant_lord' ? (
+      <>
+        <Text style={styles.label}>Ascendant Lord:</Text>
+        <Text style={styles.value}>{value}</Text>
+      </>
+    ) : label === 'name_alphabet' ? (
+      <>
+        <Text style={styles.label}>Name Alphabet:</Text>
+        <Text style={styles.value}>{value}</Text>
+      </>
+    ) : (
+      <>
+        <Text style={styles.label}>{label}:</Text>
+        <Text style={styles.value}>{value}</Text>
+      </>
+    )}
   </View>
 );
 
@@ -35,14 +49,14 @@ const styles = StyleSheet.create({
   label: {
     flex: 1,
     fontWeight: 'bold',
-    fontSize: SIZES.width * 0.03,
+    fontSize: SIZES.width * 0.04,
     fontFamily: 'Inter-Regular',
     color: '#000',
     textTransform: 'capitalize',
   },
   value: {
     flex: 1,
-    fontSize: SIZES.width * 0.03,
+    fontSize: SIZES.width * 0.035,
     fontFamily: 'Inter-Regular',
     color: '#000',
   },

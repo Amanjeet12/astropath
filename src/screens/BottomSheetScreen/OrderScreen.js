@@ -27,9 +27,9 @@ const OrderScreen = () => {
             </View>
             <View style={{marginTop: SIZES.width * 0.051}}>
               <Text style={styles.tagLine}>Recent orders and chats</Text>
-              <View>
+              {/* <View>
                 <OrderSection data={Order} />
-              </View>
+              </View> */}
             </View>
           </View>
         </ScrollView>

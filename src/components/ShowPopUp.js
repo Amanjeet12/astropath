@@ -65,7 +65,11 @@ const ShowPopUp = ({onHandle}) => {
               <Text
                 style={[
                   styles.title,
-                  {fontWeight: '700', textTransform: 'capitalize'},
+                  {
+                    fontWeight: '700',
+                    textTransform: 'capitalize',
+                    color: '#000',
+                  },
                 ]}>
                 select Your Zodic Sign
               </Text>
@@ -168,6 +172,8 @@ const styles = StyleSheet.create({
     height: SIZES.width * 0.205,
     padding: SIZES.width * 0.026,
     paddingTop: SIZES.width * 0.051,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
   },
   crossContainer: {
     position: 'absolute',

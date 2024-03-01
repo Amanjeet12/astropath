@@ -24,8 +24,8 @@ const SingleKundli = ({route}) => {
   const handleSelecter = option => {
     setSelected(option);
   };
-  const {name, value, showDateTime, showDate, lat, lon} = route.params;
-  console.log('params', name, value, showDateTime, showDate, lat, lon);
+  const {name, value, date, Time, lat, lon} = route.params;
+  console.log('params', name, value, date, Time, lat, lon);
 
   return (
     <>
@@ -113,8 +113,8 @@ const SingleKundli = ({route}) => {
                 <BasicSection
                   name={name}
                   value={value}
-                  showDateTime={showDateTime}
-                  showDate={showDate}
+                  showDateTime={date}
+                  showDate={Time}
                   lat={lat}
                   lon={lon}
                 />
@@ -122,8 +122,8 @@ const SingleKundli = ({route}) => {
                 <ChartsSection
                   name={name}
                   value={value}
-                  showDateTime={showDateTime}
-                  showDate={showDate}
+                  showDateTime={date}
+                  showDate={Time}
                   lat={lat}
                   lon={lon}
                 />
@@ -131,8 +131,8 @@ const SingleKundli = ({route}) => {
                 <AshtakvargaSSection
                   name={name}
                   value={value}
-                  showDateTime={showDateTime}
-                  showDate={showDate}
+                  showDateTime={date}
+                  showDate={Time}
                   lat={lat}
                   lon={lon}
                 />
@@ -140,8 +140,8 @@ const SingleKundli = ({route}) => {
                 <DashaSection
                   name={name}
                   value={value}
-                  showDateTime={showDateTime}
-                  showDate={showDate}
+                  showDateTime={date}
+                  showDate={Time}
                   lat={lat}
                   lon={lon}
                 />

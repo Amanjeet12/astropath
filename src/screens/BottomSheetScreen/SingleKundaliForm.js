@@ -1,3 +1,4 @@
+/* eslint-disable quotes */
 /* eslint-disable react-native/no-inline-styles */
 import {
   Image,
@@ -13,12 +14,14 @@ import {
   View,
 } from 'react-native';
 import React, {useState} from 'react';
-import DateTimePicker from '@react-native-community/datetimepicker';
+// import DateTimePicker from '@react-native-community/datetimepicker';
 import {Dropdown} from 'react-native-element-dropdown';
 import {COLORS, SIZES} from '../../constant/theme';
 import {images} from '../../constant';
 import HeaderSection from '../../components/HeaderSection';
 import BackButton from '../../components/BackButton';
+
+import DatePicker from 'react-native-date-picker';
 
 const data = [
   {label: 'Male', value: '1'},
@@ -26,78 +29,30 @@ const data = [
 ];
 
 const SingleKundaliForm = ({navigation}) => {
-  const [show, setShow] = useState(false);
   const [date, setDate] = useState(new Date());
-  const [mode, setMode] = useState('date');
-  const [showDate, setShowDate] = useState('');
-  const [showTime, setShowTime] = useState(false);
-  const [dateTime, setDateTime] = useState(new Date());
-  const [modeTime, setModeTime] = useState('date');
-  const [showDateTime, setShowDateTime] = useState('');
   const [name, setName] = useState('');
   const [place, setPlace] = useState('');
   const [value, setValue] = useState(data[0].label); // Selects 'Male' by default
   const [isFocus, setIsFocus] = useState(false);
   const [lat, setLat] = useState('');
   const [lon, setLon] = useState('');
+  const [open, setOpen] = useState(false);
+  const [openTime, setOpenTime] = useState(false);
+  const [Time, setTime] = useState(new Date());
 
   const setToastMsg = msg => {
     ToastAndroid.showWithGravity(msg, ToastAndroid.SHORT, ToastAndroid.BOTTOM);
   };
 
-  const showMode = currentMode => {
-    if (Platform.OS === 'android') {
-      setShow(false);
-    }
-    setMode(currentMode);
-  };
-
-  const showDatepicker = () => {
-    showMode('date');
-    setShow(true);
-  };
-
-  const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate;
-    setShow(false);
-    setDate(currentDate);
-    let filter = currentDate;
-    const dateToSave = currentDate.toLocaleDateString(); // convert date to string
-    setShowDate(dateToSave);
-  };
-
-  // Time
-
-  const showModeTime = currentMode => {
-    if (Platform.OS === 'android') {
-      setShowTime(false);
-    }
-    setModeTime(currentMode);
-  };
-
-  const showTimepicker = () => {
-    showModeTime('time');
-    setShowTime(true);
-  };
-
-  const onChangeTime = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-    setShowTime(false);
-    setDateTime(currentDate);
-    const hours = currentDate.getHours();
-    const minutes = currentDate.getMinutes();
-    const timeString = `${hours}:${minutes < 10 ? '0' : ''}${minutes}`;
-    setShowDateTime(timeString);
-  };
   const handleNavigation = () => {
     try {
-      if (name && value && showDateTime && showDate && lat && lon) {
-        console.log(name, value, showDateTime, showDate, lat, lon);
+      if (name && value && date && Time && lat && lon) {
+        console.log(name, value, date, Time, lat, lon);
         navigation.navigate('SingleKundli', {
           name,
           value,
-          showDateTime,
-          showDate,
+          date,
+          Time,
           lat,
           lon,
         });
@@ -121,6 +76,14 @@ const SingleKundaliForm = ({navigation}) => {
     navigation.navigate('SearchPlaceScreen', {
       onPlaceSelect: handlePlaceSelect,
     });
+  };
+
+  const resetDate = () => {
+    setDate(new Date());
+  };
+
+  const resetTime = () => {
+    setTime(new Date());
   };
 
   return (
@@ -211,54 +174,61 @@ const SingleKundaliForm = ({navigation}) => {
               <Text style={styles.title}>Time of Birth</Text>
               <TouchableOpacity
                 style={styles.mainContainer2}
-                onPress={showTimepicker}
-                activeOpacity={0.7}>
-                <View style={{width: '90%', paddingLeft: SIZES.width * 0.039}}>
-                  <Text style={{color: '#000', fontSize: SIZES.width * 0.036}}>
-                    {showDateTime ? showDateTime : 'Enter Birth Time'}
-                  </Text>
-                </View>
-                {showTime && (
-                  <DateTimePicker
-                    testID="dateTimePicker"
-                    value={dateTime}
-                    mode={modeTime}
-                    is24Hour={true}
-                    onChange={onChangeTime}
-                  />
-                )}
+                onPress={() => {
+                  setOpenTime(true);
+                }}>
+                <Text
+                  style={{
+                    paddingLeft: SIZES.width * 0.051,
+                    color: '#000',
+                  }}>
+                  {Time.toLocaleTimeString([], {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  })}
+                </Text>
+
+                <DatePicker
+                  modal
+                  open={openTime}
+                  date={Time}
+                  mode="time"
+                  onConfirm={time => {
+                    setOpenTime(false);
+                    setTime(time);
+                    console.log(time);
+                  }}
+                  onCancel={() => {
+                    setOpenTime(false);
+                  }}
+                />
               </TouchableOpacity>
             </View>
             <View style={{marginTop: SIZES.width * 0.026}}>
               <Text style={styles.title}>Date of Birth</Text>
               <TouchableOpacity
                 style={styles.mainContainer2}
-                onPress={showDatepicker}
-                activeOpacity={0.7}>
-                <View style={{width: '90%', paddingLeft: SIZES.width * 0.046}}>
-                  <Text style={{color: '#000', fontSize: SIZES.width * 0.036}}>
-                    {showDate ? showDate : 'Enter DOB'}
-                  </Text>
-                </View>
-                <View>
-                  <Image
-                    source={images.calendet_icon}
-                    style={{
-                      width: SIZES.width * 0.051,
-                      height: SIZES.width * 0.051,
-                      resizeMode: 'contain',
-                    }}
-                  />
-                </View>
-                {show && (
-                  <DateTimePicker
-                    testID="dateTimePicker"
-                    value={date}
-                    mode={mode}
-                    is24Hour={true}
-                    onChange={onChange}
-                  />
-                )}
+                onPress={() => {
+                  setOpen(true);
+                }}>
+                <Text style={{paddingLeft: SIZES.width * 0.051, color: '#000'}}>
+                  {date.toLocaleDateString()}
+                </Text>
+
+                <DatePicker
+                  modal
+                  open={open}
+                  date={date}
+                  mode="date"
+                  onConfirm={date => {
+                    setOpen(false);
+                    setDate(date);
+                    console.log(date);
+                  }}
+                  onCancel={() => {
+                    setOpen(false);
+                  }}
+                />
               </TouchableOpacity>
             </View>
             <View style={{marginTop: SIZES.width * 0.026}}>
@@ -275,7 +245,7 @@ const SingleKundaliForm = ({navigation}) => {
                     }}>
                     <Text
                       style={{fontSize: SIZES.width * 0.036, color: '#000'}}>
-                      {place ? place : `Enter Birth place`}
+                      {place ? place : 'Enter Birth place'}
                     </Text>
                   </View>
                 </TouchableOpacity>

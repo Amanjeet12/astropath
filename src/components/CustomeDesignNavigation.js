@@ -9,7 +9,7 @@ import {SIZES} from '../constant/theme';
 const CustomeDesignNavigation = ({title, icon, screen}) => {
   const navigation = useNavigateToScreen();
   const handleNavihation = () => {
-    navigation(screen);
+    console.log('enter');
   };
   return (
     <TouchableOpacity

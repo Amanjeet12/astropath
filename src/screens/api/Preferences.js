@@ -9,7 +9,13 @@ const Preferences = {
     Name: 'username',
     userLatitude: 'userLatitude',
     userLongitude: 'userLongitude',
+    birthLat: 'birthLat',
+    birthLon: 'birthLon',
     phone: 'phone',
+    email: 'email',
+    gender: 'gender',
+    birthPlace: 'birthPlace',
+    Time: 'Time',
   },
 
   async savePreferences(key, value) {

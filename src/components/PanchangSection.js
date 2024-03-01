@@ -46,68 +46,74 @@ const PanchangSection = ({refreshing}) => {
     return {day, month, year, hour, minute, formattedDate};
   }, [getOrdinalSuffix]);
 
-  useEffect(() => {
-    const callPanchang = async () => {
-      setLoading(true);
+  const callPanchang = async () => {
+    setLoading(true);
+    try {
+      const {day, month, year, hour, minute, formattedDate} =
+        getCurrentDateTime();
+      let latitude, longitude, token;
       try {
-        const {day, month, year, hour, minute, formattedDate} =
-          getCurrentDateTime();
-        let latitude, longitude, token;
-        try {
-          latitude = await Preferences.getPreferences(
-            Preferences.key.userLatitude,
-          );
-          longitude = await Preferences.getPreferences(
-            Preferences.key.userLongitude,
-          );
-          token = await Preferences.getPreferences(Preferences.key.Token);
-        } catch (error) {
-          console.error('Error getting latitude and longitude:', error);
-        }
-
-        if (latitude && longitude && token) {
-          const params = {
-            name: 'user',
-            day,
-            month,
-            year,
-            hour,
-            min: minute,
-            lat: latitude,
-            lon: longitude,
-            tzone: '5.5',
-          };
-
-          console.log(params);
-          WebMethods.postRequestWithHeader(
-            WebUrls.url.basic_panchang,
-            params,
-            token,
-          ).then(response => {
-            if (response.data != null) {
-              setPanchang(response.data);
-              setLoading(false);
-            } else {
-              console.log('error');
-              setLoading(false);
-            }
-          });
-        } else {
-          console.log('Latitude, longitude, or token is null');
-          setLoading(false);
-        }
+        latitude = await Preferences.getPreferences(
+          Preferences.key.userLatitude,
+        );
+        longitude = await Preferences.getPreferences(
+          Preferences.key.userLongitude,
+        );
+        token = await Preferences.getPreferences(Preferences.key.Token);
       } catch (error) {
-        console.log(error);
+        console.error('Error getting latitude and longitude:', error);
+      }
+
+      if (token) {
+        const params = {
+          name: 'user',
+          day,
+          month,
+          year,
+          hour,
+          min: minute,
+          lat: latitude ? latitude : '28.7041',
+          lon: longitude ? longitude : '77.1025',
+          tzone: '5.5',
+        };
+
+        console.log(params);
+        WebMethods.postRequestWithHeader(
+          WebUrls.url.basic_panchang,
+          params,
+          token,
+        ).then(response => {
+          if (response.data != null) {
+            setPanchang(response.data);
+            setLoading(false);
+          } else {
+            console.log('error');
+            setLoading(false);
+          }
+        });
+      } else {
+        console.log('Latitude, longitude, or token is null');
         setLoading(false);
       }
-    };
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  };
 
-    console.log('refreshing', refreshing);
-    if (!calledOnceRef.current && refreshing) {
+  useEffect(() => {
+    console.log('refreshing');
+    if (!calledOnceRef.current) {
       callPanchang();
       calledOnceRef.current = true;
     }
-  }, [getCurrentDateTime, calledOnceRef, refreshing]);
+  }, [calledOnceRef, refreshing]);
+
+  useEffect(() => {
+    if (refreshing === true) {
+      callPanchang();
+    }
+  }, [refreshing]);
 
   const renderRepeatedData = data => {
     return data.map((item, index) => (
@@ -166,7 +172,7 @@ const PanchangSection = ({refreshing}) => {
                 fontSize: SIZES.width * 0.0893,
                 color: '#F39200',
               }}>
-              {panchang ? panchang.day.substring(0, 3) : null}
+              {panchang ? panchang.day : null}
             </Text>
             <Text
               style={{

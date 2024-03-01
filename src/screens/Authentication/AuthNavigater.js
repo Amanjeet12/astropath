@@ -6,99 +6,105 @@ import LoginScreen from '../Login/LoginScreen';
 import OtpScreen from '../Login/OtpScreen';
 import CompleteProfile from '../Login/CompleteProfile';
 import CompleteScreen from '../Login/CompleteScreen';
+import SearchPlaceScreen from '../BottomSheetScreen/SearchPlaceScreen';
 
 const Stack = createStackNavigator();
 
 const AuthNavigator = () => {
-  const [isFirstTime, setIsFirstTime] = useState(false);
-
+  const [firstLaunch, setFirstLaunch] = useState(null);
   useEffect(() => {
-    const checkFirstTime = async () => {
-      const isFirstTime = await AsyncStorage.getItem('isFirstTime');
-      setIsFirstTime(!isFirstTime);
-    };
-    checkFirstTime();
+    async function setData() {
+      const appData = await AsyncStorage.getItem('appLaunched');
+      if (appData == null) {
+        setFirstLaunch(true);
+        AsyncStorage.setItem('appLaunched', 'false');
+      } else {
+        setFirstLaunch(false);
+      }
+    }
+    setData();
   }, []);
 
-  const handleOnboardingComplete = async () => {
-    await AsyncStorage.setItem('isFirstTime', 'true');
-    setIsFirstTime(false);
-  };
-
   return (
-    <Stack.Navigator
-      screenOptions={{
-        headerShown: false,
-        animationTypeForReplace: 'push',
-        gestureEnabled: false,
-        gestureDirection: 'horizontal',
-        transitionSpec: {
-          open: {
-            animation: 'timing',
-            config: {
-              duration: 400,
+    firstLaunch != null && (
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
+          animationTypeForReplace: 'push',
+          gestureEnabled: false,
+          gestureDirection: 'horizontal',
+          transitionSpec: {
+            open: {
+              animation: 'timing',
+              config: {
+                duration: 400,
+              },
+            },
+            close: {
+              animation: 'timing',
+              config: {
+                duration: 400,
+              },
             },
           },
-          close: {
-            animation: 'timing',
-            config: {
-              duration: 400,
-            },
+          cardStyleInterpolator: ({current, next, layouts}) => {
+            return {
+              cardStyle: {
+                transform: [
+                  {
+                    translateX: current.progress.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [layouts.screen.width, 0],
+                    }),
+                  },
+                  {
+                    translateX: next
+                      ? next.progress.interpolate({
+                          inputRange: [0, 1],
+                          outputRange: [0, -layouts.screen.width],
+                        })
+                      : 0,
+                  },
+                ],
+              },
+              overflow: 'visible',
+            };
           },
-        },
-        cardStyleInterpolator: ({current, next, layouts}) => {
-          return {
-            cardStyle: {
-              transform: [
-                {
-                  translateX: current.progress.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [layouts.screen.width, 0],
-                  }),
-                },
-                {
-                  translateX: next
-                    ? next.progress.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: [0, -layouts.screen.width],
-                      })
-                    : 0,
-                },
-              ],
-            },
-            overflow: 'visible',
-          };
-        },
-      }}>
-      {isFirstTime && (
+        }}>
+        {firstLaunch && (
+          <Stack.Screen
+            name="OnboardingScreen"
+            component={OnboardingScreen}
+            options={{headerShown: false}}
+          />
+        )}
         <Stack.Screen
-          name="OnboardingScreen"
-          component={OnboardingScreen}
+          name="LoginScreen"
+          component={LoginScreen}
           options={{headerShown: false}}
-          initialParams={{onComplete: handleOnboardingComplete}}
         />
-      )}
-      <Stack.Screen
-        name="LoginScreen"
-        component={LoginScreen}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="OtpScreen"
-        component={OtpScreen}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="CompleteProfile"
-        component={CompleteProfile}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="CompleteScreen"
-        component={CompleteScreen}
-        options={{headerShown: false}}
-      />
-    </Stack.Navigator>
+        <Stack.Screen
+          name="OtpScreen"
+          component={OtpScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="CompleteProfile"
+          component={CompleteProfile}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="CompleteScreen"
+          component={CompleteScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="SearchPlaceScreen"
+          component={SearchPlaceScreen}
+          options={{headerShown: false}}
+        />
+      </Stack.Navigator>
+    )
   );
 };
 

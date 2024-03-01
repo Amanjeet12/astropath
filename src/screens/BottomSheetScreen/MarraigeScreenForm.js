@@ -19,6 +19,7 @@ import {COLORS, SIZES} from '../../constant/theme';
 import {images} from '../../constant';
 import HeaderSection from '../../components/HeaderSection';
 import BackButton from '../../components/BackButton';
+import DatePicker from 'react-native-date-picker';
 
 const data = [
   {label: 'Male', value: '1'},
@@ -26,125 +27,46 @@ const data = [
 ];
 
 const MarraigeScreenForm = ({navigation}) => {
-  const [show, setShow] = useState(false);
-  const [date, setDate] = useState(new Date());
-  const [mode, setMode] = useState('date');
-  const [showDate, setShowDate] = useState('');
-  const [showTime, setShowTime] = useState(false);
-  const [dateTime, setDateTime] = useState(new Date());
-  const [modeTime, setModeTime] = useState('date');
-  const [showDateTime, setShowDateTime] = useState('');
   const [name_m, setName_m] = useState('');
   const [place_m, setPlace_m] = useState('');
   const [lon_m, setLon_m] = useState('');
   const [lat_m, setLat_m] = useState('');
+
+  const [open, setOpen] = useState(false);
+  const [date, setDate] = useState(new Date());
+  const [openTime, setOpenTime] = useState(false);
+  const [Time, setTime] = useState(new Date());
+
+  const [open_f, setOpen_F] = useState(false);
+  const [date_f, setDate_f] = useState(new Date());
+  const [openTime_f, setOpenTime_f] = useState(false);
+  const [Time_f, setTime_f] = useState(new Date());
+
   //female
 
   const [name_f, setName_f] = useState('');
   const [place_f, setPlace_f] = useState('');
   const [lon_f, setLon_f] = useState('');
   const [lat_f, setLat_f] = useState('');
-  const [show_f, setShow_f] = useState(false);
-  const [date_f, setDate_f] = useState(new Date());
-  const [mode_f, setMode_f] = useState('date');
-  const [showDate_f, setShowDate_f] = useState('');
-  const [showTime_f, setShowTime_f] = useState(false);
-  const [dateTime_f, setDateTime_f] = useState(new Date());
-  const [modeTime_f, setModeTime_f] = useState('date');
-  const [showDateTime_f, setShowDateTime_f] = useState('');
 
   const setToastMsg = msg => {
     ToastAndroid.showWithGravity(msg, ToastAndroid.SHORT, ToastAndroid.BOTTOM);
   };
 
-  const showMode = currentMode => {
-    if (Platform.OS === 'android') {
-      setShow(false);
-    }
-    setMode(currentMode);
+  const resetDate = () => {
+    setDate(new Date());
   };
 
-  const showDatepicker = () => {
-    showMode('date');
-    setShow(true);
+  const resetTime = () => {
+    setTime(new Date());
   };
 
-  const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate;
-    setShow(false);
-    setDate(currentDate);
-    let filter = currentDate;
-    const dateToSave = currentDate.toLocaleDateString(); // convert date to string
-    setShowDate(dateToSave);
+  const resetDate_f = () => {
+    setDate(new Date());
   };
 
-  // Time
-  const showModeTime = currentMode => {
-    if (Platform.OS === 'android') {
-      setShowTime(false);
-    }
-    setModeTime(currentMode);
-  };
-
-  const showTimepicker = () => {
-    showModeTime('time');
-    setShowTime(true);
-  };
-
-  const onChangeTime = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-    setShowTime(false);
-    setDateTime(currentDate);
-    const hours = currentDate.getHours();
-    const minutes = currentDate.getMinutes();
-    const timeString = `${hours}:${minutes < 10 ? '0' : ''}${minutes}`;
-    setShowDateTime(timeString);
-  };
-
-  //female
-
-  const showMode_f = currentMode => {
-    if (Platform.OS === 'android') {
-      setShow_f(false);
-    }
-    setMode_f(currentMode);
-  };
-
-  const showDatepicker_f = () => {
-    showMode_f('date');
-    setShow_f(true);
-  };
-
-  const onChange_f = (event, selectedDate) => {
-    const currentDate = selectedDate;
-    setShow_f(false);
-    setDate_f(currentDate);
-    let filter = currentDate;
-    const dateToSave = currentDate.toLocaleDateString(); // convert date to string
-    setShowDate_f(dateToSave);
-  };
-
-  // Time
-  const showModeTime_f = currentMode => {
-    if (Platform.OS === 'android') {
-      setShowTime_f(false);
-    }
-    setModeTime_f(currentMode);
-  };
-
-  const showTimepicker_f = () => {
-    showModeTime_f('time');
-    setShowTime_f(true);
-  };
-
-  const onChangeTime_f = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-    setShowTime_f(false);
-    setDateTime_f(currentDate);
-    const hours = currentDate.getHours();
-    const minutes = currentDate.getMinutes();
-    const timeString = `${hours}:${minutes < 10 ? '0' : ''}${minutes}`;
-    setShowDateTime_f(timeString);
+  const resetTime_f = () => {
+    setTime(new Date());
   };
 
   const handleNavigation = () => {
@@ -152,38 +74,38 @@ const MarraigeScreenForm = ({navigation}) => {
       name_m &&
       lat_m &&
       lon_m &&
-      showDate &&
-      showDateTime &&
+      date &&
+      Time &&
       name_f &&
       lat_f &&
       lon_f &&
-      showDate_f &&
-      showDateTime_f
+      date_f &&
+      Time_f
     ) {
       console.log(
         name_m,
         lat_m,
         lon_m,
-        showDate,
-        showDateTime,
+        date,
+        Time,
         name_f,
         lat_f,
         lon_f,
-        showDate_f,
-        showDateTime_f,
+        date_f,
+        Time_f,
       );
       try {
         navigation.navigate('MarraigeKundli', {
           name_m,
           lat_m,
           lon_m,
-          showDate,
-          showDateTime,
+          date,
+          Time,
           name_f,
           lat_f,
           lon_f,
-          showDate_f,
-          showDateTime_f,
+          date_f,
+          Time_f,
         });
       } catch (error) {
         console.log('erroring', error);
@@ -243,7 +165,7 @@ const MarraigeScreenForm = ({navigation}) => {
                     borderColor: '#F39200',
                   }}>
                   <Text style={{fontSize: 21, fontFamily: '', color: '#000'}}>
-                    Enter boy's details
+                    Enter Boy's details
                   </Text>
                 </View>
                 <Text style={[styles.title, {marginTop: SIZES.width * 0.051}]}>
@@ -266,56 +188,64 @@ const MarraigeScreenForm = ({navigation}) => {
                 <Text style={styles.title}>Time of Birth</Text>
                 <TouchableOpacity
                   style={styles.mainContainer2}
-                  onPress={showTimepicker}
-                  activeOpacity={0.7}>
-                  <View
-                    style={{width: '90%', paddingLeft: SIZES.width * 0.039}}>
-                    <Text style={{color: '#000'}}>
-                      {showDateTime ? showDateTime : 'Enter Birth Time'}
-                    </Text>
-                  </View>
-                  {showTime && (
-                    <DateTimePicker
-                      testID="dateTimePicker"
-                      value={dateTime}
-                      mode={modeTime}
-                      is24Hour={true}
-                      onChange={onChangeTime}
-                    />
-                  )}
+                  onPress={() => {
+                    setOpenTime(true);
+                    resetTime(); // Reset date when opening the modal
+                  }}>
+                  <Text
+                    style={{
+                      paddingLeft: SIZES.width * 0.051,
+                      color: '#000',
+                    }}>
+                    {Time.toLocaleTimeString([], {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })}
+                  </Text>
+
+                  <DatePicker
+                    modal
+                    open={openTime}
+                    date={Time}
+                    mode="time"
+                    onConfirm={time => {
+                      setOpenTime(false);
+                      setTime(time);
+                      console.log(time);
+                    }}
+                    onCancel={() => {
+                      setOpenTime(false);
+                    }}
+                  />
                 </TouchableOpacity>
               </View>
               <View style={{marginTop: SIZES.width * 0.026}}>
                 <Text style={styles.title}>Date of Birth</Text>
                 <TouchableOpacity
                   style={styles.mainContainer2}
-                  onPress={showDatepicker}
-                  activeOpacity={0.7}>
-                  <View
-                    style={{width: '90%', paddingLeft: SIZES.width * 0.046}}>
-                    <Text style={{color: '#000'}}>
-                      {showDate ? showDate : 'Enter DOB'}
-                    </Text>
-                  </View>
-                  <View>
-                    <Image
-                      source={images.calendet_icon}
-                      style={{
-                        width: SIZES.width * 0.051,
-                        height: SIZES.width * 0.051,
-                        resizeMode: 'contain',
-                      }}
-                    />
-                  </View>
-                  {show && (
-                    <DateTimePicker
-                      testID="dateTimePicker"
-                      value={date}
-                      mode={mode}
-                      is24Hour={true}
-                      onChange={onChange}
-                    />
-                  )}
+                  onPress={() => {
+                    setOpen(true);
+                    resetDate(); // Reset date when opening the modal
+                  }}>
+                  <Text
+                    style={{paddingLeft: SIZES.width * 0.051, color: '#000'}}>
+                    {date.toLocaleDateString()}
+                  </Text>
+
+                  <DatePicker
+                    modal
+                    open={open}
+                    date={date}
+                    mode="date"
+                    onConfirm={date => {
+                      setOpen(false);
+                      setDate(date);
+                      console.log(date);
+                    }}
+                    onCancel={() => {
+                      setOpen(false);
+                    }}
+                  />
                 </TouchableOpacity>
               </View>
               <View style={{marginTop: SIZES.width * 0.026}}>
@@ -346,7 +276,7 @@ const MarraigeScreenForm = ({navigation}) => {
                     borderColor: '#F39200',
                   }}>
                   <Text style={{fontSize: 21, fontFamily: '', color: '#000'}}>
-                    Enter girl's details
+                    Enter Girl's details
                   </Text>
                 </View>
                 <Text style={[styles.title, {marginTop: SIZES.width * 0.051}]}>
@@ -370,56 +300,64 @@ const MarraigeScreenForm = ({navigation}) => {
                 <Text style={styles.title}>Time of Birth</Text>
                 <TouchableOpacity
                   style={styles.mainContainer2}
-                  onPress={showTimepicker_f}
-                  activeOpacity={0.7}>
-                  <View
-                    style={{width: '90%', paddingLeft: SIZES.width * 0.039}}>
-                    <Text style={{color: '#000'}}>
-                      {showDateTime_f ? showDateTime_f : 'Enter Birth Time'}
-                    </Text>
-                  </View>
-                  {showTime_f && (
-                    <DateTimePicker
-                      testID="dateTimePicker"
-                      value={dateTime}
-                      mode={modeTime}
-                      is24Hour={true}
-                      onChange={onChangeTime_f}
-                    />
-                  )}
+                  onPress={() => {
+                    setOpenTime_f(true);
+                    resetTime_f(); // Reset date when opening the modal
+                  }}>
+                  <Text
+                    style={{
+                      paddingLeft: SIZES.width * 0.051,
+                      color: '#000',
+                    }}>
+                    {Time_f.toLocaleTimeString([], {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })}
+                  </Text>
+
+                  <DatePicker
+                    modal
+                    open={openTime_f}
+                    date={Time_f}
+                    mode="time"
+                    onConfirm={time => {
+                      setOpenTime_f(false);
+                      setTime_f(time);
+                      console.log(time);
+                    }}
+                    onCancel={() => {
+                      setOpenTime_f(false);
+                    }}
+                  />
                 </TouchableOpacity>
               </View>
               <View style={{marginTop: SIZES.width * 0.026}}>
                 <Text style={styles.title}>Date of Birth</Text>
                 <TouchableOpacity
                   style={styles.mainContainer2}
-                  onPress={showDatepicker_f}
-                  activeOpacity={0.7}>
-                  <View
-                    style={{width: '90%', paddingLeft: SIZES.width * 0.046}}>
-                    <Text style={{color: '#000'}}>
-                      {showDate_f ? showDate_f : 'Enter DOB'}
-                    </Text>
-                  </View>
-                  <View>
-                    <Image
-                      source={images.calendet_icon}
-                      style={{
-                        width: SIZES.width * 0.051,
-                        height: SIZES.width * 0.051,
-                        resizeMode: 'contain',
-                      }}
-                    />
-                  </View>
-                  {show_f && (
-                    <DateTimePicker
-                      testID="dateTimePicker"
-                      value={date}
-                      mode={mode}
-                      is24Hour={true}
-                      onChange={onChange_f}
-                    />
-                  )}
+                  onPress={() => {
+                    setOpen_F(true);
+                    resetDate_f(); // Reset date when opening the modal
+                  }}>
+                  <Text
+                    style={{paddingLeft: SIZES.width * 0.051, color: '#000'}}>
+                    {date_f.toLocaleDateString()}
+                  </Text>
+
+                  <DatePicker
+                    modal
+                    open={open_f}
+                    date={date_f}
+                    mode="date"
+                    onConfirm={date => {
+                      setOpen_F(false);
+                      setDate_f(date);
+                      console.log(date);
+                    }}
+                    onCancel={() => {
+                      setOpen_F(false);
+                    }}
+                  />
                 </TouchableOpacity>
               </View>
               <View style={{marginTop: SIZES.width * 0.026}}>

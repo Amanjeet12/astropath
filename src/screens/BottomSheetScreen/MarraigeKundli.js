@@ -26,21 +26,46 @@ const MarraigeKundli = ({route}) => {
     name_m,
     lat_m,
     lon_m,
-    showDate,
-    showDateTime,
+    date,
+    Time,
     name_f,
     lat_f,
     lon_f,
-    showDate_f,
-    showDateTime_f,
+    date_f,
+    Time_f,
   } = route.params;
   const [loading, setLoading] = useState(true);
   const [birth_detail, setBirth_detail] = useState(null);
 
-  const [m_hour, m_min] = showDateTime.split(':');
-  const [m_day, m_month, m_year] = showDate.split('/');
-  const [f_hour, f_min] = showDateTime_f.split(':');
-  const [f_day, f_month, f_year] = showDate_f.split('/');
+  const dateTimeObject = new Date(date);
+  const dateObject = new Date(Time);
+
+  // Extracting time parts
+  const m_hour = dateTimeObject.getUTCHours().toString();
+  const m_min = dateTimeObject.getUTCMinutes().toString();
+  const m_sec = dateTimeObject.getUTCSeconds().toString();
+
+  // Extracting date parts
+  const m_day = dateObject.getUTCDate().toString();
+  const m_month = (dateObject.getUTCMonth() + 1).toString();
+  const m_year = dateObject.getUTCFullYear().toString();
+
+  // female
+
+  const dateTimeObject_f = new Date(date_f);
+  const dateObject_f = new Date(Time_f);
+
+  // Extracting time parts
+  const f_hour = dateTimeObject_f.getUTCHours().toString();
+  const f_min = dateTimeObject_f.getUTCMinutes().toString();
+  const f_sec = dateTimeObject_f.getUTCSeconds().toString();
+
+  // Extracting date parts
+  const f_day = dateObject_f.getUTCDate().toString();
+  const f_month = (dateObject_f.getUTCMonth() + 1).toString();
+  const f_year = dateObject_f.getUTCFullYear().toString();
+
+  console.log(SIZES.width * 0.3);
 
   useEffect(() => {
     if (birth_detail == null) {
@@ -111,9 +136,11 @@ const MarraigeKundli = ({route}) => {
         onAnimationComplete={() => console.log('onAnimationComplete')}>
         {fill => (
           <View>
-            <Text style={{fontSize: 20, color: '#000'}}>
+            <Text style={{fontSize: SIZES.width * 0.051, color: '#000'}}>
               {receivedPoints}{' '}
-              <Text style={{fontSize: 14, color: '#000'}}>/ {totalPoints}</Text>
+              <Text style={{fontSize: SIZES.width * 0.036, color: '#000'}}>
+                / {totalPoints}
+              </Text>
             </Text>
           </View>
         )}
@@ -149,7 +176,7 @@ const MarraigeKundli = ({route}) => {
               </View>
             ) : (
               <>
-                <View style={{marginTop: SIZES.width * 0.04}}>
+                <View style={{marginTop: SIZES.width * 0.05}}>
                   <Image
                     source={images.marriage_meter}
                     style={{
@@ -166,14 +193,22 @@ const MarraigeKundli = ({route}) => {
                       paddingHorizontal: 18,
                       backgroundColor: '#ffcf87',
                       borderRadius: 30,
-                      left: 130,
-                      right: 130,
-                      alignItems:'center'
+                      left: SIZES.width * 0.3,
+                      right: SIZES.width * 0.3,
+
+                      alignItems: 'center',
                     }}>
                     <View>
-                      <Text style={{fontSize: 20, color: '#000'}}>
-                        36{' '}
-                        <Text style={{fontSize: 14, color: '#000'}}>/ 36</Text>
+                      <Text
+                        style={{fontSize: SIZES.width * 0.051, color: '#000'}}>
+                        {birth_detail.total.received_points}{' '}
+                        <Text
+                          style={{
+                            fontSize: SIZES.width * 0.036,
+                            color: '#000',
+                          }}>
+                          / {birth_detail.total.total_points}
+                        </Text>
                       </Text>
                     </View>
                   </View>
@@ -187,11 +222,11 @@ const MarraigeKundli = ({route}) => {
                     backgroundColor="#f9e59e"
                   />
                   <View style={{width: '80%'}}>
-                    <Text style={styles.title}>Temperament ( gan )</Text>
+                    <Text style={styles.title}>Temperament ( gana )</Text>
                     <Text style={styles.description}>
-                      Varna refers to the mental compatibility of two persons
-                      involved. It holds nominal effect in the matters of
-                      marriage compatibility
+                      Gana is the indicator of the behaviour, character and
+                      temperament of the potential bride and groom towards each
+                      other.
                     </Text>
                   </View>
                 </View>
@@ -208,17 +243,17 @@ const MarraigeKundli = ({route}) => {
                       Love ( Bhakut )
                     </Text>
                     <Text style={styles.description}>
-                      Varna refers to the mental compatibility of two persons
-                      involved. It holds nominal effect in the matters of
-                      marriage compatibility
+                      Bhakut is related to the couple's joys and sorrows
+                      together and assesses the wealth and health after their
+                      wedding.
                     </Text>
                   </View>
                 </View>
                 <View style={styles.boxContainer}>
                   <ProgressCircle
                     label=" Dominance ( Vashya )"
-                    receivedPoints={birth_detail.bhakut.received_points}
-                    totalPoints={birth_detail.bhakut.total_points}
+                    receivedPoints={birth_detail.vashya.received_points}
+                    totalPoints={birth_detail.vashya.total_points}
                     tintColor="#4D26B9"
                     backgroundColor="#946FFF"
                   />
@@ -227,9 +262,8 @@ const MarraigeKundli = ({route}) => {
                       Dominance ( Vashya )
                     </Text>
                     <Text style={styles.description}>
-                      Varna refers to the mental compatibility of two persons
-                      involved. It holds nominal effect in the matters of
-                      marriage compatibility
+                      Vashya indicates the bride and the groom's tendency to
+                      dominate or influence each other in a marriage.
                     </Text>
                   </View>
                 </View>
@@ -237,8 +271,8 @@ const MarraigeKundli = ({route}) => {
                   <View style={{width: '20%', alignItems: 'center'}}>
                     <ProgressCircle
                       label=" Health ( nadi' )"
-                      receivedPoints={birth_detail.bhakut.received_points}
-                      totalPoints={birth_detail.bhakut.total_points}
+                      receivedPoints={birth_detail.nadi.received_points}
+                      totalPoints={birth_detail.nadi.total_points}
                       tintColor="#f1c21b"
                       backgroundColor="#f9e59e"
                     />
@@ -248,9 +282,9 @@ const MarraigeKundli = ({route}) => {
                       Health ( nadi )
                     </Text>
                     <Text style={styles.description}>
-                      Varna refers to the mental compatibility of two persons
-                      involved. It holds nominal effect in the matters of
-                      marriage compatibility
+                      Nadi is related to the health compatibility of the couple.
+                      Matters of childbirth and progeny are also determined with
+                      this Guna.
                     </Text>
                   </View>
                 </View>
@@ -258,8 +292,8 @@ const MarraigeKundli = ({route}) => {
                   <View style={{width: '20%', alignItems: 'center'}}>
                     <ProgressCircle
                       label=" Destiny ( Tara )"
-                      receivedPoints={birth_detail.bhakut.received_points}
-                      totalPoints={birth_detail.bhakut.total_points}
+                      receivedPoints={birth_detail.tara.received_points}
+                      totalPoints={birth_detail.tara.total_points}
                       tintColor="#ff6f6f"
                       backgroundColor="#ffb8b8"
                     />
@@ -269,9 +303,9 @@ const MarraigeKundli = ({route}) => {
                       Destiny ( Tara )
                     </Text>
                     <Text style={styles.description}>
-                      Varna refers to the mental compatibility of two persons
-                      involved. It holds nominal effect in the matters of
-                      marriage compatibility
+                      Tara is the indicator of the birth star compatibility of
+                      the bride and the groom. It also indicates the fortune of
+                      the couple.
                     </Text>
                   </View>
                 </View>
@@ -279,8 +313,8 @@ const MarraigeKundli = ({route}) => {
                   <View style={{width: '20%', alignItems: 'center'}}>
                     <ProgressCircle
                       label=" Physical compatibility ( Yoni )"
-                      receivedPoints={birth_detail.bhakut.received_points}
-                      totalPoints={birth_detail.bhakut.total_points}
+                      receivedPoints={birth_detail.yoni.received_points}
+                      totalPoints={birth_detail.yoni.total_points}
                       tintColor="#4D26B9"
                       backgroundColor="#946FFF"
                     />
@@ -290,9 +324,8 @@ const MarraigeKundli = ({route}) => {
                       Physical compatibility ( Yoni )
                     </Text>
                     <Text style={styles.description}>
-                      Varna refers to the mental compatibility of two persons
-                      involved. It holds nominal effect in the matters of
-                      marriage compatibility
+                      Yoni is the indicator of the sexual or physical
+                      compatibility between the bride and the groom in question.
                     </Text>
                   </View>
                 </View>
@@ -300,8 +333,8 @@ const MarraigeKundli = ({route}) => {
                   <View style={{width: '20%', alignItems: 'center'}}>
                     <ProgressCircle
                       label=" Destiny ( Tara )"
-                      receivedPoints={birth_detail.bhakut.received_points}
-                      totalPoints={birth_detail.bhakut.total_points}
+                      receivedPoints={birth_detail.varna.received_points}
+                      totalPoints={birth_detail.varna.total_points}
                       tintColor="#f1c21b"
                       backgroundColor="#f9e59e"
                     />
@@ -325,20 +358,19 @@ const MarraigeKundli = ({route}) => {
                   <View style={{width: '20%', alignItems: 'center'}}>
                     <ProgressCircle
                       label=" Destiny ( Tara )"
-                      receivedPoints={birth_detail.bhakut.received_points}
-                      totalPoints={birth_detail.bhakut.total_points}
+                      receivedPoints={birth_detail.maitri.received_points}
+                      totalPoints={birth_detail.maitri.total_points}
                       tintColor="#ff6f6f"
                       backgroundColor="#ffb8b8"
                     />
                   </View>
                   <View style={{width: '80%'}}>
                     <Text style={[styles.title, {color: '#FF6F6F'}]}>
-                      Mental compatibility ( maitri )
+                      Mental compatibility ( Maitri )
                     </Text>
                     <Text style={styles.description}>
-                      Varna refers to the mental compatibility of two persons
-                      involved. It holds nominal effect in the matters of
-                      marriage compatibility
+                      Maitri assesses the mental compatibility and mutual love
+                      between the partners to be married.
                     </Text>
                   </View>
                 </View>
@@ -369,7 +401,7 @@ const styles = StyleSheet.create({
     gap: SIZES.width * 0.026,
     paddingHorizontal: SIZES.width * 0.026,
     borderRadius: SIZES.width * 0.01,
-    marginTop: SIZES.width * 0.051,
+    marginTop: SIZES.width * 0.08,
   },
   title: {
     fontFamily: 'KantumruyPro-Bold',

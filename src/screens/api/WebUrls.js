@@ -1,6 +1,7 @@
 const WebUrls = {
   url: {
-    LOcal_URL: 'https://astropath.co.in/',
+    // LOcal_URL: 'https://astropath.co.in/',
+    LOcal_URL: 'http:/10.0.2.2:8000/',
 
     //consumer auth url
     otp_send: 'backend/customer/otp',

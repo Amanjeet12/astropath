@@ -13,6 +13,7 @@ const ProfileSection = () => {
   const navigateToScreen = useNavigateToScreen();
 
   const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
 
   useEffect(() => {
@@ -21,15 +22,14 @@ const ProfileSection = () => {
 
   const fetchName = async () => {
     try {
-      const latitude = await Preferences.getPreferences(
-        Preferences.key.userLatitude,
-      );
       const name = await Preferences.getPreferences(Preferences.key.Name);
       const phone = await Preferences.getPreferences(Preferences.key.phone);
+      const email = await Preferences.getPreferences(Preferences.key.email);
 
       console.log('Name:', name);
       setName(name);
       setPhoneNumber(phone);
+      setEmail(email);
     } catch (error) {
       console.log('Error fetching name:', error);
     }
@@ -41,20 +41,26 @@ const ProfileSection = () => {
 
   return (
     <View style={styles.mainContainer}>
-      <View style={{width: '40%'}}>
+      <View style={{width: '35%'}}>
         <Image
           source={images.profile_image}
           style={{
-            width: SIZES.width * 0.31,
-            height: SIZES.width * 0.31,
+            width: SIZES.width * 0.25,
+            height: SIZES.width * 0.25,
             resizeMode: 'contain',
           }}
         />
       </View>
       <View style={{width: '50%', paddingTop: SIZES.width * 0.026}}>
-        <Text style={styles.Profile}>{name ? name : `UserName`}</Text>
-        <Text style={styles.profile2}>{phoneNumber ? phoneNumber : null}</Text>
-        {/* <Text style={styles.profile2}>tanmay@gmail.com</Text> */}
+        <Text style={styles.Profile} numberOfLines={1}>
+          {name ? name : `UserName`}
+        </Text>
+        <Text style={styles.profile2} numberOfLines={1}>
+          {phoneNumber ? phoneNumber : null}
+        </Text>
+        <Text style={styles.profile2} numberOfLines={1}>
+          {email}
+        </Text>
       </View>
       <TouchableOpacity
         style={{

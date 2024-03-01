@@ -17,8 +17,8 @@ import HeaderSection from '../../components/HeaderSection';
 import ProfileSection from '../../components/ProfileSection';
 import CustomeDesignNavigation from '../../components/CustomeDesignNavigation';
 import LogoutButton from '../../components/LogoutButton';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useAuth} from '../../constant/Auth';
+import Custome from '../api/logout';
 
 const AccountScreen = () => {
   const {logout} = useAuth();
@@ -35,17 +35,9 @@ const AccountScreen = () => {
         {
           text: 'Logout',
           onPress: async () => {
-            const keysToRemove = [
-              'isLoggedIn',
-              'UserId',
-              'Token',
-              'Name',
-              'phone',
-            ];
             try {
-              await AsyncStorage.multiRemove(keysToRemove);
               console.log('Items removed successfully.');
-              logout();
+              Custome.logout(logout); // Pass logout as callback
             } catch (error) {
               console.error('Error removing items:', error);
             }
@@ -118,12 +110,12 @@ const AccountScreen = () => {
                   <CustomeDesignNavigation
                     title={'Privacy Policy'}
                     icon={images.privacy}
-                    screen={'DashboardScreen'}
+                    screen={'PrivacyScreen'}
                   />
                   <CustomeDesignNavigation
                     title={'Customer Support'}
                     icon={images.customer_care}
-                    screen={'DashboardScreen'}
+                    screen={'CustomerScreen'}
                   />
                 </View>
               </View>

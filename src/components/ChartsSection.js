@@ -9,14 +9,23 @@ import {SvgXml} from 'react-native-svg';
 import Preferences from '../screens/api/Preferences';
 
 const ChartsSection = ({name, value, showDateTime, showDate, lat, lon}) => {
+  const [loading, setLoading] = useState(true);
+
   const [love_chart, setLove_chart] = useState('');
   const [lagan_chart, setLagan_chart] = useState('');
   const [marraige_chart, setMarraige_chart] = useState('');
-  const [loading, setLoading] = useState(true);
-  const [hour, minute] = showDateTime.split(':');
+  const dateTimeObject = new Date(showDateTime);
+  const dateObject = new Date(showDate);
 
-  // Parse date to get day, month, and year
-  const [day, month, year] = showDate.split('/'); // in mobile
+  // Extracting time parts
+  const hour = dateTimeObject.getUTCHours().toString();
+  const minute = dateTimeObject.getUTCMinutes().toString();
+  const second = dateTimeObject.getUTCSeconds().toString();
+
+  // Extracting date parts
+  const day = dateObject.getUTCDate().toString();
+  const month = (dateObject.getUTCMonth() + 1).toString();
+  const year = dateObject.getUTCFullYear().toString();
 
   useEffect(() => {
     fetchData();
@@ -35,10 +44,10 @@ const ChartsSection = ({name, value, showDateTime, showDate, lat, lon}) => {
       if (token) {
         const params = {
           name,
-          day,
-          month,
-          year,
-          hour,
+          day: day,
+          month: month,
+          year: year,
+          hour: hour,
           min: minute,
           lat: lat,
           lon: lon,

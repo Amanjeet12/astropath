@@ -22,11 +22,18 @@ const DashaSection = ({name, value, showDateTime, showDate, lat, lon}) => {
   const [refreshing, setRefreshing] = useState(false);
 
   const [loading, setLoading] = useState(true);
-  const [hour, minute] = showDateTime.split(':');
+  const dateTimeObject = new Date(showDateTime);
+  const dateObject = new Date(showDate);
 
-  // Parse date to get day, month, and year
-  console.log('showDate', showDate);
-  const [day, month, year] = showDate.split('/'); // in mobile
+  // Extracting time parts
+  const hour = dateTimeObject.getUTCHours().toString();
+  const minute = dateTimeObject.getUTCMinutes().toString();
+  const second = dateTimeObject.getUTCSeconds().toString();
+
+  // Extracting date parts
+  const day = dateObject.getUTCDate().toString();
+  const month = (dateObject.getUTCMonth() + 1).toString();
+  const year = dateObject.getUTCFullYear().toString();
 
   useEffect(() => {
     fetchData();
@@ -47,10 +54,10 @@ const DashaSection = ({name, value, showDateTime, showDate, lat, lon}) => {
       if (token) {
         const params = {
           name,
-          day,
-          month,
-          year,
-          hour,
+          day: day,
+          month: month,
+          year: year,
+          hour: hour,
           min: minute,
           lat: lat,
           lon: lon,
@@ -80,13 +87,13 @@ const DashaSection = ({name, value, showDateTime, showDate, lat, lon}) => {
     }
   };
 
-  // if (loading) {
-  //   return (
-  //     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-  //       <ActivityIndicator size="large" />
-  //     </View>
-  //   );
-  // }
+  if (loading) {
+    return (
+      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
 
   return (
     <>
@@ -98,8 +105,6 @@ const DashaSection = ({name, value, showDateTime, showDate, lat, lon}) => {
       <View style={styles.border} />
       <View style={{marginVertical: SIZES.width * 0.051, borderWidth: 0.5}}>
         <FlatList
-          refreshing={refreshing}
-          onRefresh={fetchData}
           data={dasha}
           scrollEnabled={false}
           renderItem={({item}) => <DashaTableItem item={item} />}
