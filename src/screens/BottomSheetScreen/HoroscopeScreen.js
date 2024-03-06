@@ -1,3 +1,4 @@
+/* eslint-disable react/self-closing-comp */
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react-native/no-inline-styles */
 import {
@@ -9,9 +10,7 @@ import {
   Text,
   TouchableOpacity,
   View,
-  Modal,
   ActivityIndicator,
-  ToastAndroid,
 } from 'react-native';
 import React, {useState} from 'react';
 import {COLORS, SIZES} from '../../constant/theme';
@@ -19,82 +18,83 @@ import {images} from '../../constant';
 import HeaderSection from '../../components/HeaderSection';
 import BackButton from '../../components/BackButton';
 import DaySelection from '../../components/DaySelection';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import {Zodiac} from '../../constant/data';
-import Cross from 'react-native-vector-icons/AntDesign';
 import WebMethods from '../api/WebMethods';
 import WebUrls from '../api/WebUrls';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import Preferences from '../api/Preferences';
 
 const HoroscopeScreen = ({route}) => {
   const {todayHoroscope, selectedItem} = route.params;
-  const [show, setShow] = useState(false);
   const [selectedItems, setSelectedItems] = useState(selectedItem);
   const [horoscope, setHoroscope] = useState(todayHoroscope);
   const [loading, setloading] = useState(false);
   const [currentDaySelected, setCurrentDaySelected] = useState('');
-  const setToastMsg = msg => {
-    ToastAndroid.showWithGravity(msg, ToastAndroid.SHORT, ToastAndroid.BOTTOM);
-  };
-
-  const handleItemPress = index => {
-    console.log(index);
-    setSelectedItems(index);
-  };
-  const handlePopup = async () => {
-    const selectedItemIdString = selectedItems.toString();
-
-    try {
-      await AsyncStorage.setItem('Zodic', selectedItemIdString);
-      setShow(!show);
-      handleSelection(currentDaySelected);
-    } catch (error) {
-      console.log(error);
-    }
-    setShow(!show);
-  };
 
   const handleSelection = async selectedItem => {
     setCurrentDaySelected(selectedItem);
-    setloading(true);
     let fetchUrl = '';
-    if (selectedItem === 'Previous') {
-      fetchUrl = WebUrls.url.previous_horoscope;
-    } else if (selectedItem === 'Today') {
-      fetchUrl = WebUrls.url.today_horoscope;
-    } else if (selectedItem === 'Tommorrow') {
-      fetchUrl = WebUrls.url.tommorrow_horoscope;
-    } else {
-      fetchUrl = WebUrls.url.monthly_horoscope;
+    let preferenceKey = '';
+
+    switch (selectedItem) {
+      case 'Previous':
+        fetchUrl = WebUrls.url.previous_horoscope;
+        preferenceKey = Preferences.horoscope.yesterday;
+        break;
+      case 'Today':
+        fetchUrl = WebUrls.url.today_horoscope;
+        preferenceKey = Preferences.horoscope.today;
+        break;
+      case 'Tommorrow':
+        fetchUrl = WebUrls.url.tommorrow_horoscope;
+        preferenceKey = Preferences.horoscope.tommorow;
+        break;
+      default:
+        fetchUrl = WebUrls.url.monthly_horoscope;
     }
 
     try {
-      var params = {
-        zodiacName: Zodiac[selectedItems].title,
-        tzone: '5.5',
-      };
-
-      let token;
-      try {
-        token = await Preferences.getPreferences(Preferences.key.Token);
-      } catch (error) {
-        console.error('Error getting latitude and longitude:', error);
+      const cachedHoroscope = await Preferences.getJsonPreferences(
+        preferenceKey,
+      );
+      if (cachedHoroscope) {
+        setHoroscope(cachedHoroscope);
         return;
       }
-      WebMethods.postRequestWithHeader(fetchUrl, params, token).then(
-        response => {
-          if (response.data != null) {
-            setHoroscope(response.data);
-            setloading(false);
-          } else {
-            console.log('error');
-          }
-        },
+    } catch (error) {}
+
+    const params = {
+      zodiacName: Zodiac[selectedItems].title,
+      tzone: '5.5',
+    };
+
+    try {
+      const token = await Preferences.getPreferences(Preferences.key.Token);
+      const response = await WebMethods.postRequestWithHeader(
+        fetchUrl,
+        params,
+        token,
       );
+      if (response.data != null) {
+        setHoroscope(response.data);
+        handleSaveData(response.data, selectedItem);
+        setloading(false);
+      } else {
+        console.log('error');
+      }
     } catch (error) {
       console.log('erroring', error);
     }
+  };
+
+  const handleSaveData = async (value, key) => {
+    const preferenceKey = {
+      Today: Preferences.horoscope.today,
+      Previous: Preferences.horoscope.yesterday,
+      Tommorrow: Preferences.horoscope.tommorow,
+    }[key];
+
+    await Preferences.saveJsonPerences(preferenceKey, value);
+    console.log('done');
   };
 
   const Loading = () => {
@@ -119,23 +119,25 @@ const HoroscopeScreen = ({route}) => {
             </View>
             <View style={styles.fleBox}>
               <BackButton placeholder={'Horoscope'} />
-              <TouchableOpacity onPress={() => handlePopup()}>
-                <Icon
-                  name={'refresh'}
-                  size={SIZES.width * 0.051}
-                  color={'#000'}
-                />
-              </TouchableOpacity>
-            </View>
-            <View style={styles.imageContainer}>
-              <Image
-                source={Zodiac[selectedItems].image}
-                style={styles.image}
-              />
             </View>
             <View
-              style={{alignItems: 'center', marginTop: SIZES.width * 0.051}}>
-              <Text style={styles.headline}>{Zodiac[selectedItems].title}</Text>
+              style={{
+                flexDirection: 'row',
+                marginTop: SIZES.width * 0.051,
+                alignItems: 'center',
+                gap: SIZES.width * 0.031,
+              }}>
+              <View style={styles.imageContainer}>
+                <Image
+                  source={Zodiac[selectedItems].image}
+                  style={styles.image}
+                />
+              </View>
+              <View>
+                <Text style={styles.headline}>
+                  {Zodiac[selectedItems].title}
+                </Text>
+              </View>
             </View>
             <View>
               <DaySelection onSelect={handleSelection} />
@@ -173,78 +175,57 @@ const HoroscopeScreen = ({route}) => {
                       </Text>
                       <View style={styles.border} />
                     </View>
-                    <View
-                      style={{
-                        marginTop: SIZES.width * 0.051,
-                        flexDirection: 'row',
-                        flexWrap: 'wrap',
-                      }}>
+                    <View style={styles.boxContainer}>
                       <Text
                         style={[
                           styles.description,
                           {fontWeight: '700', marginBottom: 10},
                         ]}>
-                        "Emotions"
+                        Emotions
                       </Text>
-                      <Text style={styles.description}>
+                      <Text style={[styles.description, {color: '#000'}]}>
                         {horoscope.prediction
                           ? horoscope.prediction.emotions
                           : null}
                       </Text>
                     </View>
-                    <View
-                      style={{
-                        marginTop: SIZES.width * 0.051,
-                        flexDirection: 'row',
-                        flexWrap: 'wrap',
-                      }}>
+                    <View style={styles.boxContainer}>
                       <Text
                         style={[
                           styles.description,
                           {fontWeight: '700', marginBottom: 10},
                         ]}>
-                        "Health"
+                        Health
                       </Text>
-                      <Text style={styles.description}>
+                      <Text style={[styles.description, {color: '#000'}]}>
                         {horoscope.prediction
                           ? horoscope.prediction.health
                           : null}
                       </Text>
                     </View>
-                    <View
-                      style={{
-                        marginTop: SIZES.width * 0.051,
-                        flexDirection: 'row',
-                        flexWrap: 'wrap',
-                      }}>
+                    <View style={styles.boxContainer}>
                       <Text
                         style={[
                           styles.description,
                           {fontWeight: '700', marginBottom: 10},
                         ]}>
-                        "Personal Life"
+                        Personal Life
                       </Text>
-                      <Text style={styles.description}>
+                      <Text style={[styles.description, {color: '#000'}]}>
                         {horoscope.prediction
                           ? horoscope.prediction.personal_life
                           : null}
                       </Text>
                     </View>
-                    <View
-                      style={{
-                        marginTop: SIZES.width * 0.051,
-                        flexDirection: 'row',
-                        flexWrap: 'wrap',
-                        marginBottom: 50,
-                      }}>
+                    <View style={[styles.boxContainer, {marginBottom: 50}]}>
                       <Text
                         style={[
                           styles.description,
                           {fontWeight: '700', marginBottom: 10},
                         ]}>
-                        "Profession"
+                        Profession
                       </Text>
-                      <Text style={styles.description}>
+                      <Text style={[styles.description, {color: '#000'}]}>
                         {horoscope.prediction
                           ? horoscope.prediction.profession
                           : null}
@@ -257,106 +238,6 @@ const HoroscopeScreen = ({route}) => {
           </View>
         </ScrollView>
       </ImageBackground>
-
-      <Modal
-        visible={show}
-        transparent={true}
-        onRequestClose={() => handlePopup()}>
-        <View style={styles.ModelBoxContainer}>
-          <View style={styles.ModelBox}>
-            <View style={styles.headerContainer}>
-              <Text
-                style={[
-                  styles.title,
-                  {
-                    fontWeight: '700',
-                    textTransform: 'capitalize',
-                    color: '#000',
-                  },
-                ]}>
-                select Your Zodic Sign
-              </Text>
-              <Text
-                style={[
-                  styles.title,
-                  {
-                    color: '#475467',
-                    textTransform: 'capitalize',
-                    paddingTop: SIZES.width * 0.01,
-                    fontSize: SIZES.width * 0.031,
-                  },
-                ]}>
-                Select Your Zodic Sign for horoscope
-              </Text>
-              <TouchableOpacity
-                style={styles.crossContainer}
-                onPress={() => handlePopup()}>
-                <Cross name={'close'} size={25} color={'#667085'} />
-              </TouchableOpacity>
-            </View>
-            <ScrollView>
-              {Zodiac.reduce((rows, item, index) => {
-                if (index % 3 === 0) {
-                  rows.push([]);
-                }
-                rows[rows.length - 1].push(item);
-                return rows;
-              }, []).map((row, rowIndex) => (
-                <View
-                  key={rowIndex}
-                  style={{flexDirection: 'row', padding: SIZES.width * 0.026}}>
-                  {row.map((item, itemIndex) => (
-                    <TouchableOpacity
-                      key={itemIndex}
-                      style={{
-                        flex: 1,
-                        backgroundColor:
-                          selectedItems === rowIndex * 3 + itemIndex
-                            ? '#FFB443'
-                            : 'white',
-                        alignItems: 'center',
-                        paddingVertical: SIZES.width * 0.039,
-                        borderRadius: 20,
-                      }}
-                      onPress={() => handleItemPress(rowIndex * 3 + itemIndex)}>
-                      <Image
-                        source={item.image}
-                        style={{
-                          width: SIZES.width * 0.255,
-                          height: SIZES.width * 0.255,
-                          marginBottom: SIZES.width * 0.013,
-                        }}
-                      />
-                      <Text
-                        style={{
-                          fontSize: SIZES.width * 0.031,
-                          color:
-                            selectedItems === rowIndex * 3 + itemIndex
-                              ? '#fff'
-                              : '#000',
-                          fontFamily: 'KantumruyPro-Regular',
-                        }}>
-                        {item.title}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
-                </View>
-              ))}
-              <TouchableOpacity
-                style={styles.buttonContainer}
-                onPress={() => handlePopup()}>
-                <Text
-                  style={[
-                    styles.title,
-                    {fontWeight: '500', fontSize: SIZES.width * 0.041},
-                  ]}>
-                  Update
-                </Text>
-              </TouchableOpacity>
-            </ScrollView>
-          </View>
-        </View>
-      </Modal>
     </>
   );
 };
@@ -369,6 +250,16 @@ const styles = StyleSheet.create({
   },
   mainContainer: {
     marginHorizontal: SIZES.width * 0.051,
+  },
+  boxContainer: {
+    marginTop: SIZES.width * 0.051,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    borderWidth: 1,
+    padding: SIZES.width * 0.03,
+    backgroundColor: '#fff',
+    borderColor: '#7d3807',
+    borderRadius: 5,
   },
   maincontainer: {
     height: SIZES.width * 0.13,
@@ -385,10 +276,8 @@ const styles = StyleSheet.create({
     fontSize: SIZES.width * 0.041,
   },
   imageContainer: {
-    marginTop: SIZES.width * 0.051,
-    width: SIZES.width * 0.382,
-    height: SIZES.width * 0.382,
-    alignSelf: 'center',
+    width: SIZES.width * 0.25,
+    height: SIZES.width * 0.25,
     borderRadius: 100,
   },
   image: {
@@ -417,7 +306,7 @@ const styles = StyleSheet.create({
   description: {
     fontSize: SIZES.width * 0.041,
     fontFamily: 'KantumruyPro-Regular',
-    color: '#000',
+    color: '#7d3807',
     lineHeight: SIZES.width * 0.064,
   },
   fleBox: {

@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react/self-closing-comp */
 import React, {useEffect, useState, useCallback, useRef} from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {Image, ImageBackground, StyleSheet, Text, View} from 'react-native';
 import {images} from '../constant';
 import {SIZES} from '../constant/theme';
 import WebUrls from '../screens/api/WebUrls';
@@ -47,19 +47,29 @@ const PanchangSection = ({refreshing}) => {
   }, [getOrdinalSuffix]);
 
   const callPanchang = async () => {
+    let latitude, longitude, token;
+
+    try {
+      const todayPanchang = await Preferences.getJsonPreferences(
+        Preferences.horoscope.panchang,
+      );
+      latitude = await Preferences.getPreferences(Preferences.key.userLatitude);
+      longitude = await Preferences.getPreferences(
+        Preferences.key.userLongitude,
+      );
+      token = await Preferences.getPreferences(Preferences.key.Token);
+      if (todayPanchang) {
+        setPanchang(todayPanchang);
+        setLoading(false);
+        return;
+      }
+    } catch (error) {
+      console.log(error);
+    }
     setLoading(true);
     try {
-      const {day, month, year, hour, minute, formattedDate} =
-        getCurrentDateTime();
-      let latitude, longitude, token;
+      const {day, month, year, hour, minute} = getCurrentDateTime();
       try {
-        latitude = await Preferences.getPreferences(
-          Preferences.key.userLatitude,
-        );
-        longitude = await Preferences.getPreferences(
-          Preferences.key.userLongitude,
-        );
-        token = await Preferences.getPreferences(Preferences.key.Token);
       } catch (error) {
         console.error('Error getting latitude and longitude:', error);
       }
@@ -82,10 +92,19 @@ const PanchangSection = ({refreshing}) => {
           WebUrls.url.basic_panchang,
           params,
           token,
-        ).then(response => {
+        ).then(async response => {
           if (response.data != null) {
             setPanchang(response.data);
             setLoading(false);
+            try {
+              await Preferences.saveJsonPerences(
+                Preferences.horoscope.panchang,
+                response.data,
+              );
+              console.log('done');
+            } catch (error) {
+              console.log(error);
+            }
           } else {
             console.log('error');
             setLoading(false);
@@ -148,68 +167,86 @@ const PanchangSection = ({refreshing}) => {
           shimmerColors={['#fae3d2', '#FFD0AC', '#FFD0AC']}
           visible={!loading}></ShimmerPlaceHolder>
       ) : (
-        <View style={styles.mainContainer}>
-          <View style={styles.headerContainer}>
-            <Text style={styles.text1}>Panchang</Text>
-            <Image
-              source={images.sawastik_icon}
-              style={{
-                width: SIZES.width * 0.064,
-                height: SIZES.width * 0.064,
-                resizeMode: 'contain',
-              }}
-            />
-          </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              gap: SIZES.width * 0.026,
-              alignItems: 'flex-end',
-            }}>
-            <Text
-              style={{
-                fontFamily: 'DMSerifDisplay-Regular',
-                fontSize: SIZES.width * 0.0893,
-                color: '#F39200',
-              }}>
-              {panchang ? panchang.day : null}
-            </Text>
-            <Text
-              style={{
-                fontFamily: 'KantumruyPro-Regular',
-                fontSize: SIZES.width * 0.036,
-                color: '#000',
-              }}>
-              {formattedDate}
-            </Text>
-          </View>
-          <View style={styles.flexbox}>
-            <View style={{alignItems: 'center'}}>
-              <Image source={images.sunrise_icon} style={styles.icon} />
-              <Text style={styles.text2}>Vedic Sunrise</Text>
-              <Text style={{color: '#000'}}>{panchang.vedic_sunrise}</Text>
-            </View>
-
-            <View style={{alignItems: 'center'}}>
-              <Image source={images.sunset_icon} style={styles.icon} />
-              <Text style={styles.text2}>Vedic Sunset</Text>
-              <Text style={{color: '#000'}}>{panchang.vedic_sunset}</Text>
-            </View>
-          </View>
-          <View style={{marginTop: SIZES.width * 0.034}}>
-            {renderRepeatedData(repeatedData)}
-            <View style={{position: 'absolute', bottom: 0, right: 0}}>
+        <ImageBackground
+          source={images.panchangbg}
+          style={[
+            styles.mainContainer,
+            {
+              padding: SIZES.width * 0.051,
+              borderWidth: 1,
+            },
+          ]}
+          imageStyle={{
+            borderRadius: SIZES.width * 0.077,
+            width: SIZES.width * 0.515,
+            height: SIZES.height * 0.42,
+            resizeMode: 'cover',
+            position: 'absolute',
+            left: SIZES.width * 0.385,
+          }}>
+          <View style={styles.mainContainer2}>
+            <View style={styles.headerContainer}>
+              <Text style={styles.text1}>Panchang</Text>
               <Image
-                source={images.kalash}
+                source={images.sawastik_icon}
                 style={{
-                  width: SIZES.width * 0.23,
-                  height: SIZES.width * 0.24,
+                  width: SIZES.width * 0.064,
+                  height: SIZES.width * 0.064,
                   resizeMode: 'contain',
                 }}
               />
             </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                gap: SIZES.width * 0.026,
+                alignItems: 'flex-end',
+              }}>
+              <Text
+                style={{
+                  fontFamily: 'DMSerifDisplay-Regular',
+                  fontSize: SIZES.width * 0.0893,
+                  color: '#F39200',
+                }}>
+                {panchang ? panchang.day : null}
+              </Text>
+              <Text
+                style={{
+                  fontFamily: 'KantumruyPro-Regular',
+                  fontSize: SIZES.width * 0.036,
+                  color: '#000',
+                }}>
+                {formattedDate}
+              </Text>
+            </View>
+            <View style={styles.flexbox}>
+              <View style={{alignItems: 'center'}}>
+                <Image source={images.sunrise_icon} style={styles.icon} />
+                <Text style={styles.text2}>Vedic Sunrise</Text>
+                <Text style={{color: '#000'}}>{panchang.vedic_sunrise}</Text>
+              </View>
+
+              <View style={{alignItems: 'center'}}>
+                <Image source={images.sunset_icon} style={styles.icon} />
+                <Text style={styles.text2}>Vedic Sunset</Text>
+                <Text style={{color: '#000'}}>{panchang.vedic_sunset}</Text>
+              </View>
+            </View>
+            <View style={{marginTop: SIZES.width * 0.034}}>
+              {renderRepeatedData(repeatedData)}
+              <View style={{position: 'absolute', bottom: 0, right: 0}}>
+                <Image
+                  source={images.kalash}
+                  style={{
+                    width: SIZES.width * 0.23,
+                    height: SIZES.width * 0.24,
+                    resizeMode: 'contain',
+                  }}
+                />
+              </View>
+            </View>
           </View>
-        </View>
+        </ImageBackground>
       )}
     </>
   );
@@ -219,10 +256,15 @@ export default PanchangSection;
 
 const styles = StyleSheet.create({
   mainContainer: {
+    width: SIZES.width - 40,
     height: SIZES.height * 0.42,
-    borderWidth: 1,
     borderRadius: SIZES.width * 0.077,
-    padding: SIZES.width * 0.051,
+    borderColor: '#843C14',
+    backgroundColor: '#fff',
+  },
+  mainContainer2: {
+    height: SIZES.height * 0.42,
+    borderRadius: SIZES.width * 0.077,
     borderColor: '#843C14',
   },
   headerContainer: {

@@ -1,7 +1,14 @@
 /* eslint-disable react/self-closing-comp */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {COLORS, SIZES} from '../constant/theme';
 import {images} from '../constant';
@@ -28,9 +35,12 @@ const HoroscopeSection = ({data, refresh, refreshing}) => {
   const fetchData = async () => {
     try {
       const zodicNumber = await AsyncStorage.getItem('Zodic');
+      console.log(zodicNumber);
       if (zodicNumber !== null) {
         const selectedItemnumber = parseInt(zodicNumber);
         setSelectedItem(selectedItemnumber);
+      } else {
+        setSelectedItem(0);
       }
     } catch (error) {
       console.log(error);
@@ -55,22 +65,40 @@ const HoroscopeSection = ({data, refresh, refreshing}) => {
   }, [refreshing]);
 
   const fetchHeroscope = async () => {
-    setLoading(true);
+    console.log('enter');
+    try {
+      const todayHeroscope = await Preferences.getJsonPreferences(
+        Preferences.horoscope.today,
+      );
+      console.log('today', todayHeroscope);
+      if (todayHeroscope) {
+        setTodayHoroscope(todayHeroscope);
+        setLoading(false);
+        return;
+      }
+    } catch (error) {
+      setLoading(true);
+    }
     try {
       const params = {
         zodiacName: Zodiac[selectedItem].title,
         tzone: '5.5',
       };
-
       const token = await Preferences.getPreferences(Preferences.key.Token);
-
       WebMethods.postRequestWithHeader(
         WebUrls.url.today_horoscope,
         params,
         token,
-      ).then(response => {
+      ).then(async response => {
         if (response.data != null) {
           setTodayHoroscope(response.data);
+          try {
+            await Preferences.saveJsonPerences(
+              Preferences.horoscope.today,
+              response.data,
+            );
+            console.log('done');
+          } catch (error) {}
         } else {
           console.log('error');
         }
@@ -123,6 +151,17 @@ const HoroscopeSection = ({data, refresh, refreshing}) => {
                   ? todayHoroscope.prediction_date
                   : null}
               </Text>
+              <TouchableOpacity
+                style={{marginTop: -10}}
+                onPress={() => navigation.navigate('ZodicScreen')}>
+                <Text
+                  style={[
+                    styles.date,
+                    {fontWeight: '700', color: COLORS.primary},
+                  ]}>
+                  Change Zodiac Sign
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
           <View style={{marginTop: SIZES.width * 0.02}}>
@@ -132,8 +171,7 @@ const HoroscopeSection = ({data, refresh, refreshing}) => {
                 : null}
             </Text>
           </View>
-          <View
-            style={{alignItems: 'flex-end', marginTop: SIZES.width * 0.026}}>
+          <View style={{alignItems: 'flex-end', marginTop: SIZES.width * 0.04}}>
             <TouchableOpacity
               style={styles.buttonContainer}
               onPress={() => handleNavigaion()}>
@@ -141,8 +179,8 @@ const HoroscopeSection = ({data, refresh, refreshing}) => {
               <Image
                 source={images.button_icon}
                 style={{
-                  width: SIZES.width * 0.039,
-                  height: SIZES.width * 0.039,
+                  width: SIZES.width * 0.061,
+                  height: SIZES.width * 0.061,
                   resizeMode: 'contain',
                 }}
               />

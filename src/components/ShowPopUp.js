@@ -126,12 +126,13 @@ const ShowPopUp = ({onHandle}) => {
                       />
                       <Text
                         style={{
-                          fontSize: SIZES.width * 0.031,
+                          fontSize: SIZES.width * 0.04,
                           color:
                             selectedItem === rowIndex * 3 + itemIndex
                               ? '#fff'
                               : '#000',
                           fontFamily: 'KantumruyPro-Regular',
+                          textTransform: 'capitalize',
                         }}>
                         {item.title}
                       </Text>

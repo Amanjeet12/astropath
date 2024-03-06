@@ -13,15 +13,17 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
-// import DateTimePicker from '@react-native-community/datetimepicker';
+import React, {useEffect, useState} from 'react';
 import {Dropdown} from 'react-native-element-dropdown';
 import {COLORS, SIZES} from '../../constant/theme';
 import {images} from '../../constant';
 import HeaderSection from '../../components/HeaderSection';
 import BackButton from '../../components/BackButton';
-
 import DatePicker from 'react-native-date-picker';
+import {useDispatch, useSelector} from 'react-redux';
+import {addToCart} from '../../redux/cartSlice';
+import RecentKundali from '../../components/RecentKundali';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const data = [
   {label: 'Male', value: '1'},
@@ -29,30 +31,82 @@ const data = [
 ];
 
 const SingleKundaliForm = ({navigation}) => {
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState(new Date('1985-01-01T11:05:00.000Z'));
   const [name, setName] = useState('');
   const [place, setPlace] = useState('');
   const [value, setValue] = useState(data[0].label); // Selects 'Male' by default
   const [isFocus, setIsFocus] = useState(false);
-  const [lat, setLat] = useState('');
-  const [lon, setLon] = useState('');
+  const [lat, setLat] = useState('28.7041');
+  const [lon, setLon] = useState('77.1025');
   const [open, setOpen] = useState(false);
   const [openTime, setOpenTime] = useState(false);
   const [Time, setTime] = useState(new Date());
+  const dispatch = useDispatch();
+  const cartItems = useSelector(state => state.cart.items);
+  const [showTime, setShowTime] = useState('');
+  const [hour, setHour] = useState('');
+  const [min, setMinute] = useState('');
+  const [showDay, setShowDay] = useState('');
+  const [day, setDay] = useState('');
+  const [month, setMonth] = useState('');
+  const [year, setYear] = useState('');
+  const [recent, setRecent] = useState('');
 
   const setToastMsg = msg => {
     ToastAndroid.showWithGravity(msg, ToastAndroid.SHORT, ToastAndroid.BOTTOM);
   };
 
-  const handleNavigation = () => {
+  useEffect(() => {
+    const retrieveItems = async () => {
+      try {
+        const items = await AsyncStorage.getItem('kundliItems');
+        if (items !== null) {
+          const parsedItems = JSON.parse(items);
+          // Use parsedItems array as needed
+          console.log(items);
+          setRecent(parsedItems);
+        }
+      } catch (error) {
+        console.error('Error retrieving items from AsyncStorage:', error);
+      }
+    };
+
+    retrieveItems();
+  }, []);
+
+  const handleNavigation = async () => {
+    const item = {name, day, month, year, hour, min, lat, lon, value};
+    console.log(item);
+    dispatch(addToCart(item));
     try {
-      if (name && value && date && Time && lat && lon) {
-        console.log(name, value, date, Time, lat, lon);
+      console.log(name, day, month, year, hour, min, lat, lon, value);
+      try {
+        const existingItems = await AsyncStorage.getItem('kundliItems');
+        let items = existingItems ? JSON.parse(existingItems) : [];
+        items.push(item);
+        await AsyncStorage.setItem('kundliItems', JSON.stringify(items));
+      } catch (error) {
+        console.log(error);
+      }
+
+      if (
+        name &&
+        day &&
+        month &&
+        year &&
+        hour !== null &&
+        min !== null &&
+        lat &&
+        lon &&
+        value
+      ) {
         navigation.navigate('SingleKundli', {
           name,
-          value,
-          date,
-          Time,
+          day,
+          month,
+          year,
+          hour,
+          min,
           lat,
           lon,
         });
@@ -67,8 +121,8 @@ const SingleKundaliForm = ({navigation}) => {
 
   const handlePlaceSelect = (placeName, lat, lng) => {
     setPlace(placeName);
-    setLat(lat);
-    setLon(lng);
+    setLat(lat ? lat : '28.7041');
+    setLon(lng ? lng : '77.1025');
     console.log(placeName, lat, lng);
   };
 
@@ -78,12 +132,32 @@ const SingleKundaliForm = ({navigation}) => {
     });
   };
 
-  const resetDate = () => {
-    setDate(new Date());
+  const setHandleTime = item => {
+    const birthTimeUTC = new Date(item);
+    const birthTimeLocal = birthTimeUTC.toLocaleTimeString([], {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+    });
+    setShowTime(birthTimeLocal);
+    setHour(birthTimeUTC.getHours());
+    setMinute(birthTimeUTC.getMinutes());
+    console.log(birthTimeUTC.getHours(), birthTimeUTC.getMinutes());
   };
 
-  const resetTime = () => {
-    setTime(new Date());
+  const setHandleDate = item => {
+    const birthDayUTC = new Date(item);
+    const birthDateLocal = birthDayUTC.toLocaleDateString();
+    setDay(birthDayUTC.getDate());
+    const month = birthDayUTC.getMonth() + 1;
+    setMonth(month);
+    setYear(birthDayUTC.getFullYear());
+    setShowDay(birthDateLocal);
+    console.log(
+      birthDayUTC.getDate(),
+      birthDayUTC.getMonth() + 1,
+      birthDayUTC.getFullYear(),
+    );
   };
 
   return (
@@ -102,6 +176,29 @@ const SingleKundaliForm = ({navigation}) => {
             <View style={{width: SIZES.width * 0.65}}>
               <BackButton placeholder={'Your Kundli'} />
             </View>
+            {recent && recent.length > 0 && (
+              <View style={{marginTop: SIZES.width * 0.06}}>
+                <View
+                  style={{
+                    paddingBottom: SIZES.width * 0.021,
+                    borderBottomWidth: 2,
+                    borderColor: '#F39200',
+                  }}>
+                  <Text
+                    style={{
+                      fontSize: SIZES.width * 0.051,
+                      fontFamily: 'KantumruyPro-Regular',
+                      color: '#000',
+                    }}>
+                    Recent Kundali
+                  </Text>
+                </View>
+                <View>
+                  <RecentKundali data={recent} screen={'SingleKundli'} />
+                </View>
+              </View>
+            )}
+
             <View style={{marginTop: SIZES.width * 0.06}}>
               <View
                 style={{
@@ -112,7 +209,7 @@ const SingleKundaliForm = ({navigation}) => {
                 <Text
                   style={{
                     fontSize: SIZES.width * 0.051,
-                    fontFamily: '',
+                    fontFamily: 'KantumruyPro-Regular',
                     color: '#000',
                   }}>
                   Create a new kundli
@@ -182,10 +279,7 @@ const SingleKundaliForm = ({navigation}) => {
                     paddingLeft: SIZES.width * 0.051,
                     color: '#000',
                   }}>
-                  {Time.toLocaleTimeString([], {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                  })}
+                  {showTime ? showTime : 'Enter Time Of Birth'}
                 </Text>
 
                 <DatePicker
@@ -193,9 +287,12 @@ const SingleKundaliForm = ({navigation}) => {
                   open={openTime}
                   date={Time}
                   mode="time"
+                  is24hourSource="locale"
+                  locale="en-GB" // Use a locale that defaults to 24-hour format
                   onConfirm={time => {
                     setOpenTime(false);
                     setTime(time);
+                    setHandleTime(time);
                     console.log(time);
                   }}
                   onCancel={() => {
@@ -212,7 +309,7 @@ const SingleKundaliForm = ({navigation}) => {
                   setOpen(true);
                 }}>
                 <Text style={{paddingLeft: SIZES.width * 0.051, color: '#000'}}>
-                  {date.toLocaleDateString()}
+                  {showDay ? showDay : 'Enter You Birth Date'}
                 </Text>
 
                 <DatePicker
@@ -223,6 +320,7 @@ const SingleKundaliForm = ({navigation}) => {
                   onConfirm={date => {
                     setOpen(false);
                     setDate(date);
+                    setHandleDate(date);
                     console.log(date);
                   }}
                   onCancel={() => {
@@ -245,7 +343,7 @@ const SingleKundaliForm = ({navigation}) => {
                     }}>
                     <Text
                       style={{fontSize: SIZES.width * 0.036, color: '#000'}}>
-                      {place ? place : 'Enter Birth place'}
+                      {place ? place : 'Delhi'}
                     </Text>
                   </View>
                 </TouchableOpacity>
@@ -289,6 +387,7 @@ const styles = StyleSheet.create({
   },
   button_position: {
     position: 'relative',
+    marginBottom: SIZES.width * 0.06,
   },
   buttonContainer: {
     height: SIZES.width * 0.13,

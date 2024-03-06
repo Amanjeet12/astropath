@@ -18,6 +18,13 @@ const Preferences = {
     Time: 'Time',
   },
 
+  horoscope: {
+    today: 'today',
+    yesterday: 'yesterday',
+    tommorow: 'tommorow',
+    panchang: 'panchang',
+  },
+
   async savePreferences(key, value) {
     try {
       await AsyncStorage.setItem(key, value);
@@ -30,6 +37,23 @@ const Preferences = {
     try {
       const value = await AsyncStorage.getItem(key);
       return value;
+    } catch (error) {
+      console.log('Something went wrong', error);
+    }
+  },
+
+  async saveJsonPerences(key, value) {
+    try {
+      await AsyncStorage.setItem(key, JSON.stringify(value));
+    } catch (error) {
+      console.log('Something went wrong', error);
+    }
+  },
+
+  async getJsonPreferences(key) {
+    try {
+      const value = await AsyncStorage.getItem(key);
+      return JSON.parse(value);
     } catch (error) {
       console.log('Something went wrong', error);
     }

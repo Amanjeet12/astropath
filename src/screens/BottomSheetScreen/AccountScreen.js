@@ -19,6 +19,8 @@ import CustomeDesignNavigation from '../../components/CustomeDesignNavigation';
 import LogoutButton from '../../components/LogoutButton';
 import {useAuth} from '../../constant/Auth';
 import Custome from '../api/logout';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Preferences from '../api/Preferences';
 
 const AccountScreen = () => {
   const {logout} = useAuth();
@@ -37,7 +39,29 @@ const AccountScreen = () => {
           onPress: async () => {
             try {
               console.log('Items removed successfully.');
-              Custome.logout(logout); // Pass logout as callback
+              let items = [];
+              await AsyncStorage.setItem('kundliItems', JSON.stringify(items));
+              await Preferences.saveJsonPerences(
+                Preferences.horoscope.panchang,
+                null,
+              );
+              await Preferences.saveJsonPerences(
+                Preferences.horoscope.today,
+                null,
+              );
+              await Preferences.saveJsonPerences(
+                Preferences.horoscope.tommorow,
+                null,
+              );
+              await Preferences.saveJsonPerences(
+                Preferences.horoscope.yesterday,
+                null,
+              );
+
+              Custome.logout(() => {
+                console.log('Logout successful');
+              });
+              logout();
             } catch (error) {
               console.error('Error removing items:', error);
             }
@@ -63,16 +87,6 @@ const AccountScreen = () => {
             <View style={{marginTop: SIZES.width * 0.051}}>
               <ProfileSection />
             </View>
-            {/* <View style={{marginTop: SIZES.width * 0.051}}>
-              <Text style={styles.profile_name}>User Name</Text>
-              <Text
-                style={[
-                  styles.profile_name,
-                  {color: '#848484', fontFamily: 'KantumruyPro-Regular'},
-                ]}>
-                tSingh102
-              </Text>
-            </View> */}
             <View
               style={{
                 marginTop: SIZES.width * 0.051,

@@ -15,6 +15,22 @@ const DaySelection = ({onSelect}) => {
         style={[
           styles.singleContainer,
           {
+            backgroundColor: selected === 'Previous' ? '#F39200' : '#ece9e4',
+          },
+        ]}
+        onPress={() => handleSelecter('Previous')}>
+        <Text
+          style={{
+            color: selected === 'Previous' ? '#fff' : '#000',
+            fontSize: SIZES.width * 0.031,
+          }}>
+          Yesterday
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[
+          styles.singleContainer,
+          {
             backgroundColor: selected === 'Today' ? '#F39200' : '#ece9e4',
           },
         ]}
@@ -25,22 +41,6 @@ const DaySelection = ({onSelect}) => {
             fontSize: SIZES.width * 0.031,
           }}>
           Today
-        </Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={[
-          styles.singleContainer,
-          {
-            backgroundColor: selected === 'Previous' ? '#F39200' : '#ece9e4',
-          },
-        ]}
-        onPress={() => handleSelecter('Previous')}>
-        <Text
-          style={{
-            color: selected === 'Previous' ? '#fff' : '#000',
-            fontSize: SIZES.width * 0.031,
-          }}>
-          Previous Day
         </Text>
       </TouchableOpacity>
       <TouchableOpacity
@@ -59,7 +59,7 @@ const DaySelection = ({onSelect}) => {
           Tommorrow
         </Text>
       </TouchableOpacity>
-      <TouchableOpacity
+      {/* <TouchableOpacity
         style={[
           styles.singleContainer,
           {
@@ -74,7 +74,7 @@ const DaySelection = ({onSelect}) => {
           }}>
           Monthly
         </Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 };

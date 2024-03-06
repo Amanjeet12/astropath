@@ -18,6 +18,7 @@ import BlogSection from '../../components/BlogSection';
 import PanchangSection from '../../components/PanchangSection';
 import KundliSecion from '../../components/KundliSecion';
 import ShowPopUp from '../../components/ShowPopUp';
+import AdvancePanchangSection from '../../components/AdvancePanchangSection';
 
 const DashboardScreen = () => {
   const [refresh, setRefresh] = useState(false);
@@ -54,9 +55,11 @@ const DashboardScreen = () => {
             <View style={{marginTop: SIZES.width * 0.03}}>
               <KundliSecion />
             </View>
+            <View style={{marginTop: SIZES.width * 0.01}}>
+              <AdvancePanchangSection />
+            </View>
           </View>
-          <View
-            style={[styles.mainContainer, {marginTop: SIZES.width * 0.026}]}>
+          <View style={[styles.mainContainer, {marginTop: SIZES.width * 0.03}]}>
             <HoroscopeSection
               data={Horoscope}
               refresh={refresh}
@@ -71,9 +74,6 @@ const DashboardScreen = () => {
               style={[styles.mainContainer, {marginTop: SIZES.width * 0.051}]}>
               <BlogSection data={Blog} />
             </View>
-          </View>
-          <View>
-            <ShowPopUp onHandle={handleRefresh} />
           </View>
         </ScrollView>
       </ImageBackground>

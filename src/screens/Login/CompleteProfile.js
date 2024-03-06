@@ -25,24 +25,26 @@ import WebUrls from '../api/WebUrls';
 
 const CompleteProfile = ({route, navigation}) => {
   const {response} = route.params;
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState(new Date('1985-01-01T11:05:00.000Z'));
   const [Time, setTime] = useState(new Date());
   const [openTime, setOpenTime] = useState(false);
   const [open, setOpen] = useState(false);
-  const [lat, setLat] = useState('');
-  const [lon, setLon] = useState('');
-  const [place, setPlace] = useState('');
+  const [lat, setLat] = useState('28.7041');
+  const [lon, setLon] = useState('77.1025');
+  const [place, setPlace] = useState('Delhi');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [isMaleSelected, setMaleSelected] = useState(false);
   const [isFemaleSelected, setFemaleSelected] = useState(false);
   const [gender, setGender] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showTime, setShowTime] = useState('');
+  const [showDay, setShowDay] = useState('');
 
   const handlePlaceSelect = (placeName, lat, lng) => {
     setPlace(placeName);
-    setLat(lat);
-    setLon(lng);
+    setLat(lat ? lat : '28.7041');
+    setLon(lng ? lng : '77.1025');
     console.log(placeName, lat, lng);
   };
 
@@ -59,8 +61,19 @@ const CompleteProfile = ({route, navigation}) => {
   const handleNavigation = async () => {
     setLoading(true);
     try {
-      console.log('enter', lat, lon, date, place, name, email, gender);
-      if (name && place && date && Time && lat && lon && email && gender) {
+      console.log('enter', lat, lon, date, Time, place, name, email, gender);
+      if (
+        name &&
+        place &&
+        date &&
+        Time &&
+        lat &&
+        lon &&
+        email &&
+        gender &&
+        showDay &&
+        showTime
+      ) {
         try {
           await Preferences.savePreferences(
             Preferences.key.UserId,
@@ -101,9 +114,9 @@ const CompleteProfile = ({route, navigation}) => {
           profile_photo: null,
           fcmtoken: null,
           gender: gender,
-          dob: date.toString(),
+          dob: date,
           birth_location: place,
-          birth_time: Time.toString(),
+          birth_time: Time,
           birth_lat: lat.toString(),
           birth_lon: lon.toString(),
         };
@@ -114,16 +127,16 @@ const CompleteProfile = ({route, navigation}) => {
           response.jwt_token,
         ).then(response => {
           console.log('response', response);
-          setLoading(true);
-          navigation.navigate('CompleteScreen');
+          setLoading(false);
+          navigation.navigate('SelectHoroScope');
         });
       } else {
         setToastMsg('All feilds are compalsary');
-        setLoading(true);
+        setLoading(false);
       }
     } catch (error) {
       console.log('erroring', error);
-      setLoading(true);
+      setLoading(false);
     }
   };
   const handleName = text => {
@@ -131,6 +144,22 @@ const CompleteProfile = ({route, navigation}) => {
   };
   const handleEmail = text => {
     setEmail(text);
+  };
+
+  const setHandleTime = item => {
+    const birthTimeUTC = new Date(item);
+    const birthTimeLocal = birthTimeUTC.toLocaleTimeString([], {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+    });
+    setShowTime(birthTimeLocal);
+  };
+
+  const setHandleDate = item => {
+    const birthDayUTC = new Date(item);
+    const birthDateLocal = birthDayUTC.toLocaleDateString();
+    setShowDay(birthDateLocal);
   };
 
   return (
@@ -180,7 +209,7 @@ const CompleteProfile = ({route, navigation}) => {
             <Text style={styles.title2}>Enter Email</Text>
             <View style={styles.mainContainer2}>
               <TextInput
-                placeholder={response.name ? response.name : 'Enter Your name'}
+                placeholder={response.name ? response.name : 'Enter Your email'}
                 style={{
                   paddingLeft: SIZES.width * 0.051,
                   color: COLORS.black,
@@ -205,10 +234,7 @@ const CompleteProfile = ({route, navigation}) => {
                   paddingLeft: SIZES.width * 0.051,
                   color: '#000',
                 }}>
-                {Time.toLocaleTimeString([], {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                })}
+                {showTime ? showTime : 'Enter Time Of Birth'}
               </Text>
 
               <DatePicker
@@ -219,6 +245,7 @@ const CompleteProfile = ({route, navigation}) => {
                 onConfirm={time => {
                   setOpenTime(false);
                   setTime(time);
+                  setHandleTime(time);
                   console.log(time);
                 }}
                 onCancel={() => {
@@ -235,7 +262,7 @@ const CompleteProfile = ({route, navigation}) => {
                 setOpen(true);
               }}>
               <Text style={{paddingLeft: SIZES.width * 0.051, color: '#000'}}>
-                {date.toLocaleDateString()}
+                {showDay ? showDay : 'Enter You Birth Date'}
               </Text>
 
               <DatePicker
@@ -246,6 +273,7 @@ const CompleteProfile = ({route, navigation}) => {
                 onConfirm={date => {
                   setOpen(false);
                   setDate(date);
+                  setHandleDate(date);
                   console.log(date);
                 }}
                 onCancel={() => {
@@ -278,7 +306,7 @@ const CompleteProfile = ({route, navigation}) => {
                   textTransform: 'capitalize',
                 }}>
                 <Text style={{fontSize: SIZES.width * 0.036, color: '#000'}}>
-                  {place ? place : 'Enter Birth place'}
+                  {place ? place : 'Delhi'}
                 </Text>
               </View>
             </TouchableOpacity>

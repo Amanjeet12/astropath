@@ -1,9 +1,11 @@
 import React from 'react';
 import {Text, View, StyleSheet} from 'react-native';
 
-const DashaTableItem = ({item}) => {
+const DashaTableItem = ({item, index}) => {
+  const rowStyle = index % 1 === 0 ? styles.rowEven : styles.rowOdd;
+
   return (
-    <View style={styles.row}>
+    <View style={[styles.row, rowStyle]}>
       <Text style={styles.cell}>{item.planet}</Text>
       <Text style={styles.cell}>{item.planet_id}</Text>
       <Text style={styles.cell}>{item.start}</Text>
@@ -19,6 +21,12 @@ const styles = StyleSheet.create({
     borderBottomColor: '#ccc',
     paddingVertical: 5,
   },
+  rowEven: {
+    backgroundColor: 'black', // Even row color
+  },
+  rowOdd: {
+    backgroundColor: 'grey', // Odd row color
+  },
   cell: {
     flex: 1,
     textAlign: 'center',
@@ -26,7 +34,8 @@ const styles = StyleSheet.create({
     borderRightColor: '#ccc',
     paddingVertical: 5,
     fontSize: 12,
-    color: 'grey',
+    color: 'white', // Text color
+    paddingLeft: 0,
   },
 });
 

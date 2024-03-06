@@ -5,39 +5,38 @@ import {SIZES} from '../constant/theme';
 const TableComponent = ({data}) => {
   return (
     <View style={styles.table}>
-      {Object.entries(data).map(([key, value]) => (
-        <Row key={key} label={key} value={value} />
+      {Object.entries(data).map(([key, value], index) => (
+        <Row key={key} label={key} value={value} index={index} />
       ))}
     </View>
   );
 };
 
-const Row = ({label, value}) => (
-  <View style={styles.row}>
-    {label === 'ascendant_lord' ? (
-      <>
-        <Text style={styles.label}>Ascendant Lord:</Text>
-        <Text style={styles.value}>{value}</Text>
-      </>
-    ) : label === 'name_alphabet' ? (
-      <>
-        <Text style={styles.label}>Name Alphabet:</Text>
-        <Text style={styles.value}>{value}</Text>
-      </>
-    ) : (
-      <>
-        <Text style={styles.label}>{label}:</Text>
-        <Text style={styles.value}>{value}</Text>
-      </>
-    )}
-  </View>
-);
+const Row = ({label, value, index}) => {
+  const formatLabel = label
+    .split('_')
+    .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(' ');
+
+  const rowStyle = {
+    ...styles.row,
+    backgroundColor: index % 2 === 0 ? '#FECF8A' : '#fff',
+  };
+
+  return (
+    <View style={rowStyle}>
+      <Text style={styles.label}>{formatLabel}:</Text>
+      <Text style={styles.value}>{value}</Text>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   table: {
     borderWidth: 0.7,
     borderColor: '#B9B9B9',
     borderRadius: 5,
+    backgroundColor: '#fff',
     // margin: SIZES.width * 0.02,
   },
   row: {
@@ -49,7 +48,7 @@ const styles = StyleSheet.create({
   label: {
     flex: 1,
     fontWeight: 'bold',
-    fontSize: SIZES.width * 0.04,
+    fontSize: SIZES.width * 0.035,
     fontFamily: 'Inter-Regular',
     color: '#000',
     textTransform: 'capitalize',

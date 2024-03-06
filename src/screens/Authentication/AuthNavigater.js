@@ -7,6 +7,7 @@ import OtpScreen from '../Login/OtpScreen';
 import CompleteProfile from '../Login/CompleteProfile';
 import CompleteScreen from '../Login/CompleteScreen';
 import SearchPlaceScreen from '../BottomSheetScreen/SearchPlaceScreen';
+import SelectHoroScope from '../Login/SelectHoroScope';
 
 const Stack = createStackNavigator();
 
@@ -101,6 +102,11 @@ const AuthNavigator = () => {
         <Stack.Screen
           name="SearchPlaceScreen"
           component={SearchPlaceScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="SelectHoroScope"
+          component={SelectHoroScope}
           options={{headerShown: false}}
         />
       </Stack.Navigator>

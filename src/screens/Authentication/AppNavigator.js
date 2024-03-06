@@ -15,7 +15,10 @@ import SingleKundaliForm from '../BottomSheetScreen/SingleKundaliForm';
 import MarraigeScreenForm from '../BottomSheetScreen/MarraigeScreenForm';
 import SearchPlaceScreen from '../BottomSheetScreen/SearchPlaceScreen';
 import PrivacyScreen from '../BottomSheetScreen/PrivacyScreen';
-import CustomerScreen from '../BottomSheetScreen/CustomerScreen';
+import ZodicScreen from '../BottomSheetScreen/ZodicScreen';
+import NumerologyFormScreen from '../BottomSheetScreen/NumerologyFormScreen';
+import NumerologyScreen from '../BottomSheetScreen/NumerologyScreen';
+import AdvancePanchangScreen from '../BottomSheetScreen/AdvancePanchangScreen';
 
 const Stack = createStackNavigator();
 
@@ -31,7 +34,7 @@ const AppNavigator = () => {
           open: {
             animation: 'timing',
             config: {
-              duration: 400,
+              duration: 100,
             },
           },
           close: {
@@ -140,10 +143,26 @@ const AppNavigator = () => {
         name="PrivacyScreen"
         component={PrivacyScreen}
       />
+
       <Stack.Screen
         options={{headerShown: false}}
-        name="CustomerScreen"
-        component={CustomerScreen}
+        name="ZodicScreen"
+        component={ZodicScreen}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="NumerologyFormScreen"
+        component={NumerologyFormScreen}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="NumerologyScreen"
+        component={NumerologyScreen}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="AdvancePanchangScreen"
+        component={AdvancePanchangScreen}
       />
     </Stack.Navigator>
   );

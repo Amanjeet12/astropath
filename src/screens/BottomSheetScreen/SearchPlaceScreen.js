@@ -1,8 +1,10 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {View, TouchableOpacity, StyleSheet} from 'react-native';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import Icon from 'react-native-vector-icons/AntDesign';
 import {useNavigation, useRoute} from '@react-navigation/native';
+import {COLORS} from '../../constant/theme';
 
 const SearchPlaceScreen = () => {
   const navigation = useNavigation();
@@ -36,7 +38,11 @@ const SearchPlaceScreen = () => {
         marginTop: 10,
       }}>
       <GooglePlacesAutocomplete
-        placeholder="Enter Location"
+        placeholder="Search Place (min 3 characters)"
+        textInputProps={{
+          placeholderTextColor: '#808080',
+          returnKeyType: 'search',
+        }}
         onPress={(data, details = null) => {
           handlePlaceSelected(data, details);
         }}
@@ -58,10 +64,13 @@ const SearchPlaceScreen = () => {
           },
           textInputContainer: {
             flexDirection: 'row',
-            backgroundColor: '#fff',
+            backgroundColor: '#FBF8F2',
+            borderColor: '#000',
+            borderWidth: 1,
+            borderRadius: 5,
           },
           textInput: {
-            backgroundColor: '#FFFFFF',
+            backgroundColor: '#FBF8F2',
             height: 44,
             borderRadius: 5,
             paddingVertical: 5,

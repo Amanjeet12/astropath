@@ -20,50 +20,31 @@ import WebMethods from '../api/WebMethods';
 import WebUrls from '../api/WebUrls';
 import {AnimatedCircularProgress} from 'react-native-circular-progress';
 import Preferences from '../api/Preferences';
+import NewBackButton from '../../components/NewBackButton';
 
 const MarraigeKundli = ({route}) => {
   const {
     name_m,
     lat_m,
     lon_m,
-    date,
-    Time,
+    day_m,
+    month_m,
+    year_m,
+    hour_m,
+    min_m,
     name_f,
     lat_f,
     lon_f,
-    date_f,
-    Time_f,
+    day_f,
+    month_f,
+    year_f,
+    hour_f,
+    min_f,
   } = route.params;
+
   const [loading, setLoading] = useState(true);
   const [birth_detail, setBirth_detail] = useState(null);
-
-  const dateTimeObject = new Date(date);
-  const dateObject = new Date(Time);
-
-  // Extracting time parts
-  const m_hour = dateTimeObject.getUTCHours().toString();
-  const m_min = dateTimeObject.getUTCMinutes().toString();
-  const m_sec = dateTimeObject.getUTCSeconds().toString();
-
-  // Extracting date parts
-  const m_day = dateObject.getUTCDate().toString();
-  const m_month = (dateObject.getUTCMonth() + 1).toString();
-  const m_year = dateObject.getUTCFullYear().toString();
-
-  // female
-
-  const dateTimeObject_f = new Date(date_f);
-  const dateObject_f = new Date(Time_f);
-
-  // Extracting time parts
-  const f_hour = dateTimeObject_f.getUTCHours().toString();
-  const f_min = dateTimeObject_f.getUTCMinutes().toString();
-  const f_sec = dateTimeObject_f.getUTCSeconds().toString();
-
-  // Extracting date parts
-  const f_day = dateObject_f.getUTCDate().toString();
-  const f_month = (dateObject_f.getUTCMonth() + 1).toString();
-  const f_year = dateObject_f.getUTCFullYear().toString();
+  const [mangalik_detail, setMagalik_detail] = useState(null);
 
   console.log(SIZES.width * 0.3);
 
@@ -85,38 +66,65 @@ const MarraigeKundli = ({route}) => {
 
       const params = {
         name: name_m,
-        m_day,
-        m_hour,
-        m_min,
-        m_month,
-        m_year,
+        m_day: day_m,
+        m_month: month_m,
+        m_year: year_m,
+        m_hour: hour_m,
+        m_min: min_m,
         m_lat: lat_m,
         m_lon: lon_m,
         m_tzone: '5.5',
-        f_day,
-        f_hour,
-        f_month,
-        f_min,
-        f_year,
+        f_day: day_f,
+        f_month: month_f,
+        f_year: year_f,
+        f_hour: hour_f,
+        f_min: min_f,
         f_lat: lat_f,
         f_lon: lon_f,
         f_tzone: '5.5',
       };
 
-      const [birthDetailData] = await Promise.all([
+      const [birthDetailData, mangalikData] = await Promise.all([
         WebMethods.postRequestWithHeader(
           WebUrls.url.match_ashtakoot_points,
+          params,
+          token,
+        ),
+        WebMethods.postRequestWithHeader(
+          WebUrls.url.match_manglik_report,
           params,
           token,
         ),
       ]);
 
       setBirth_detail(birthDetailData.data);
+      setMagalik_detail(mangalikData.data);
+      console.log(mangalikData);
     } catch (error) {
       console.log('Error fetching data:', error);
     } finally {
       setLoading(false);
     }
+  };
+
+  const data = {
+    f_day: undefined,
+    f_hour: undefined,
+    f_lat: '77.1025',
+    f_lon: '28.7041',
+    f_min: undefined,
+    f_month: undefined,
+    f_tzone: '5.5',
+    f_year: undefined,
+    m_day: undefined,
+    m_hour: undefined,
+    m_lat: 24.19135,
+    m_lon: 86.2996368,
+    m_min: undefined,
+    m_month: undefined,
+    m_tzone: '5.5',
+    m_year: undefined,
+    name: 'Amanjeet Singh',
   };
 
   const ProgressCircle = ({
@@ -161,7 +169,7 @@ const MarraigeKundli = ({route}) => {
               <HeaderSection />
             </View>
             <View style={{width: SIZES.width * 0.65}}>
-              <BackButton placeholder={'Marraige Kundli'} />
+              <NewBackButton placeholder={'Marraige Kundli'} />
             </View>
 
             {loading ? (
@@ -374,6 +382,76 @@ const MarraigeKundli = ({route}) => {
                     </Text>
                   </View>
                 </View>
+                <View
+                  style={{
+                    marginVertical: 10,
+                    marginBottom: 50,
+                    borderWidth: 0.5,
+                    borderRadius: 5,
+                    borderColor: COLORS.primary,
+                    padding: 10,
+                    backgroundColor: '#fff',
+                  }}>
+                  <Text
+                    style={{
+                      textAlign: 'center',
+                      fontSize: SIZES.width * 0.051,
+                      color: '#000',
+                    }}>
+                    Manglik Report
+                  </Text>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'space-around',
+                      marginTop: 20,
+                    }}>
+                    <View style={{alignItems: 'center'}}>
+                      <Image source={images.m_man} style={styles.image} />
+                      <Text style={styles.text}>{name_m}</Text>
+                      <Text
+                        style={{
+                          fontSize: 14,
+                          color: mangalik_detail.male.is_present
+                            ? 'red'
+                            : 'green',
+                        }}>
+                        {mangalik_detail.male.is_present
+                          ? 'Mangalik'
+                          : 'Not Mangalik'}
+                      </Text>
+                    </View>
+                    <View>
+                      <View style={{alignItems: 'center'}}>
+                        <Image source={images.w_woman} style={styles.image} />
+                        <Text style={styles.text}>{name_f}</Text>
+                        <Text
+                          style={{
+                            fontSize: 14,
+                            color: mangalik_detail.male.is_present
+                              ? 'red'
+                              : 'green',
+                          }}>
+                          {mangalik_detail.female.is_present
+                            ? 'Mangalik'
+                            : 'Not Mangalik'}
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
+                  <View>
+                    <Text
+                      style={{
+                        textAlign: 'center',
+                        color: 'grey',
+                        fontSize: 12,
+                        paddingTop: 10,
+                      }}>
+                      {mangalik_detail.conclusion?.report}
+                    </Text>
+                  </View>
+                </View>
               </>
             )}
           </View>
@@ -413,4 +491,6 @@ const styles = StyleSheet.create({
     fontSize: SIZES.width * 0.026,
     color: '#525252',
   },
+  image: {width: 70, height: 70, resizeMode: 'contain'},
+  text: {marginTop: 10, fontSize: 16, color: '#000'},
 });

@@ -50,6 +50,14 @@ const single_icon = require('../assets/images/singleIcon.png');
 const sunrise_icon = require('../assets/images/sunrise.png');
 const sunset_icon = require('../assets/images/sunset.png');
 const kalash = require('../assets/images/kalash.png');
+const panchangbg = require('../assets/images/panchangbg.png');
+const kundali_bg = require('../assets/images/kundali_bg.png');
+const m_man = require('../assets/images/marraigeM.png');
+const w_woman = require('../assets/images/marraigeW.png');
+const horoscopeIcon = require('../assets/images/horoscope.png');
+const dailypan = require('../assets/images/dailypan.png');
+const moon = require('../assets/images/moon.png');
+const nuro = require('../assets/images/nuro.png');
 
 // Zodic
 
@@ -131,4 +139,12 @@ export default {
   sunrise_icon,
   sunset_icon,
   kalash,
+  panchangbg,
+  kundali_bg,
+  m_man,
+  w_woman,
+  horoscopeIcon,
+  moon,
+  dailypan,
+  nuro,
 };

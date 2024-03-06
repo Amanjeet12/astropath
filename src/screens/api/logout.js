@@ -14,7 +14,9 @@ const Custome = {
       Preferences.key.birthLat,
       Preferences.key.birthLon,
     ];
-    await AsyncStorage.multiRemove(storedKeys);
+    for (const key of storedKeys) {
+      await AsyncStorage.removeItem(key);
+    }
     console.log('clear');
     callback();
   },

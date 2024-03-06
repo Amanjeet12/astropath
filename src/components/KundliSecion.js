@@ -1,45 +1,65 @@
 /* eslint-disable react-native/no-inline-styles */
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Image,
+  ImageBackground,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React from 'react';
 import {images} from '../constant';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {SIZES} from '../constant/theme';
 import {useNavigation} from '@react-navigation/native';
 
 const KundliSecion = () => {
   const navigation = useNavigation();
+
+  const handleSingleForm = async () => {
+    navigation.navigate('SingleKundaliForm');
+  };
+
   return (
     <View style={styles.mainContainer}>
-      <View style={styles.boxContainer}>
+      <TouchableOpacity
+        style={styles.boxContainer}
+        onPress={() => handleSingleForm()}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Image source={images.single_icon} style={styles.images} />
-          <Text style={styles.text1}>Free Kundli</Text>
         </View>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate('SingleKundaliForm')}>
-          <Icon
-            name="arrow-top-right"
-            size={SIZES.width * 0.051}
-            color={'#fff'}
+        <Text style={styles.text1}>Free Kundli</Text>
+        <View style={{position: 'absolute', right: 0, borderRadius: 10}}>
+          <Image
+            source={images.kundali_bg}
+            style={{
+              width: SIZES.width * 0.133,
+              height: SIZES.width * 0.16,
+              resizeMode: 'contain',
+              borderTopRightRadius: 10,
+            }}
           />
-        </TouchableOpacity>
-      </View>
-      <View style={styles.boxContainer}>
+        </View>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.boxContainer}
+        onPress={() => navigation.navigate('MarraigeScreenForm')}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Image source={images.love_icon} style={styles.images} />
-          <Text style={styles.text1}>Match Making{'\n'}Kundli</Text>
         </View>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate('MarraigeScreenForm')}>
-          <Icon
-            name="arrow-top-right"
-            size={SIZES.width * 0.051}
-            color={'#fff'}
+        <Text style={styles.text1}>Match Making Kundli</Text>
+        <View style={{position: 'absolute', right: 0, borderRadius: 10}}>
+          <Image
+            source={images.kundali_bg}
+            style={{
+              width: SIZES.width * 0.133,
+              height: SIZES.width * 0.16,
+              resizeMode: 'contain',
+              borderTopRightRadius: 10,
+            }}
           />
-        </TouchableOpacity>
-      </View>
+        </View>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -54,30 +74,22 @@ const styles = StyleSheet.create({
     marginVertical: SIZES.width * 0.026,
   },
   boxContainer: {
-    width: '48%',
+    width: '45%',
     gap: SIZES.width * 0.026,
     height: SIZES.width * 0.21,
-    padding: SIZES.width * 0.013,
-    borderRadius: 18,
+    padding: 10,
+    borderRadius: 10,
     backgroundColor: '#fae1d0',
   },
   images: {
-    width: SIZES.width * 0.153,
-    height: SIZES.width * 0.115,
+    width: 38,
+    height: 38,
     resizeMode: 'contain',
   },
-  button: {
-    position: 'absolute',
-    bottom: SIZES.width * 0.026,
-    right: SIZES.width * 0.026,
-    paddingHorizontal: SIZES.width * 0.026,
-    borderWidth: 1,
-    borderRadius: 20,
-    backgroundColor: '#7d3807',
-  },
+
   text1: {
-    fontSize: SIZES.width * 0.029,
+    fontSize: SIZES.width * 0.03,
     color: '#000',
-    fontFamily: 'KantumruyPro-Regular',
+    fontFamily: 'KantumruyPro-Bold',
   },
 });

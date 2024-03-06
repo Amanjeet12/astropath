@@ -1,76 +1,16 @@
 /* eslint-disable react-native/no-inline-styles */
-import {ActivityIndicator, Image, StyleSheet, Text, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {images} from '../constant';
+import {ActivityIndicator, Image, StyleSheet, Text, View} from 'react-native';
 import {SIZES} from '../constant/theme';
-import WebMethods from '../screens/api/WebMethods';
-import WebUrls from '../screens/api/WebUrls';
-import {SvgXml} from 'react-native-svg';
-import Preferences from '../screens/api/Preferences';
+import {decode} from 'base-64'; // Import the base-64 library for decoding
 
-const ChartsSection = ({name, value, showDateTime, showDate, lat, lon}) => {
-  const [loading, setLoading] = useState(true);
-
-  const [love_chart, setLove_chart] = useState('');
-  const [lagan_chart, setLagan_chart] = useState('');
-  const [marraige_chart, setMarraige_chart] = useState('');
-  const dateTimeObject = new Date(showDateTime);
-  const dateObject = new Date(showDate);
-
-  // Extracting time parts
-  const hour = dateTimeObject.getUTCHours().toString();
-  const minute = dateTimeObject.getUTCMinutes().toString();
-  const second = dateTimeObject.getUTCSeconds().toString();
-
-  // Extracting date parts
-  const day = dateObject.getUTCDate().toString();
-  const month = (dateObject.getUTCMonth() + 1).toString();
-  const year = dateObject.getUTCFullYear().toString();
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const fetchData = async () => {
-    try {
-      let token;
-      try {
-        token = await Preferences.getPreferences(Preferences.key.Token);
-      } catch (error) {
-        console.error('Error getting latitude and longitude:', error);
-        return;
-      }
-
-      if (token) {
-        const params = {
-          name,
-          day: day,
-          month: month,
-          year: year,
-          hour: hour,
-          min: minute,
-          lat: lat,
-          lon: lon,
-          tzone: '5.5',
-        };
-
-        WebMethods.postRequestWithHeader(
-          WebUrls.url.lagan_chart,
-          params,
-          token,
-        ).then(response => {
-          setLagan_chart(response.data.svg);
-        });
-      } else {
-        console.log('Latitude, longitude, or token is null');
-      }
-    } catch (error) {
-      console.log('Error fetching data:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
+const ChartsSection = ({
+  birth_chart,
+  Chathurthamasha_Chart,
+  Panchmansha_Chart,
+  Chalit_Chart,
+  loading,
+}) => {
   if (loading) {
     return (
       <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
@@ -81,24 +21,93 @@ const ChartsSection = ({name, value, showDateTime, showDate, lat, lon}) => {
 
   return (
     <>
-      {lagan_chart && (
-        <>
+      {birth_chart && (
+        <View style={styles.specifyContainer}>
           <View style={styles.flexBox}>
             <View>
-              <Text style={styles.title}>Lagan Chart</Text>
+              <Text style={styles.title}>Birth Chart</Text>
             </View>
           </View>
           <View style={styles.border} />
           <View style={{marginTop: SIZES.width * 0.026}}>
             <View>
-              <SvgXml
-                xml={lagan_chart}
-                width="100%"
-                height={SIZES.width * 0.9}
+              <Image
+                style={{
+                  width: SIZES.width - 40,
+                  height: 300,
+                  resizeMode: 'contain',
+                }}
+                source={{uri: birth_chart}}
               />
             </View>
           </View>
-        </>
+        </View>
+      )}
+      {Panchmansha_Chart && (
+        <View style={styles.specifyContainer}>
+          <View style={styles.flexBox}>
+            <View>
+              <Text style={styles.title}>Panchmansha Chart</Text>
+            </View>
+          </View>
+          <View style={styles.border} />
+          <View style={{marginTop: SIZES.width * 0.026}}>
+            <View>
+              <Image
+                style={{
+                  width: SIZES.width - 40,
+                  height: 300,
+                  resizeMode: 'contain',
+                }}
+                source={{uri: Panchmansha_Chart}}
+              />
+            </View>
+          </View>
+        </View>
+      )}
+      {Chalit_Chart && (
+        <View style={styles.specifyContainer}>
+          <View style={styles.flexBox}>
+            <View>
+              <Text style={styles.title}>Navamansha Chart</Text>
+            </View>
+          </View>
+          <View style={styles.border} />
+          <View style={{marginTop: SIZES.width * 0.026}}>
+            <View>
+              <Image
+                style={{
+                  width: SIZES.width - 40,
+                  height: 300,
+                  resizeMode: 'contain',
+                }}
+                source={{uri: Chalit_Chart}}
+              />
+            </View>
+          </View>
+        </View>
+      )}
+      {Chathurthamasha_Chart && (
+        <View style={styles.specifyContainer}>
+          <View style={styles.flexBox}>
+            <View>
+              <Text style={styles.title}>Chathurthamasha Chart</Text>
+            </View>
+          </View>
+          <View style={styles.border} />
+          <View style={{marginTop: SIZES.width * 0.026}}>
+            <View>
+              <Image
+                style={{
+                  width: SIZES.width - 40,
+                  height: 300,
+                  resizeMode: 'contain',
+                }}
+                source={{uri: Chathurthamasha_Chart}}
+              />
+            </View>
+          </View>
+        </View>
       )}
     </>
   );
@@ -112,13 +121,14 @@ const styles = StyleSheet.create({
     color: '#171532',
     fontFamily: 'KantumruyPro-Regular',
   },
-  dropdown: {
-    height: SIZES.width * 0.102,
-    borderColor: 'gray',
-    borderWidth: 0.5,
-    paddingHorizontal: SIZES.width * 0.021,
-    borderRadius: SIZES.width * 0.01,
+  specifyContainer: {
+    backgroundColor: '#fff',
+    paddingBottom: 30,
+    paddingHorizontal: 5,
+    borderRadius: 5,
+    marginTop: 10,
   },
+
   placeholderStyle: {
     fontSize: SIZES.width * 0.031,
     color: 'grey',
@@ -140,6 +150,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginTop: SIZES.width * 0.03,
   },
   border: {
     height: 1,

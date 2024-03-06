@@ -35,10 +35,6 @@ const Splashscreen = () => {
         }),
       ]).start(() => {
         setShowActivityIndicator(true);
-
-        // setTimeout(() => {
-        //   navigation.navigate('OnboardingScreen');
-        // }, 1000);
       });
     };
 

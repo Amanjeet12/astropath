@@ -82,6 +82,7 @@ const WebMethods = {
         console.log('error', error);
       });
   },
+
   getRequestWithHeader: async (webUrl, token) => {
     const url = WebUrls.url.LOcal_URL + webUrl;
     console.log('url==>', url);

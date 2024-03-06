@@ -89,7 +89,7 @@ const OtpScreen = ({navigation, route}) => {
       googlePlayStore(phone, orderId);
       return;
     }
-    if (!otp) {
+    if (!otp || otp < 5) {
       setToastMsg('Enter your otp');
       return;
     }
@@ -130,10 +130,7 @@ const OtpScreen = ({navigation, route}) => {
             Preferences.key.email,
             existingCustomer.email,
           ),
-          Preferences.savePreferences(
-            Preferences.key.Time,
-            existingCustomer.birth_time,
-          ),
+
           Preferences.savePreferences(
             Preferences.key.birthPlace,
             existingCustomer.birth_location,

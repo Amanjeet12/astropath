@@ -81,7 +81,7 @@ export const Horoscope = {
   title: 'Your Today’s Horoscope',
   date: '06th February 2024',
   description: `A few fresh ideas will not only add some pizzazz to your life right now, they will increase your romantic potential! If you're in the mood to start a new romance, expose yourself to new ways of thinking.`,
-  image: images.Sagittarius,
+  image: images.Aries,
 };
 
 export const Blog = [
@@ -168,12 +168,11 @@ export const language = [
     title: 'हिन्दी',
   },
 ];
-
 export const Zodiac = [
   {
     id: '1',
-    image: images.Sagittarius,
-    title: 'sagittarius',
+    image: images.Aries,
+    title: 'aries',
   },
   {
     id: '2',
@@ -192,13 +191,13 @@ export const Zodiac = [
   },
   {
     id: '5',
-    image: images.Virgo,
-    title: 'virgo',
+    image: images.Leo,
+    title: 'leo',
   },
   {
     id: '6',
-    image: images.Leo,
-    title: 'leo',
+    image: images.Virgo,
+    title: 'virgo',
   },
   {
     id: '7',
@@ -212,22 +211,40 @@ export const Zodiac = [
   },
   {
     id: '9',
-    image: images.Aries,
-    title: 'aries',
+    image: images.Sagittarius,
+    title: 'sagittarius',
   },
   {
     id: '10',
-    image: images.Aquarius,
-    title: 'aquarius',
+    image: images.Capicorn,
+    title: 'capricorn',
   },
   {
     id: '11',
-    image: images.Capicorn,
-    title: 'capricorn',
+    image: images.Aquarius,
+    title: 'aquarius',
   },
   {
     id: '12',
     image: images.Pisces,
     title: 'pisces',
+  },
+];
+export const kundaliData = [
+  {
+    lat: 23.7994757,
+    lon: 85.94578369999999,
+    name: 'Amanjeet',
+    stringDate: '1999-09-26T06:03:00.000Z',
+    stringTime: '2024-03-02T06:03:32.870Z',
+    value: 'Male',
+  },
+  {
+    lat: 23.7994757,
+    lon: 85.94578369999999,
+    name: 'Kundali',
+    stringDate: '1999-09-26T06:03:00.000Z',
+    stringTime: '2024-03-02T06:03:32.870Z',
+    value: 'Male',
   },
 ];
