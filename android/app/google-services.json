@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "919550891528",
+    "project_id": "zegocloudvideocall-b50bd",
+    "storage_bucket": "zegocloudvideocall-b50bd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:919550891528:android:bfb610d75793d38dffe3bd",
+        "android_client_info": {
+          "package_name": "com.astrolger"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGu-y80sJIikMnXahE8AMKC9ynZN2zmXs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:919550891528:android:b52a847aa4d04e4cffe3bd",
+        "android_client_info": {
+          "package_name": "com.astropath"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGu-y80sJIikMnXahE8AMKC9ynZN2zmXs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

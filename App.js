@@ -7,6 +7,11 @@ import {Provider} from 'react-redux';
 import fetchApproximateLocation from './src/screens/Authentication/fetchApproximateLocation';
 import {myStore} from './src/redux/myStore';
 
+import {
+  ZegoCallInvitationDialog,
+  ZegoUIKitPrebuiltCallFloatingMinimizedView,
+} from '@zegocloud/zego-uikit-prebuilt-call-rn';
+
 const App = () => {
   useEffect(() => {
     fetchApproximateLocation();
@@ -16,7 +21,9 @@ const App = () => {
     <AuthProvider>
       <NavigationContainer>
         <Provider store={myStore}>
+          <ZegoCallInvitationDialog />
           <Main />
+          <ZegoUIKitPrebuiltCallFloatingMinimizedView />
         </Provider>
       </NavigationContainer>
     </AuthProvider>

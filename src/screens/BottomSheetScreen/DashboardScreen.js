@@ -12,13 +12,14 @@ import React, {useState} from 'react';
 import {COLORS, SIZES} from '../../constant/theme';
 import HeaderSection from '../../components/HeaderSection';
 import {images} from '../../constant';
-import {Blog, Horoscope} from '../../constant/data';
+import {Astrologer, Blog, Horoscope} from '../../constant/data';
 import HoroscopeSection from '../../components/HoroscopeSection';
 import BlogSection from '../../components/BlogSection';
 import PanchangSection from '../../components/PanchangSection';
 import KundliSecion from '../../components/KundliSecion';
 import ShowPopUp from '../../components/ShowPopUp';
 import AdvancePanchangSection from '../../components/AdvancePanchangSection';
+import AstrologerComponent from '../../components/AstrologerComponent';
 
 const DashboardScreen = () => {
   const [refresh, setRefresh] = useState(false);
@@ -58,6 +59,12 @@ const DashboardScreen = () => {
             <View style={{marginTop: SIZES.width * 0.01}}>
               <AdvancePanchangSection />
             </View>
+          </View>
+          <View style={[styles.mainContainer, {marginTop: SIZES.width * 0.03}]}>
+            <Text style={[styles.tagLine, {marginBottom: 10}]}>
+              Recent Astrologer
+            </Text>
+            <AstrologerComponent data={Astrologer} />
           </View>
           <View style={[styles.mainContainer, {marginTop: SIZES.width * 0.03}]}>
             <HoroscopeSection

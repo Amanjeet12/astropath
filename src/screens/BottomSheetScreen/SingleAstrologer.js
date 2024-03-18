@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react/self-closing-comp */
 /* eslint-disable react-native/no-inline-styles */
 import {
@@ -10,15 +11,105 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {COLORS, SIZES} from '../../constant/theme';
 import {images} from '../../constant';
 import HeaderSection from '../../components/HeaderSection';
 import BackButton from '../../components/BackButton';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import Chat from 'react-native-vector-icons/Ionicons';
+import AboutAstrologer from '../../components/AboutAstrologer';
+import * as ZIM from 'zego-zim-react-native';
+import * as ZPNs from 'zego-zpns-react-native';
 
-const SingleAstrologer = ({route}) => {
+import ZegoUIKitPrebuiltCallService, {
+  ZegoSendCallInvitationButton,
+  ZegoMenuBarButtonName,
+} from '@zegocloud/zego-uikit-prebuilt-call-rn';
+import Preferences from '../api/Preferences';
+
+const SingleAstrologer = ({route, navigation}) => {
   const {item} = route.params;
   console.log(item);
+  const onUserLogin = async (userID, userName) => {
+    return ZegoUIKitPrebuiltCallService.init(
+      678662769,
+      'a88556743e933ecfa883c17d34de63633098a9ee8acb7e4ea5544b5504268707',
+      userID,
+      userName,
+      [ZIM, ZPNs],
+      {
+        ringtoneConfig: {
+          incomingCallFileName: 'zego_incoming.mp3',
+          outgoingCallFileName: 'zego_outgoing.mp3',
+        },
+        notifyWhenAppRunningInBackgroundOrQuit: true,
+        androidNotificationConfig: {
+          channelId: 'zego_video_call',
+          channelName: 'zego_video_call',
+        },
+        avatarBuilder: ({userInfo}) => {
+          return (
+            <View style={{width: '100%', height: '100%'}}>
+              <Image
+                style={{width: '100%', height: '100%'}}
+                resizeMode="cover"
+                source={{uri: `https://robohash.org/${userInfo.userID}.png`}}
+              />
+            </View>
+          );
+        },
+        requireConfig: data => {
+          return {
+            timingConfig: {
+              isDurationVisible: true,
+              onDurationUpdate: duration => {
+                console.log(
+                  '########CallWithInvitation onDurationUpdate',
+                  duration,
+                );
+                if (duration === 10 * 60) {
+                  ZegoUIKitPrebuiltCallService.hangUp();
+                }
+              },
+            },
+
+            hangUpConfirmInfo: {
+              title: 'Hangup confirm',
+              message: 'Do you want to hangup?',
+              cancelButtonName: 'Cancel',
+              confirmButtonName: 'Confirm',
+            },
+
+            topMenuBarConfig: {
+              buttons: [ZegoMenuBarButtonName.minimizingButton],
+            },
+            onWindowMinimized: () => {
+              console.log('[Demo]CallInvitation onWindowMinimized');
+              navigation.navigate('Waitlist');
+            },
+            onWindowMaximized: () => {
+              console.log('[Demo]CallInvitation onWindowMaximized');
+              navigation.navigate('ZegoUIKitPrebuiltCallInCallScreen');
+            },
+          };
+        },
+      },
+    );
+  };
+
+  const handlCallAndVideoCallRequest = async () => {
+    try {
+      const userName = await Preferences.getPreferences(Preferences.key.Name);
+      const userId = await Preferences.getPreferences(Preferences.key.UserId);
+      const truncatedUserId = userId.substring(0, 5);
+      console.log(userName, truncatedUserId);
+      onUserLogin(truncatedUserId, userName).then(() => {
+        console.log('request send');
+      });
+    } catch (error) {}
+  };
+
   return (
     <>
       <StatusBar backgroundColor={'#f7f1e1'} barStyle={'dark-content'} />
@@ -34,16 +125,7 @@ const SingleAstrologer = ({route}) => {
             <View style={{width: SIZES.width * 0.65}}>
               <BackButton placeholder={'Astrologer'} />
             </View>
-            <View
-              style={{
-                width: '100%',
-                height: 220,
-                borderWidth: 1,
-                marginTop: 30,
-                borderRadius: 10,
-                backgroundColor: '#fff',
-                padding: SIZES.width * 0.039,
-              }}>
+            <View style={styles.mainBoxContainer}>
               <View style={{flexDirection: 'row'}}>
                 <View style={{width: '40%'}}>
                   <View>
@@ -79,29 +161,68 @@ const SingleAstrologer = ({route}) => {
                 <View style={{width: '60%'}}>
                   <Text style={styles.profile_name}>{item.name}</Text>
                   <View style={styles.flexBox}>
-                    <Image source={images.location_icon} style={styles.icon} />
+                    <Image source={images.knowledge} style={styles.icon} />
                     <Text style={styles.profile_categories}>
                       {item.categories}
                     </Text>
                   </View>
                   <View style={[styles.flexBox, {marginTop: 3}]}>
-                    <Image source={images.location_icon} style={styles.icon} />
-
+                    <Image source={images.language} style={styles.icon} />
                     <Text style={styles.profile_language}>{item.language}</Text>
                   </View>
                   <View style={[styles.flexBox, {marginTop: 3}]}>
-                    <Image source={images.location_icon} style={styles.icon} />
+                    <Image source={images.experiance} style={styles.icon} />
                     <Text style={styles.profile_experience}>
                       {item.experience} Years
                     </Text>
                   </View>
-
-                  <Text style={styles.profile_rate}>
-                    ₹ {item.rate}/min -Chat
-                  </Text>
+                  <View style={[styles.flexBox, {gap: 15}]}>
+                    <Text style={styles.profile_rate}>
+                      ₹ {item.rate}/min-Chat
+                    </Text>
+                    <TouchableOpacity style={styles.flexBox}>
+                      <Text style={{fontSize: 12, color: 'green'}}>
+                        view charges
+                      </Text>
+                      <Icon
+                        name={'error-outline'}
+                        size={12}
+                        color={'grey'}
+                        style={{transform: [{rotate: '180deg'}]}}
+                      />
+                    </TouchableOpacity>
+                  </View>
                 </View>
               </View>
+              <View style={styles.border} />
+              <View style={styles.featuresContainer}>
+                <TouchableOpacity
+                  style={[styles.flexBox, styles.singlebox, {width: '25%'}]}>
+                  <Text style={{fontSize: 15, color: '#000'}}>Chat</Text>
+                  <Chat
+                    name={'chatbubble-ellipses-outline'}
+                    color={'#000'}
+                    size={15}
+                  />
+                </TouchableOpacity>
+                <View style={styles.verticalBorder} />
+                <TouchableOpacity
+                  style={[styles.flexBox, styles.singlebox, {width: '30%'}]}
+                  onPress={handlCallAndVideoCallRequest}>
+                  <Text style={{fontSize: 15, color: '#000'}}>Call</Text>
+                  <Chat name={'call'} color={'#000'} size={15} />
+                </TouchableOpacity>
+                <View style={styles.verticalBorder} />
+
+                <TouchableOpacity
+                  style={[styles.flexBox, styles.singlebox, {width: '40%'}]}
+                  onPress={handlCallAndVideoCallRequest}>
+                  <Text style={{fontSize: 15, color: '#000'}}>Video Call</Text>
+                  <Chat name={'videocam'} color={'#000'} size={15} />
+                </TouchableOpacity>
+              </View>
             </View>
+            <AboutAstrologer data={item.about} />
           </View>
         </ScrollView>
       </ImageBackground>
@@ -117,6 +238,21 @@ const styles = StyleSheet.create({
   },
   mainContainer: {
     marginHorizontal: SIZES.width * 0.051,
+  },
+  mainBoxContainer: {
+    width: '100%',
+    height: 220,
+    borderWidth: 1,
+    marginTop: 30,
+    borderRadius: 10,
+    backgroundColor: '#fff',
+    padding: SIZES.width * 0.039,
+  },
+  featuresContainer: {
+    height: 50,
+    flexDirection: 'row',
+    gap: 5,
+    marginTop: 5,
   },
   profile: {
     width: SIZES.width * 0.3,
@@ -137,18 +273,19 @@ const styles = StyleSheet.create({
   profile_language: {
     color: '#0D6EFD',
     fontFamily: 'KantumruyPro-Regular',
-    fontSize: SIZES.width * 0.021,
+    fontSize: SIZES.width * 0.029,
   },
   profile_experience: {
     color: '#707B81',
     fontFamily: 'KantumruyPro-Regular',
-    fontSize: SIZES.width * 0.026,
+    fontSize: SIZES.width * 0.029,
   },
   profile_rate: {
     color: '#000',
-    fontFamily: 'KantumruyPro-Bold',
-    fontSize: SIZES.width * 0.031,
+    fontFamily: 'KantumruyPro-Regular',
+    fontSize: SIZES.width * 0.03,
     paddingTop: 5,
+    paddingLeft: 5,
   },
   ratingContainer: {
     position: 'absolute',
@@ -169,4 +306,23 @@ const styles = StyleSheet.create({
     gap: 5,
   },
   icon: {width: 15, height: 15, resizeMode: 'contain'},
+  border: {
+    width: '100%',
+    borderWidth: 1,
+    borderColor: '#FFB443',
+    marginTop: 20,
+  },
+  singlebox: {
+    padding: 5,
+    backgroundColor: '#FFB443',
+    width: '33%',
+    justifyContent: 'center',
+    borderRadius: 20,
+    borderWidth: 0.5,
+  },
+  verticalBorder: {
+    borderWidth: 1,
+    borderColor: '#FFB443',
+    marginTop: 5,
+  },
 });

@@ -19,6 +19,10 @@ import ZodicScreen from '../BottomSheetScreen/ZodicScreen';
 import NumerologyFormScreen from '../BottomSheetScreen/NumerologyFormScreen';
 import NumerologyScreen from '../BottomSheetScreen/NumerologyScreen';
 import AdvancePanchangScreen from '../BottomSheetScreen/AdvancePanchangScreen';
+import {
+  ZegoUIKitPrebuiltCallWaitingScreen,
+  ZegoUIKitPrebuiltCallInCallScreen,
+} from '@zegocloud/zego-uikit-prebuilt-call-rn';
 
 const Stack = createStackNavigator();
 
@@ -163,6 +167,18 @@ const AppNavigator = () => {
         options={{headerShown: false}}
         name="AdvancePanchangScreen"
         component={AdvancePanchangScreen}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        // DO NOT change the name
+        name="ZegoUIKitPrebuiltCallWaitingScreen"
+        component={ZegoUIKitPrebuiltCallWaitingScreen}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        // DO NOT change the name
+        name="ZegoUIKitPrebuiltCallInCallScreen"
+        component={ZegoUIKitPrebuiltCallInCallScreen}
       />
     </Stack.Navigator>
   );
