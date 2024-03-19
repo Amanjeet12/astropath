@@ -45,6 +45,11 @@ const WebUrls = {
 
     lalkitab: 'kundali/backend/lalkitab_debts',
     lalkitab_planet: 'kundali/backend/lalkitab_planets',
+
+    // payment
+
+    create_payment: 'backend/create-payment',
+    verify_payment: 'backend/verify-payment',
   },
 };
 

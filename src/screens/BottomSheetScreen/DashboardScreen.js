@@ -20,8 +20,10 @@ import KundliSecion from '../../components/KundliSecion';
 import ShowPopUp from '../../components/ShowPopUp';
 import AdvancePanchangSection from '../../components/AdvancePanchangSection';
 import AstrologerComponent from '../../components/AstrologerComponent';
+import {useTranslation} from 'react-i18next';
 
 const DashboardScreen = () => {
+  const {t} = useTranslation();
   const [refresh, setRefresh] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const onRefresh = () => {
@@ -62,7 +64,7 @@ const DashboardScreen = () => {
           </View>
           <View style={[styles.mainContainer, {marginTop: SIZES.width * 0.03}]}>
             <Text style={[styles.tagLine, {marginBottom: 10}]}>
-              Recent Astrologer
+              {t('Top Astrologers')}
             </Text>
             <AstrologerComponent data={Astrologer} />
           </View>
@@ -75,7 +77,7 @@ const DashboardScreen = () => {
           </View>
           <View>
             <View style={[styles.mainContainer]}>
-              <Text style={styles.tagLine}>Latest Blogs</Text>
+              <Text style={styles.tagLine}>{t('Latest Blogs')}</Text>
             </View>
             <View
               style={[styles.mainContainer, {marginTop: SIZES.width * 0.051}]}>

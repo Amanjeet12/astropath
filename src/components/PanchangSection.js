@@ -9,10 +9,12 @@ import WebMethods from '../screens/api/WebMethods';
 import Preferences from '../screens/api/Preferences';
 import LinearGradient from 'react-native-linear-gradient';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
+import {useTranslation} from 'react-i18next';
 
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
 const PanchangSection = ({refreshing}) => {
+  const {t} = useTranslation();
   const [panchang, setPanchang] = useState('');
   const [loading, setLoading] = useState(true);
   const calledOnceRef = useRef(false);
@@ -148,10 +150,10 @@ const PanchangSection = ({refreshing}) => {
   const formattedDate = getCurrentDateTime().formattedDate;
 
   const repeatedData = [
-    {label: 'Tithi', value: panchang.tithi},
+    {label: t('Tithi'), value: panchang.tithi},
     {label: 'Nakshatra', value: panchang.nakshatra},
-    {label: 'Yog', value: panchang.yog},
-    {label: 'Karan', value: panchang.karan},
+    {label: t('Yog'), value: panchang.yog},
+    {label: t('Karan'), value: panchang.karan},
   ];
 
   return (
@@ -186,7 +188,7 @@ const PanchangSection = ({refreshing}) => {
           }}>
           <View style={styles.mainContainer2}>
             <View style={styles.headerContainer}>
-              <Text style={styles.text1}>Panchang</Text>
+              <Text style={styles.text1}> {t('Panchang')}</Text>
               <Image
                 source={images.sawastik_icon}
                 style={{
@@ -222,13 +224,13 @@ const PanchangSection = ({refreshing}) => {
             <View style={styles.flexbox}>
               <View style={{alignItems: 'center'}}>
                 <Image source={images.sunrise_icon} style={styles.icon} />
-                <Text style={styles.text2}>Vedic Sunrise</Text>
+                <Text style={styles.text2}>{t('Vedic Sunrise')}</Text>
                 <Text style={{color: '#000'}}>{panchang.vedic_sunrise}</Text>
               </View>
 
               <View style={{alignItems: 'center'}}>
                 <Image source={images.sunset_icon} style={styles.icon} />
-                <Text style={styles.text2}>Vedic Sunset</Text>
+                <Text style={styles.text2}>{t('Vedic Sunset')}</Text>
                 <Text style={{color: '#000'}}>{panchang.vedic_sunset}</Text>
               </View>
             </View>

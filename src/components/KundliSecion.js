@@ -11,10 +11,11 @@ import React from 'react';
 import {images} from '../constant';
 import {SIZES} from '../constant/theme';
 import {useNavigation} from '@react-navigation/native';
+import {useTranslation} from 'react-i18next';
 
 const KundliSecion = () => {
   const navigation = useNavigation();
-
+  const {t} = useTranslation();
   const handleSingleForm = async () => {
     navigation.navigate('SingleKundaliForm');
   };
@@ -27,7 +28,7 @@ const KundliSecion = () => {
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Image source={images.single_icon} style={styles.images} />
         </View>
-        <Text style={styles.text1}>Free Kundli</Text>
+        <Text style={styles.text1}>{t('Single Kundli')}</Text>
         <View style={{position: 'absolute', right: 0, borderRadius: 10}}>
           <Image
             source={images.kundali_bg}
@@ -47,7 +48,7 @@ const KundliSecion = () => {
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Image source={images.love_icon} style={styles.images} />
         </View>
-        <Text style={styles.text1}>Match Making Kundli</Text>
+        <Text style={styles.text1}>{t('Match Making Kundli')}</Text>
         <View style={{position: 'absolute', right: 0, borderRadius: 10}}>
           <Image
             source={images.kundali_bg}

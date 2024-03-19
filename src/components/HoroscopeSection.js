@@ -22,8 +22,10 @@ import Preferences from '../screens/api/Preferences';
 import LinearGradient from 'react-native-linear-gradient';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
+import {useTranslation} from 'react-i18next';
 
 const HoroscopeSection = ({data, refresh, refreshing}) => {
+  const {t} = useTranslation();
   const focused = useIsFocused();
   const navigation = useNavigation();
   const [selectedItem, setSelectedItem] = useState(null);
@@ -145,7 +147,7 @@ const HoroscopeSection = ({data, refresh, refreshing}) => {
               />
             </View>
             <View style={{paddingTop: SIZES.width * 0.026}}>
-              <Text style={styles.title}>{data.title}</Text>
+              <Text style={styles.title}>{t('Your Today’s Horoscope')}</Text>
               <Text style={styles.date}>
                 {todayHoroscope.prediction_date
                   ? todayHoroscope.prediction_date

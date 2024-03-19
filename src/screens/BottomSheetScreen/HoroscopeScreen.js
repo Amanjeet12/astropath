@@ -22,8 +22,10 @@ import {Zodiac} from '../../constant/data';
 import WebMethods from '../api/WebMethods';
 import WebUrls from '../api/WebUrls';
 import Preferences from '../api/Preferences';
+import {useTranslation} from 'react-i18next';
 
 const HoroscopeScreen = ({route}) => {
+  const {t} = useTranslation();
   const {todayHoroscope, selectedItem} = route.params;
   const [selectedItems, setSelectedItems] = useState(selectedItem);
   const [horoscope, setHoroscope] = useState(todayHoroscope);
@@ -118,7 +120,7 @@ const HoroscopeScreen = ({route}) => {
               <HeaderSection />
             </View>
             <View style={styles.fleBox}>
-              <BackButton placeholder={'Horoscope'} />
+              <BackButton placeholder={t('Horoscope')} />
             </View>
             <View
               style={{
@@ -135,7 +137,7 @@ const HoroscopeScreen = ({route}) => {
               </View>
               <View>
                 <Text style={styles.headline}>
-                  {Zodiac[selectedItems].title}
+                  {t(Zodiac[selectedItems].title)}
                 </Text>
               </View>
             </View>

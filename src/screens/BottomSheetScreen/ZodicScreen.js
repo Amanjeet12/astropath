@@ -18,8 +18,10 @@ import {Zodiac} from '../../constant/data';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import Preferences from '../api/Preferences';
+import {useTranslation} from 'react-i18next';
 
 const ZodicScreen = () => {
+  const {t} = useTranslation();
   const navigation = useNavigation();
   const [selectedItem, setSelectedItem] = useState(null);
 
@@ -119,7 +121,7 @@ const ZodicScreen = () => {
                         fontFamily: 'KantumruyPro-Regular',
                         textTransform: 'capitalize',
                       }}>
-                      {item.title}
+                      {t(item.title)}
                     </Text>
                   </TouchableOpacity>
                 ))}

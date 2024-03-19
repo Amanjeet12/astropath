@@ -34,5 +34,7 @@ const styles = StyleSheet.create({
     fontFamily: 'DMSerifDisplay-Regular',
     fontSize: SIZES.width * 0.057,
     color: '#000',
+    lineHeight: 35,
+    paddingTop: 5,
   },
 });

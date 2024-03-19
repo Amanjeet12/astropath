@@ -178,62 +178,62 @@ export const Zodiac = [
   {
     id: '1',
     image: images.Aries,
-    title: 'aries',
+    title: 'Aries',
   },
   {
     id: '2',
     image: images.Taurus,
-    title: 'taurus',
+    title: 'Taurus',
   },
   {
     id: '3',
     image: images.Gemini,
-    title: 'gemini',
+    title: 'Gemini',
   },
   {
     id: '4',
     image: images.Cancer,
-    title: 'cancer',
+    title: 'Cancer',
   },
   {
     id: '5',
     image: images.Leo,
-    title: 'leo',
+    title: 'Leo',
   },
   {
     id: '6',
     image: images.Virgo,
-    title: 'virgo',
+    title: 'Virgo',
   },
   {
     id: '7',
     image: images.Libra,
-    title: 'libra',
+    title: 'Libra',
   },
   {
     id: '8',
     image: images.Scorpio,
-    title: 'scorpio',
+    title: 'Scorpio',
   },
   {
     id: '9',
     image: images.Sagittarius,
-    title: 'sagittarius',
+    title: 'Sagittarius',
   },
   {
     id: '10',
     image: images.Capicorn,
-    title: 'capricorn',
+    title: 'Capricorn',
   },
   {
     id: '11',
     image: images.Aquarius,
-    title: 'aquarius',
+    title: 'Aquarius',
   },
   {
     id: '12',
     image: images.Pisces,
-    title: 'pisces',
+    title: 'Pisces',
   },
 ];
 export const kundaliData = [

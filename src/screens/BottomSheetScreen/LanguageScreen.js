@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import {COLORS, SIZES} from '../../constant/theme';
 import {images} from '../../constant';
 import HeaderSection from '../../components/HeaderSection';
@@ -17,11 +17,19 @@ import BackButton from '../../components/BackButton';
 import Custombutton from '../../components/Custombutton';
 import {useNavigation} from '@react-navigation/native';
 import {language} from '../../constant/data';
+import i18next, {languageResources} from '../../locales/i18next';
+import languagesList from '../../locales/languagesList.json';
 
 const LanguageScreen = () => {
   const navigation = useNavigation();
+
   const handleNavigation = () => {
     navigation.goBack();
+  };
+
+  const changeLng = lng => {
+    i18next.changeLanguage(lng);
+    handleNavigation();
   };
 
   const renderItem = ({item}) => (
@@ -49,10 +57,17 @@ const LanguageScreen = () => {
             </View>
             <View style={{marginTop: SIZES.width * 0.051}}>
               <FlatList
-                horizontal
-                data={language}
-                renderItem={renderItem}
-                keyExtractor={item => item.id}
+                data={Object.keys(languageResources)}
+                scrollEnabled={false}
+                renderItem={({item}) => (
+                  <TouchableOpacity
+                    style={styles.languageButton}
+                    onPress={() => changeLng(item)}>
+                    <Text style={styles.lngName}>
+                      {languagesList[item].nativeName}
+                    </Text>
+                  </TouchableOpacity>
+                )}
               />
             </View>
           </View>
@@ -105,5 +120,14 @@ const styles = StyleSheet.create({
     color: '#000',
     fontFamily: 'KantumruyPro-Regular',
     fontSize: SIZES.width * 0.036,
+  },
+  languageButton: {
+    padding: 10,
+    borderBottomColor: '#F39200',
+    borderBottomWidth: 1,
+  },
+  lngName: {
+    fontSize: 16,
+    color: '#000',
   },
 });

@@ -21,8 +21,11 @@ import {useAuth} from '../../constant/Auth';
 import Custome from '../api/logout';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Preferences from '../api/Preferences';
+import {useTranslation} from 'react-i18next';
 
 const AccountScreen = () => {
+  const {t} = useTranslation();
+
   const {logout} = useAuth();
 
   const handleLogout = async () => {
@@ -101,7 +104,7 @@ const AccountScreen = () => {
                     screen={'WalletScreen'}
                   />
                   <CustomeDesignNavigation
-                    title={'Language'}
+                    title={t('Language')}
                     icon={images.language}
                     screen={'LanguageScreen'}
                   />

@@ -18,8 +18,11 @@ import {images} from '../../constant';
 import HeaderSection from '../../components/HeaderSection';
 import BackButton from '../../components/BackButton';
 import DatePicker from 'react-native-date-picker';
+import {useTranslation} from 'react-i18next';
 
 const MarraigeScreenForm = ({navigation}) => {
+  const {t} = useTranslation();
+
   const [name_m, setName_m] = useState('');
   const [place_m, setPlace_m] = useState('');
   const [lon_m, setLon_m] = useState('28.7041');
@@ -229,7 +232,7 @@ const MarraigeScreenForm = ({navigation}) => {
                 <HeaderSection />
               </View>
               <View style={{width: SIZES.width * 0.65}}>
-                <BackButton placeholder={'Free Kundli'} />
+                <BackButton placeholder={t('Free Kundli')} />
               </View>
               <View style={{marginTop: SIZES.width * 0.06}}>
                 <View

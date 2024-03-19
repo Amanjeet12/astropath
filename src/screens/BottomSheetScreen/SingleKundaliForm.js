@@ -24,6 +24,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {addToCart} from '../../redux/cartSlice';
 import RecentKundali from '../../components/RecentKundali';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useTranslation} from 'react-i18next';
 
 const data = [
   {label: 'Male', value: '1'},
@@ -51,6 +52,7 @@ const SingleKundaliForm = ({navigation}) => {
   const [month, setMonth] = useState('');
   const [year, setYear] = useState('');
   const [recent, setRecent] = useState('');
+  const {t} = useTranslation();
 
   const setToastMsg = msg => {
     ToastAndroid.showWithGravity(msg, ToastAndroid.SHORT, ToastAndroid.BOTTOM);
@@ -174,7 +176,7 @@ const SingleKundaliForm = ({navigation}) => {
               <HeaderSection />
             </View>
             <View style={{width: SIZES.width * 0.65}}>
-              <BackButton placeholder={'Your Kundli'} />
+              <BackButton placeholder={t('Your Kundli')} />
             </View>
             {recent && recent.length > 0 && (
               <View style={{marginTop: SIZES.width * 0.06}}>
@@ -190,7 +192,7 @@ const SingleKundaliForm = ({navigation}) => {
                       fontFamily: 'KantumruyPro-Regular',
                       color: '#000',
                     }}>
-                    Recent Kundali
+                    {t('Recent Kundli')}
                   </Text>
                 </View>
                 <View>
