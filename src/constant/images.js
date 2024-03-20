@@ -60,6 +60,7 @@ const moon = require('../assets/images/moon.png');
 const nuro = require('../assets/images/nuro.png');
 const knowledge = require('../assets/images/knowledge.png');
 const experiance = require('../assets/images/experiance.png');
+const walletbanner = require('../assets/images/walletbanner.png');
 
 // Zodic
 
@@ -77,6 +78,7 @@ const Capicorn = require('../assets/images/icon/horo2.png');
 const Pisces = require('../assets/images/icon/horo1.png');
 
 export default {
+  walletbanner,
   knowledge,
   experiance,
   astropath_logo,

@@ -1,7 +1,8 @@
 const WebUrls = {
   url: {
-    LOcal_URL: 'https://api.astropath.co.in/',
+    // LOcal_URL: 'https://api.astropath.co.in/',
     // LOcal_URL: 'http:/10.0.2.2:8000/',
+    LOcal_URL: 'http:/143.110.191.190:8000/',
 
     //consumer auth url
     otp_send: 'backend/customer/otp',
@@ -48,8 +49,8 @@ const WebUrls = {
 
     // payment
 
-    create_payment: 'backend/create-payment',
-    verify_payment: 'backend/verify-payment',
+    create_payment: 'customer/customer/create_payment_order',
+    transaction_history: 'customer/customer/transaction',
   },
 };
 

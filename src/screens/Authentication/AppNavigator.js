@@ -23,6 +23,8 @@ import {
   ZegoUIKitPrebuiltCallWaitingScreen,
   ZegoUIKitPrebuiltCallInCallScreen,
 } from '@zegocloud/zego-uikit-prebuilt-call-rn';
+import AllTransaction from '../BottomSheetScreen/AllTransactionScreen';
+import AllTransactionScreen from '../BottomSheetScreen/AllTransactionScreen';
 
 const Stack = createStackNavigator();
 
@@ -167,6 +169,11 @@ const AppNavigator = () => {
         options={{headerShown: false}}
         name="AdvancePanchangScreen"
         component={AdvancePanchangScreen}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="AllTransactionScreen"
+        component={AllTransactionScreen}
       />
       <Stack.Screen
         options={{headerShown: false}}
