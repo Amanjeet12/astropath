@@ -2,7 +2,7 @@ const WebUrls = {
   url: {
     // LOcal_URL: 'https://api.astropath.co.in/',
     // LOcal_URL: 'http:/10.0.2.2:8000/',
-    LOcal_URL: 'http:/143.110.191.190:8000/',
+    LOcal_URL: 'https:/astrologer.astropath.co.in/',
 
     //consumer auth url
     otp_send: 'backend/customer/otp',
@@ -51,6 +51,18 @@ const WebUrls = {
 
     create_payment: 'customer/customer/create_payment_order',
     transaction_history: 'customer/customer/transaction',
+
+    //
+    requestToken: 'customer/customer/request-token',
+    checkRequest: 'astrologer/astrologer/communicate-next',
+
+    // Astrologer
+    fetchAstrologer: 'customer/customer/get_all_astrologer',
+    request_token: 'customer/customer/request-token',
+    fetch_queue: 'customer/customer/get_astrologer_queue_length',
+
+    // all orders
+    orders: 'customer/customer/get_orders',
   },
 };
 

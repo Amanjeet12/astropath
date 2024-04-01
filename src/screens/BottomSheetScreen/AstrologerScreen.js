@@ -1,30 +1,95 @@
-import {ImageBackground, StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import {
+  ActivityIndicator,
+  ImageBackground,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+import React, {useEffect, useState} from 'react';
 import {images} from '../../constant';
-import {SIZES} from '../../constant/theme';
+import {COLORS, SIZES} from '../../constant/theme';
+import HeaderSection from '../../components/HeaderSection';
+import Preferences from '../api/Preferences';
+import WebMethods from '../api/WebMethods';
+import WebUrls from '../api/WebUrls';
+import AstrologerComponent from '../../components/AstrologerComponent';
+import {useIsFocused} from '@react-navigation/native';
 
 const AstrologerScreen = () => {
+  const IsFocused = useIsFocused();
+  const [astrologer, setAstrolger] = useState('');
+
+  useEffect(() => {
+    if (IsFocused) {
+      const fetchAstrologer = async () => {
+        try {
+          const token = await Preferences.getPreferences(Preferences.key.Token);
+          if (token) {
+            const response = await WebMethods.getRequestWithHeader(
+              WebUrls.url.fetchAstrologer,
+              token,
+            );
+            if (response != null) {
+              console.log('response===>', response.data);
+              setAstrolger(response.data);
+            } else {
+              console.log('error');
+            }
+          }
+        } catch (error) {
+          console.error('Error handling payment:', error);
+        }
+      };
+      fetchAstrologer();
+    }
+  }, [IsFocused]);
+
   return (
-    <View>
+    <>
+      <StatusBar backgroundColor={'#f7f1e1'} barStyle={'dark-content'} />
       <ImageBackground
-        source={images.blur}
-        style={{width: SIZES.width, height: SIZES.height}}
-        imageStyle={{resizeMode: 'cover'}}>
-        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-          <Text
-            style={{
-              fontSize: 30,
-              fontFamily: 'DMSerifDisplay-Regular',
-              color: '#000',
-            }}>
-            Coming Soon
-          </Text>
-        </View>
+        source={images.mobile_bg}
+        style={{width: SIZES.width, height: SIZES.height, flex: 1}}
+        imageStyle={{resizeMode: 'stretch'}}>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <View style={styles.mainContainer}>
+            <View style={{marginTop: SIZES.width * 0.026}}>
+              <HeaderSection />
+            </View>
+            <View style={{marginTop: SIZES.width * 0.051}}>
+              <Text style={styles.tagLine}>All Astrologer</Text>
+              <View style={{marginTop: 30}}>
+                {astrologer ? (
+                  <AstrologerComponent data={astrologer} />
+                ) : (
+                  <View>
+                    <ActivityIndicator size={'small'} color={COLORS.black} />
+                  </View>
+                )}
+              </View>
+            </View>
+          </View>
+        </ScrollView>
       </ImageBackground>
-    </View>
+    </>
   );
 };
 
 export default AstrologerScreen;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  mainContainer: {
+    marginHorizontal: SIZES.width * 0.051,
+  },
+  tagLine: {
+    fontSize: SIZES.width * 0.051,
+    fontFamily: 'DMSerifDisplay-Regular',
+    color: COLORS.black,
+    textTransform: 'capitalize',
+  },
+});

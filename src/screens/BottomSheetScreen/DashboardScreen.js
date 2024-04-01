@@ -8,7 +8,7 @@ import {
   View,
   RefreshControl,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {COLORS, SIZES} from '../../constant/theme';
 import HeaderSection from '../../components/HeaderSection';
 import {images} from '../../constant';
@@ -21,8 +21,13 @@ import ShowPopUp from '../../components/ShowPopUp';
 import AdvancePanchangSection from '../../components/AdvancePanchangSection';
 import AstrologerComponent from '../../components/AstrologerComponent';
 import {useTranslation} from 'react-i18next';
+import {fetchWalletbalance} from '../../redux/WalletBalanceSlice';
+import Preferences from '../api/Preferences';
+import {useDispatch} from 'react-redux';
 
 const DashboardScreen = () => {
+  const dispatch = useDispatch();
+
   const {t} = useTranslation();
   const [refresh, setRefresh] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -33,8 +38,21 @@ const DashboardScreen = () => {
     }, 2000);
   };
 
+  useEffect(() => {
+    handleWalletBalance();
+  }, []);
+
   const handleRefresh = () => {
     setRefresh(!refresh);
+  };
+
+  const handleWalletBalance = async () => {
+    try {
+      const token = await Preferences.getPreferences(Preferences.key.Token);
+      if (token) {
+        dispatch(fetchWalletbalance(token));
+      }
+    } catch {}
   };
   return (
     <View style={styles.container}>
@@ -62,12 +80,12 @@ const DashboardScreen = () => {
               <AdvancePanchangSection />
             </View>
           </View>
-          <View style={[styles.mainContainer, {marginTop: SIZES.width * 0.03}]}>
+          {/* <View style={[styles.mainContainer, {marginTop: SIZES.width * 0.03}]}>
             <Text style={[styles.tagLine, {marginBottom: 10}]}>
               {t('Top Astrologers')}
             </Text>
             <AstrologerComponent data={Astrologer} />
-          </View>
+          </View> */}
           <View style={[styles.mainContainer, {marginTop: SIZES.width * 0.03}]}>
             <HoroscopeSection
               data={Horoscope}

@@ -2,6 +2,7 @@
 /* eslint-disable react/self-closing-comp */
 /* eslint-disable react-native/no-inline-styles */
 import {
+  Alert,
   Image,
   ImageBackground,
   ScrollView,
@@ -27,10 +28,16 @@ import ZegoUIKitPrebuiltCallService, {
   ZegoMenuBarButtonName,
 } from '@zegocloud/zego-uikit-prebuilt-call-rn';
 import Preferences from '../api/Preferences';
+import WebMethods from '../api/WebMethods';
+import WebUrls from '../api/WebUrls';
+import {fetchWalletbalance} from '../../redux/WalletBalanceSlice';
+import {useDispatch} from 'react-redux';
 
 const SingleAstrologer = ({route, navigation}) => {
   const {item} = route.params;
-  console.log(item);
+  console.log(item._id);
+  const dispatch = useDispatch();
+
   const onUserLogin = async (userID, userName) => {
     return ZegoUIKitPrebuiltCallService.init(
       678662769,
@@ -68,10 +75,11 @@ const SingleAstrologer = ({route, navigation}) => {
                   '########CallWithInvitation onDurationUpdate',
                   duration,
                 );
-                if (duration === 10 * 60) {
-                  ZegoUIKitPrebuiltCallService.hangUp();
-                }
               },
+            },
+
+            onHangUp: duration => {
+              navigation.navigate('DashboardScreen');
             },
 
             hangUpConfirmInfo: {
@@ -86,7 +94,7 @@ const SingleAstrologer = ({route, navigation}) => {
             },
             onWindowMinimized: () => {
               console.log('[Demo]CallInvitation onWindowMinimized');
-              navigation.navigate('Waitlist');
+              navigation.navigate('DashboardScreen');
             },
             onWindowMaximized: () => {
               console.log('[Demo]CallInvitation onWindowMaximized');
@@ -98,15 +106,34 @@ const SingleAstrologer = ({route, navigation}) => {
     );
   };
 
-  const handlCallAndVideoCallRequest = async () => {
-    try {
+  useEffect(() => {
+    const fetch = async () => {
       const userName = await Preferences.getPreferences(Preferences.key.Name);
-      const userId = await Preferences.getPreferences(Preferences.key.UserId);
-      const truncatedUserId = userId.substring(0, 5);
-      console.log(userName, truncatedUserId);
-      onUserLogin(truncatedUserId, userName).then(() => {
-        console.log('request send');
-      });
+      const phone = await Preferences.getPreferences(Preferences.key.phone);
+      onUserLogin(phone, userName);
+    };
+
+    fetch();
+  }, []);
+
+  // const handleWalletBalance = async () => {
+  //   try {
+  //     const token = await Preferences.getPreferences(Preferences.key.Token);
+  //     if (token) {
+  //       dispatch(fetchWalletbalance(token));
+  //     }
+  //   } catch {}
+  // };
+
+  const handlCallAndVideoCallRequest = async service => {
+    var datas = {
+      astrologerId: item._id,
+      services: service,
+      service_cost: item.voice_call_price,
+    };
+    try {
+      console.log('request send', service);
+      navigation.navigate('CallInTakeFormScreen', {datas});
     } catch (error) {}
   };
 
@@ -129,7 +156,10 @@ const SingleAstrologer = ({route, navigation}) => {
               <View style={{flexDirection: 'row'}}>
                 <View style={{width: '40%'}}>
                   <View>
-                    <Image source={item.profile} style={styles.profile} />
+                    <Image
+                      source={{uri: item.profile_photo}}
+                      style={styles.profile}
+                    />
                     <View
                       style={{
                         position: 'absolute',
@@ -162,9 +192,7 @@ const SingleAstrologer = ({route, navigation}) => {
                   <Text style={styles.profile_name}>{item.name}</Text>
                   <View style={styles.flexBox}>
                     <Image source={images.knowledge} style={styles.icon} />
-                    <Text style={styles.profile_categories}>
-                      {item.categories}
-                    </Text>
+                    <Text style={styles.profile_categories}>{item.gender}</Text>
                   </View>
                   <View style={[styles.flexBox, {marginTop: 3}]}>
                     <Image source={images.language} style={styles.icon} />
@@ -172,13 +200,11 @@ const SingleAstrologer = ({route, navigation}) => {
                   </View>
                   <View style={[styles.flexBox, {marginTop: 3}]}>
                     <Image source={images.experiance} style={styles.icon} />
-                    <Text style={styles.profile_experience}>
-                      {item.experience} Years
-                    </Text>
+                    <Text style={styles.profile_experience}>7 Years</Text>
                   </View>
                   <View style={[styles.flexBox, {gap: 15}]}>
                     <Text style={styles.profile_rate}>
-                      ₹ {item.rate}/min-Chat
+                      ₹ {item.chat_price}/min - chat
                     </Text>
                     <TouchableOpacity style={styles.flexBox}>
                       <Text style={{fontSize: 12, color: 'green'}}>
@@ -197,7 +223,15 @@ const SingleAstrologer = ({route, navigation}) => {
               <View style={styles.border} />
               <View style={styles.featuresContainer}>
                 <TouchableOpacity
-                  style={[styles.flexBox, styles.singlebox, {width: '25%'}]}>
+                  style={[
+                    styles.flexBox,
+                    styles.singlebox,
+                    {width: '25%'},
+                    !item.work_schedule.services.includes('chat') && {
+                      opacity: 0.5,
+                    },
+                  ]}
+                  disabled={!item.work_schedule.services.includes('chat')}>
                   <Text style={{fontSize: 15, color: '#000'}}>Chat</Text>
                   <Chat
                     name={'chatbubble-ellipses-outline'}
@@ -207,22 +241,38 @@ const SingleAstrologer = ({route, navigation}) => {
                 </TouchableOpacity>
                 <View style={styles.verticalBorder} />
                 <TouchableOpacity
-                  style={[styles.flexBox, styles.singlebox, {width: '30%'}]}
-                  onPress={handlCallAndVideoCallRequest}>
+                  style={[
+                    styles.flexBox,
+                    styles.singlebox,
+                    {width: '30%'},
+                    !item.work_schedule.services.includes('voice call') && {
+                      opacity: 0.5,
+                    },
+                  ]}
+                  disabled={!item.work_schedule.services.includes('voice call')}
+                  onPress={() => handlCallAndVideoCallRequest('voice call')}>
                   <Text style={{fontSize: 15, color: '#000'}}>Call</Text>
                   <Chat name={'call'} color={'#000'} size={15} />
                 </TouchableOpacity>
                 <View style={styles.verticalBorder} />
 
                 <TouchableOpacity
-                  style={[styles.flexBox, styles.singlebox, {width: '40%'}]}
-                  onPress={handlCallAndVideoCallRequest}>
+                  style={[
+                    styles.flexBox,
+                    styles.singlebox,
+                    {width: '40%'},
+                    !item.work_schedule.services.includes('video call') && {
+                      opacity: 0.5,
+                    },
+                  ]}
+                  disabled={!item.work_schedule.services.includes('video call')}
+                  onPress={() => handlCallAndVideoCallRequest('video call')}>
                   <Text style={{fontSize: 15, color: '#000'}}>Video Call</Text>
                   <Chat name={'videocam'} color={'#000'} size={15} />
                 </TouchableOpacity>
               </View>
             </View>
-            <AboutAstrologer data={item.about} />
+            <AboutAstrologer data={item.bio} />
           </View>
         </ScrollView>
       </ImageBackground>

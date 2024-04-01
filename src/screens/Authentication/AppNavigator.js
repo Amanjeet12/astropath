@@ -25,6 +25,7 @@ import {
 } from '@zegocloud/zego-uikit-prebuilt-call-rn';
 import AllTransaction from '../BottomSheetScreen/AllTransactionScreen';
 import AllTransactionScreen from '../BottomSheetScreen/AllTransactionScreen';
+import CallInTakeFormScreen from '../BottomSheetScreen/CallInTakeFormScreen';
 
 const Stack = createStackNavigator();
 
@@ -174,6 +175,11 @@ const AppNavigator = () => {
         options={{headerShown: false}}
         name="AllTransactionScreen"
         component={AllTransactionScreen}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="CallInTakeFormScreen"
+        component={CallInTakeFormScreen}
       />
       <Stack.Screen
         options={{headerShown: false}}

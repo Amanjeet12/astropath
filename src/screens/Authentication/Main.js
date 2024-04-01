@@ -7,6 +7,8 @@ import {useAuth} from '../../constant/Auth';
 import Splashscreen from '../onboarding/SplashScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Preferences from '../api/Preferences';
+import {TimerProvider} from '../../constant/TimerContext';
+import TimerComponent from '../../components/TimerComponent';
 
 const Main = () => {
   const {isLoggedIn} = useAuth();
@@ -68,7 +70,18 @@ const Main = () => {
     return <Splashscreen />;
   }
 
-  return <>{isLoggedIn ? <AppNavigator /> : <AuthNavigator />}</>;
+  return (
+    <>
+      {isLoggedIn ? (
+        <TimerProvider>
+          <AppNavigator />
+          <TimerComponent />
+        </TimerProvider>
+      ) : (
+        <AuthNavigator />
+      )}
+    </>
+  );
 };
 
 export default Main;

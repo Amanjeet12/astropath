@@ -13,77 +13,83 @@ const AstrologerComponent = ({data}) => {
   };
   return (
     <View>
-      {data.map((item, index) => {
-        return (
-          <View key={index} style={styles.container}>
-            <View style={{flexDirection: 'row'}}>
-              <View style={{width: '31%'}}>
-                <View>
-                  <Image source={item.profile} style={styles.profile} />
-                  <View
-                    style={{
-                      position: 'absolute',
-                      bottom: SIZES.width * 0.051,
-                      right: 5,
-                    }}>
+      {data &&
+        data.map((item, index) => {
+          return (
+            <View key={index} style={styles.container}>
+              <View style={{flexDirection: 'row'}}>
+                <View style={{width: '31%'}}>
+                  <View>
                     <Image
-                      source={images.verified_icon}
+                      source={{uri: item.profile_photo}}
+                      style={styles.profile}
+                    />
+                    <View
                       style={{
-                        width: SIZES.width * 0.051,
-                        height: SIZES.width * 0.051,
+                        position: 'absolute',
+                        bottom: SIZES.width * 0.051,
+                        right: 5,
+                      }}>
+                      <Image
+                        source={images.verified_icon}
+                        style={{
+                          width: SIZES.width * 0.051,
+                          height: SIZES.width * 0.051,
+                          resizeMode: 'contain',
+                        }}
+                      />
+                    </View>
+                    <View style={styles.ratingContainer}>
+                      <Image
+                        source={images.star_icon}
+                        style={{
+                          width: SIZES.width * 0.051,
+                          height: SIZES.width * 0.051,
+                          resizeMode: 'contain',
+                        }}
+                      />
+                      <Text style={{color: 'grey'}}>5</Text>
+                    </View>
+                  </View>
+                </View>
+                <View style={{width: '45%'}}>
+                  <Text style={styles.profile_name}>{item.name}</Text>
+                  <Text style={styles.profile_categories}>{item.gender}</Text>
+                  <Text style={styles.profile_language}>{item.language}</Text>
+                  <Text style={styles.profile_experience}>Exp 4+ Years</Text>
+                  <Text style={styles.profile_rate}>
+                    ₹ {item.chat_price}/min - chat
+                  </Text>
+                </View>
+                <View style={{width: '25%', alignItems: 'flex-end'}}>
+                  <View style={styles.statusContainer}>
+                    <Icon
+                      name="dot-fill"
+                      color={'#409261'}
+                      size={SIZES.width * 0.031}
+                    />
+                    <Text style={styles.status}>
+                      {item.is_active ? 'online' : 'offline'}
+                    </Text>
+                  </View>
+                  <TouchableOpacity
+                    style={styles.buttonContainer}
+                    onPress={() => handlenavigation(item)}>
+                    <Text style={styles.buttonText}>View</Text>
+                    <Image
+                      source={images.button_icon}
+                      style={{
+                        width: SIZES.width * 0.039,
+                        height: SIZES.width * 0.039,
                         resizeMode: 'contain',
                       }}
                     />
-                  </View>
-                  <View style={styles.ratingContainer}>
-                    <Image
-                      source={images.star_icon}
-                      style={{
-                        width: SIZES.width * 0.051,
-                        height: SIZES.width * 0.051,
-                        resizeMode: 'contain',
-                      }}
-                    />
-                    <Text style={{color: 'grey'}}>5</Text>
-                  </View>
+                  </TouchableOpacity>
                 </View>
-              </View>
-              <View style={{width: '45%'}}>
-                <Text style={styles.profile_name}>{item.name}</Text>
-                <Text style={styles.profile_categories}>{item.categories}</Text>
-                <Text style={styles.profile_language}>{item.language}</Text>
-                <Text style={styles.profile_experience}>
-                  Exp {item.experience}+ Years
-                </Text>
-                <Text style={styles.profile_rate}>₹ {item.rate}/min -Chat</Text>
-              </View>
-              <View style={{width: '25%', alignItems: 'flex-end'}}>
-                <View style={styles.statusContainer}>
-                  <Icon
-                    name="dot-fill"
-                    color={'#409261'}
-                    size={SIZES.width * 0.031}
-                  />
-                  <Text style={styles.status}>{item.status}</Text>
-                </View>
-                <TouchableOpacity
-                  style={styles.buttonContainer}
-                  onPress={() => handlenavigation(item)}>
-                  <Text style={styles.buttonText}>View</Text>
-                  <Image
-                    source={images.button_icon}
-                    style={{
-                      width: SIZES.width * 0.039,
-                      height: SIZES.width * 0.039,
-                      resizeMode: 'contain',
-                    }}
-                  />
-                </TouchableOpacity>
               </View>
             </View>
-          </View>
-        );
-      })}
+          );
+        })}
     </View>
   );
 };
@@ -127,8 +133,8 @@ const styles = StyleSheet.create({
   },
   profile_rate: {
     color: '#000',
-    fontFamily: 'KantumruyPro-Bold',
-    fontSize: SIZES.width * 0.031,
+    fontFamily: 'KantumruyPro-regular',
+    fontSize: SIZES.width * 0.028,
     paddingTop: 5,
   },
   status: {

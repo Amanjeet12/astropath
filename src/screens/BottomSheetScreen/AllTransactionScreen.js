@@ -79,6 +79,7 @@ const AllTransactionScreen = () => {
               <BackButton placeholder={'Transactions'} />
             </View>
             <FlatList
+              scrollEnabled={false}
               data={transactions}
               renderItem={renderItem}
               keyExtractor={item => item._id}

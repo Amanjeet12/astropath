@@ -6,13 +6,45 @@ import {
   Text,
   View,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {COLORS, SIZES} from '../../constant/theme';
 import HeaderSection from '../../components/HeaderSection';
 import OrderSection from '../../components/OrderSection';
-import {Order} from '../../constant/data';
 import {images} from '../../constant';
+import Preferences from '../api/Preferences';
+import WebMethods from '../api/WebMethods';
+import WebUrls from '../api/WebUrls';
+import {useIsFocused} from '@react-navigation/native';
+
 const OrderScreen = () => {
+  const IsFocused = useIsFocused();
+  const [orders, setOrders] = useState('');
+
+  useEffect(() => {
+    if (IsFocused) {
+      const fetchAstrologer = async () => {
+        try {
+          const token = await Preferences.getPreferences(Preferences.key.Token);
+          if (token) {
+            const response = await WebMethods.getRequestWithHeader(
+              WebUrls.url.orders,
+              token,
+            );
+            if (response != null) {
+              console.log('response===>', response.data);
+              setOrders(response.data);
+            } else {
+              console.log('error');
+            }
+          }
+        } catch (error) {
+          console.error('Error handling payment:', error);
+        }
+      };
+      fetchAstrologer();
+    }
+  }, [IsFocused]);
+
   return (
     <>
       <StatusBar backgroundColor={'#f7f1e1'} barStyle={'dark-content'} />
@@ -27,9 +59,9 @@ const OrderScreen = () => {
             </View>
             <View style={{marginTop: SIZES.width * 0.051}}>
               <Text style={styles.tagLine}>Recent orders and chats</Text>
-              {/* <View>
-                <OrderSection data={Order} />
-              </View> */}
+              <View>
+                <OrderSection data={orders} />
+              </View>
             </View>
           </View>
         </ScrollView>

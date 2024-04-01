@@ -1,5 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import {
+  ActivityIndicator,
   Alert,
   Image,
   StyleSheet,
@@ -11,14 +12,12 @@ import React from 'react';
 import {Astropath_logo} from '../screens/SvgComponent/BottomSvgComponent';
 import {images} from '../constant';
 import {SIZES} from '../constant/theme';
-import RazorpayCheckout from 'react-native-razorpay';
-import WebMethods from '../screens/api/WebMethods';
-import WebUrls from '../screens/api/WebUrls';
-import Preferences from '../screens/api/Preferences';
 import {useNavigation} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
 
 const HeaderSection = () => {
   const navigation = useNavigation();
+  const {isloading, walletBalance} = useSelector(state => state.wallet);
 
   return (
     <View style={styles.mainContainer}>
@@ -28,7 +27,16 @@ const HeaderSection = () => {
       <TouchableOpacity
         style={styles.walletContainer}
         onPress={() => navigation.navigate('WalletScreen')}>
-        <Text style={styles.title}>₹ 4,00</Text>
+        {isloading ? (
+          <View>
+            <ActivityIndicator size={'small'} />
+          </View>
+        ) : (
+          <View>
+            <Text style={styles.title}>₹ {walletBalance / 100}</Text>
+          </View>
+        )}
+
         <Image
           source={images.wallet_icon}
           style={{

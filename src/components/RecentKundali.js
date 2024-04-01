@@ -1,28 +1,111 @@
 /* eslint-disable react-native/no-inline-styles */
-import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Alert,
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React from 'react';
 import {kundaliData} from '../constant/data';
 import {SIZES} from '../constant/theme';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
+import WebUrls from '../screens/api/WebUrls';
+import WebMethods from '../screens/api/WebMethods';
+import Preferences from '../screens/api/Preferences';
 
 const backgroundColor = ['#1f2499', '#bf6424', '#1f2499', '#bf6424', '#1f2499'];
 
-const RecentKundali = ({data, screen}) => {
+const RecentKundali = ({data, screen, datas}) => {
   const navigation = useNavigation();
 
   const handleNavigation = item => {
-    navigation.navigate(screen, {
-      name: item.name,
-      day: item.day,
-      month: item.month,
-      year: item.year,
-      hour: item.hour,
-      min: item.min,
-      lat: item.lat,
-      lon: item.lon,
-    });
+    if (datas) {
+      handleRequest(
+        item.name,
+        item.day,
+        item.month,
+        item.year,
+        item.hour,
+        item.min,
+        item.lat,
+        item.lon,
+      );
+    } else {
+      navigation.navigate(screen, {
+        name: item.name,
+        day: item.day,
+        month: item.month,
+        year: item.year,
+        hour: item.hour,
+        min: item.min,
+        lat: item.lat,
+        lon: item.lon,
+      });
+    }
+  };
+
+  const handleRequest = async (name, day, month, year, hour, min, lat, lon) => {
+    let token;
+    try {
+      token = await Preferences.getPreferences(Preferences.key.Token);
+    } catch (error) {
+      console.error('Error getting token:', error);
+      return;
+    }
+
+    const params = {
+      ...datas,
+      kundali_data: {
+        name: name,
+        hour: hour,
+        min: min,
+        lat: lat,
+        lon: lon,
+        day: day,
+        month: month,
+        year: year,
+      },
+    };
+
+    if (token) {
+      WebMethods.postRequestWithHeader(WebUrls.url.request_token, params, token)
+        .then(async response => {
+          if (response != null) {
+            if (response.success === 'o') {
+              console.log('Success false');
+            } else {
+              var params = {
+                astrologerId: datas.astrologerId,
+                services: datas.services,
+              };
+              try {
+                WebMethods.postRequestWithHeader(
+                  WebUrls.url.fetch_queue,
+                  params,
+                  token,
+                ).then(async response => {
+                  if (response != null) {
+                    console.log(response.data);
+                    navigation.navigate('AstrologerScreen');
+                    Alert.alert(
+                      `Successfully Added queue List No ${response.data}`,
+                    );
+                  }
+                });
+              } catch (error) {}
+            }
+          } else {
+            console.log('Null response');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    }
   };
 
   const showlist = ({item, index}) => {
