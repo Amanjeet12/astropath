@@ -33,7 +33,7 @@ const HeaderSection = () => {
           </View>
         ) : (
           <View>
-            <Text style={styles.title}>₹ {walletBalance / 100}</Text>
+            <Text style={styles.title}>₹ {walletBalance}</Text>
           </View>
         )}
 

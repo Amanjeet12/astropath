@@ -59,10 +59,6 @@ const WalletScreen = ({navigation}) => {
     </TouchableOpacity>
   );
 
-  const toggleColumns = () => {
-    setColumns(columns === 1 ? 2 : 1);
-  };
-
   const setToastMsg = msg => {
     ToastAndroid.showWithGravity(msg, ToastAndroid.SHORT, ToastAndroid.BOTTOM);
   };
@@ -95,7 +91,6 @@ const WalletScreen = ({navigation}) => {
       .catch(error => {
         setModalMessage('Payment Failed');
         setModalVisible(true);
-        // Hide modal after some time (e.g., 3 seconds)
         setTimeout(() => {
           setModalVisible(false);
         }, 3000);
@@ -111,78 +106,6 @@ const WalletScreen = ({navigation}) => {
     } catch {}
   };
 
-  const data = {
-    _id: '65fbdca6d0220981231eff2d',
-    astrologer_history: [
-      {
-        _id: '65fd2dbfa2fdf7fb625e3729',
-        astrologerId: '65f7ffde9f2dceaaf7013f37',
-        timestamp: '2024-03-22T07:05:35.325Z',
-      },
-      {
-        _id: '6603d1aa742902db145b2c46',
-        astrologerId: '66030b8401e0c3fc4440a3a2',
-        timestamp: '2024-03-27T07:58:34.420Z',
-      },
-      {
-        _id: '6603d495742902db145b2c50',
-        astrologerId: '66030b8401e0c3fc4440a3a2',
-        timestamp: '2024-03-27T08:11:01.468Z',
-      },
-      {
-        _id: '6603d97f742902db145b2c58',
-        astrologerId: '66030b8401e0c3fc4440a3a2',
-        timestamp: '2024-03-27T08:31:59.518Z',
-      },
-      {
-        _id: '6603d98c742902db145b2c5e',
-        astrologerId: '66030b8401e0c3fc4440a3a2',
-        timestamp: '2024-03-27T08:32:12.929Z',
-      },
-      {
-        _id: '66071c909676872bde9f4edd',
-        astrologerId: '65fdbf2c147c92aeda8fb063',
-        timestamp: '2024-03-29T19:54:56.661Z',
-      },
-      {
-        _id: '66071e3e9676872bde9f4ef1',
-        astrologerId: '66030b8401e0c3fc4440a3a2',
-        timestamp: '2024-03-29T20:02:06.535Z',
-      },
-      {
-        _id: '66071f0c9676872bde9f4ef7',
-        astrologerId: '66030b8401e0c3fc4440a3a2',
-        timestamp: '2024-03-29T20:05:32.710Z',
-      },
-    ],
-    balance: '130200',
-    birth_lat: '28.7041',
-    birth_location: 'Delhi',
-    birth_lon: '77.1025',
-    birth_time: '2024-03-21T07:07:11.628Z',
-    createdAt: '2024-03-21T07:07:18.242Z',
-    current_astrologer: '66030b8401e0c3fc4440a3a2',
-    customer_astro_id: [
-      '65fbdccc4b09537c1c01b433',
-      '65fd2d0727c77b29b77fe721',
-      '65fedb4b61a412c6c92b76a9',
-      '6603b1da5d0dbc014c655b8a',
-      '6603b5fc0e8b46a034d44b83',
-      '660501e75d0dbc014c655b96',
-      '660501fa5d0dbc014c655b9a',
-      '66071ae3c9072e1372d9b381',
-    ],
-    customer_match_astro_id: [],
-    dob: '1985-01-01T11:05:00.000Z',
-    email: 'vikrant@krantecq.com',
-    fcmtoken: null,
-    gender: 'male',
-    name: 'vikrant',
-    phone: '+919525606192',
-    profile_photo: null,
-    updatedAt: '2024-03-30T07:28:15.262Z',
-  };
-
   const handlePayment = async () => {
     if (!customAmount && !selectedAmount) {
       setToastMsg('Please enter amount');
@@ -190,7 +113,7 @@ const WalletScreen = ({navigation}) => {
     }
     const amount = customAmount
       ? customAmount
-      : parseFloat(selectedAmount.replace('₹', '')) * 100;
+      : parseFloat(selectedAmount.replace('₹', ''));
 
     try {
       const token = await Preferences.getPreferences(Preferences.key.Token);
@@ -238,11 +161,11 @@ const WalletScreen = ({navigation}) => {
                 style={{width: '100%', height: '100%', resizeMode: 'cover'}}
               />
               <View style={{position: 'absolute', top: 10, left: 20}}>
-                <Text style={{fontSize: 16, color: '#000'}}>
+                <Text style={{fontSize: 16, color: '#000', fontWeight: '600'}}>
                   Current Wallet Balance
                 </Text>
                 <Text style={{fontSize: 28, color: '#000', fontWeight: '600'}}>
-                  ₹ 400.40
+                  ₹ {walletBalance}
                 </Text>
               </View>
               <TouchableOpacity

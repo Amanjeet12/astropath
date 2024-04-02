@@ -13,7 +13,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Dropdown} from 'react-native-element-dropdown';
 import {COLORS, SIZES} from '../../constant/theme';
 import {images} from '../../constant';
@@ -28,6 +28,7 @@ import {useTranslation} from 'react-i18next';
 import WebMethods from '../api/WebMethods';
 import WebUrls from '../api/WebUrls';
 import Preferences from '../api/Preferences';
+import {TimerContext} from '../../constant/TimerContext';
 
 const data = [
   {label: 'Male', value: '1'},
@@ -35,6 +36,7 @@ const data = [
 ];
 
 const CallInTakeFormScreen = ({navigation, route}) => {
+  const {showTimer} = useContext(TimerContext);
   const {datas} = route.params;
   const [date, setDate] = useState(new Date('1985-01-01T11:05:00.000Z'));
   const [name, setName] = useState('');
@@ -134,6 +136,7 @@ const CallInTakeFormScreen = ({navigation, route}) => {
                   if (response != null) {
                     console.log(response.data);
                     navigation.navigate('AstrologerScreen');
+                    showTimer();
                     Alert.alert(
                       `Successfully Added queue List No ${response.data}`,
                     );

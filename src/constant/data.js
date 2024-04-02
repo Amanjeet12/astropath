@@ -254,3 +254,24 @@ export const kundaliData = [
     value: 'Male',
   },
 ];
+
+export const question = [
+  {
+    id: 1,
+    question: 'How can I make Kundli?',
+    answer:
+      'Nibh quisque suscipit fermentum netus nulla cras porttitor euismod nulla. Orci, dictumst nec aliquet id ullamcorper venenatis. ',
+  },
+  {
+    id: 2,
+    question: 'How to make a matching kundli ?',
+    answer:
+      'Nibh quisque suscipit fermentum netus nulla cras porttitor euismod nulla. Orci, dictumst nec aliquet id ullamcorper venenatis. ',
+  },
+  {
+    id: 3,
+    question: 'Do all astrologers provide free chat for some time ?',
+    answer:
+      'Nibh quisque suscipit fermentum netus nulla cras porttitor euismod nulla. Orci, dictumst nec aliquet id ullamcorper venenatis. ',
+  },
+];

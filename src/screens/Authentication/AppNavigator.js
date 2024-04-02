@@ -26,6 +26,7 @@ import {
 import AllTransaction from '../BottomSheetScreen/AllTransactionScreen';
 import AllTransactionScreen from '../BottomSheetScreen/AllTransactionScreen';
 import CallInTakeFormScreen from '../BottomSheetScreen/CallInTakeFormScreen';
+import CustomerSupportScreen from '../BottomSheetScreen/CustomerSupportScreen';
 
 const Stack = createStackNavigator();
 
@@ -180,6 +181,11 @@ const AppNavigator = () => {
         options={{headerShown: false}}
         name="CallInTakeFormScreen"
         component={CallInTakeFormScreen}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="CustomerSupportScreen"
+        component={CustomerSupportScreen}
       />
       <Stack.Screen
         options={{headerShown: false}}

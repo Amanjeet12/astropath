@@ -12,7 +12,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {COLORS, SIZES} from '../../constant/theme';
 import {images} from '../../constant';
 import HeaderSection from '../../components/HeaderSection';
@@ -32,11 +32,13 @@ import WebMethods from '../api/WebMethods';
 import WebUrls from '../api/WebUrls';
 import {fetchWalletbalance} from '../../redux/WalletBalanceSlice';
 import {useDispatch} from 'react-redux';
+import {TimerContext} from '../../constant/TimerContext';
 
 const SingleAstrologer = ({route, navigation}) => {
   const {item} = route.params;
   console.log(item._id);
   const dispatch = useDispatch();
+  const {isVisible, hideTimer} = useContext(TimerContext);
 
   const onUserLogin = async (userID, userName) => {
     return ZegoUIKitPrebuiltCallService.init(
@@ -46,6 +48,16 @@ const SingleAstrologer = ({route, navigation}) => {
       userName,
       [ZIM, ZPNs],
       {
+        onIncomingCallReceived: (
+          callID,
+          inviter,
+          type,
+          invitees,
+          customData,
+        ) => {
+          hideTimer();
+        },
+
         ringtoneConfig: {
           incomingCallFileName: 'zego_incoming.mp3',
           outgoingCallFileName: 'zego_outgoing.mp3',
@@ -79,6 +91,7 @@ const SingleAstrologer = ({route, navigation}) => {
             },
 
             onHangUp: duration => {
+              handleWalletBalance();
               navigation.navigate('DashboardScreen');
             },
 
@@ -116,16 +129,31 @@ const SingleAstrologer = ({route, navigation}) => {
     fetch();
   }, []);
 
-  // const handleWalletBalance = async () => {
-  //   try {
-  //     const token = await Preferences.getPreferences(Preferences.key.Token);
-  //     if (token) {
-  //       dispatch(fetchWalletbalance(token));
-  //     }
-  //   } catch {}
-  // };
+  const handleWalletBalance = async () => {
+    try {
+      const token = await Preferences.getPreferences(Preferences.key.Token);
+      if (token) {
+        dispatch(fetchWalletbalance(token));
+      }
+    } catch {}
+  };
 
   const handlCallAndVideoCallRequest = async service => {
+    if (isVisible) {
+      Alert.alert(
+        'Cannot Make Another Call',
+        "You're already in a queue, please cancel current request to send another.",
+        [
+          {
+            text: 'OK',
+            onPress: () => console.log('OK Pressed'),
+            style: 'cancel',
+          },
+        ],
+        {cancelable: false},
+      );
+      return;
+    }
     var datas = {
       astrologerId: item._id,
       services: service,

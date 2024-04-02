@@ -132,7 +132,7 @@ const AccountScreen = () => {
                   <CustomeDesignNavigation
                     title={'Customer Support'}
                     icon={images.customer_care}
-                    screen={'CustomerScreen'}
+                    screen={'CustomerSupportScreen'}
                   />
                 </View>
               </View>

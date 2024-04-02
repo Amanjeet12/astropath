@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React from 'react';
+import React, {useContext} from 'react';
 import {kundaliData} from '../constant/data';
 import {SIZES} from '../constant/theme';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -16,11 +16,13 @@ import {useSelector} from 'react-redux';
 import WebUrls from '../screens/api/WebUrls';
 import WebMethods from '../screens/api/WebMethods';
 import Preferences from '../screens/api/Preferences';
+import {TimerContext} from '../constant/TimerContext';
 
 const backgroundColor = ['#1f2499', '#bf6424', '#1f2499', '#bf6424', '#1f2499'];
 
 const RecentKundali = ({data, screen, datas}) => {
   const navigation = useNavigation();
+  const {showTimer} = useContext(TimerContext);
 
   const handleNavigation = item => {
     if (datas) {
@@ -91,6 +93,7 @@ const RecentKundali = ({data, screen, datas}) => {
                   if (response != null) {
                     console.log(response.data);
                     navigation.navigate('AstrologerScreen');
+                    showTimer();
                     Alert.alert(
                       `Successfully Added queue List No ${response.data}`,
                     );

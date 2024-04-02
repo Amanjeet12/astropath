@@ -63,6 +63,10 @@ const WebUrls = {
 
     // all orders
     orders: 'customer/customer/get_orders',
+
+    // support
+
+    support: 'customer/customer/create_support_ticket',
   },
 };
 

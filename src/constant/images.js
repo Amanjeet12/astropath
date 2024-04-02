@@ -61,6 +61,7 @@ const nuro = require('../assets/images/nuro.png');
 const knowledge = require('../assets/images/knowledge.png');
 const experiance = require('../assets/images/experiance.png');
 const walletbanner = require('../assets/images/walletbanner.png');
+const upload = require('../assets/images/upload.png');
 
 // Zodic
 
@@ -153,4 +154,5 @@ export default {
   moon,
   dailypan,
   nuro,
+  upload,
 };

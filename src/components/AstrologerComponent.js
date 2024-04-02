@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React from 'react';
+import React, {useContext} from 'react';
 import {COLORS, SIZES} from '../constant/theme';
 import {images} from '../constant';
 import Icon from 'react-native-vector-icons/Octicons';
@@ -8,6 +8,7 @@ import {useNavigation} from '@react-navigation/native';
 
 const AstrologerComponent = ({data}) => {
   const navigation = useNavigation();
+
   const handlenavigation = item => {
     navigation.navigate('SingleAstrologer', {item});
   };
