@@ -59,18 +59,28 @@ const AstrologerComponent = ({data}) => {
                   <Text style={styles.profile_language}>{item.language}</Text>
                   <Text style={styles.profile_experience}>Exp 4+ Years</Text>
                   <Text style={styles.profile_rate}>
-                    ₹ {item.chat_price}/min - chat
+                    ₹ {item.chat_price}/min - Chat
                   </Text>
                 </View>
                 <View style={{width: '25%', alignItems: 'flex-end'}}>
-                  <View style={styles.statusContainer}>
+                  <View
+                    style={[
+                      styles.statusContainer,
+                      {
+                        backgroundColor: item.is_active ? '#e9ffef' : '#e4e4e4',
+                      },
+                    ]}>
                     <Icon
                       name="dot-fill"
-                      color={'#409261'}
+                      color={item.is_active ? '#409261' : 'black'}
                       size={SIZES.width * 0.031}
                     />
-                    <Text style={styles.status}>
-                      {item.is_active ? 'online' : 'offline'}
+                    <Text
+                      style={[
+                        styles.status,
+                        {color: item.is_active ? '#409261' : 'black'},
+                      ]}>
+                      {item.is_active ? 'Online' : 'Offline'}
                     </Text>
                   </View>
                   <TouchableOpacity
@@ -103,23 +113,25 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
     marginBottom: SIZES.width * 0.051,
     borderWidth: 1,
-    borderColor: COLORS.black,
+    borderColor: '#843c14',
     borderRadius: SIZES.width * 0.031,
     padding: SIZES.width * 0.039,
   },
   profile: {
     width: SIZES.width * 0.22,
     height: SIZES.width * 0.22,
-    resizeMode: 'contain',
+    resizeMode: 'cover',
+    borderRadius: 55,
   },
   profile_name: {
     color: COLORS.black,
     fontFamily: 'DMSerifDisplay-Regular',
+    fontSize: 16,
   },
   profile_categories: {
     color: '#707B81',
     fontFamily: 'KantumruyPro-Regular',
-    fontSize: SIZES.width * 0.031,
+    fontSize: SIZES.width * 0.035,
     paddingTop: 3,
   },
   profile_language: {
@@ -130,13 +142,12 @@ const styles = StyleSheet.create({
   profile_experience: {
     color: '#707B81',
     fontFamily: 'KantumruyPro-Regular',
-    fontSize: SIZES.width * 0.026,
+    fontSize: SIZES.width * 0.031,
   },
   profile_rate: {
     color: '#000',
     fontFamily: 'KantumruyPro-regular',
-    fontSize: SIZES.width * 0.028,
-    paddingTop: 5,
+    fontSize: SIZES.width * 0.031,
   },
   status: {
     fontSize: SIZES.width * 0.023,

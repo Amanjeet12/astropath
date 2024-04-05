@@ -1,11 +1,13 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
+  ActivityIndicator,
   Alert,
   FlatList,
   Image,
   ImageBackground,
   Modal,
+  RefreshControl,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -34,6 +36,15 @@ const WalletScreen = ({navigation}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
   const {isData, walletBalance} = useSelector(state => state.wallet);
+  const [refreshing, setRefreshing] = useState(false);
+  const [buttonLoading, setButtonLoading] = useState(false);
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  };
 
   // Sample data representing top amounts
 
@@ -44,6 +55,10 @@ const WalletScreen = ({navigation}) => {
     {id: '3', amount: '₹ 200.00'},
     {id: '4', amount: '₹ 100.00'},
   ];
+
+  useEffect(() => {
+    handleWalletBalance();
+  }, [refreshing]);
 
   const renderTopAmount = ({item}) => (
     <TouchableOpacity
@@ -66,7 +81,7 @@ const WalletScreen = ({navigation}) => {
     var options = {
       description: 'Add To Wallet',
       image:
-        'https://firebasestorage.googleapis.com/v0/b/wookfood.appspot.com/o/account-removebg-preview.png?alt=media&token=9dd0bfa7-3905-4850-a13d-36938735b07d',
+        'https://firebasestorage.googleapis.com/v0/b/zegocloudvideocall-b50bd.appspot.com/o/userprofile%2FWhatsApp%20Image%202024-04-03%20at%2012.55.45%20PM.jpeg?alt=media&token=729aae36-a285-4ccb-802d-ea512cbadb07',
       currency: 'INR',
       key: 'rzp_test_f2dxSEQgSlFtDB',
       amount: transactionAmount,
@@ -111,6 +126,7 @@ const WalletScreen = ({navigation}) => {
       setToastMsg('Please enter amount');
       return;
     }
+    setButtonLoading(true);
     const amount = customAmount
       ? customAmount
       : parseFloat(selectedAmount.replace('₹', ''));
@@ -129,14 +145,16 @@ const WalletScreen = ({navigation}) => {
         if (response != null) {
           const orderId = response.response.id;
           const transactionAmount = response.response.amount;
-
+          setButtonLoading(false);
           startPayment(orderId, transactionAmount);
         } else {
           console.log('error');
+          setButtonLoading(false);
         }
       }
     } catch (error) {
       console.error('Error handling payment:', error);
+      setButtonLoading(false);
     }
   };
 
@@ -147,7 +165,11 @@ const WalletScreen = ({navigation}) => {
         source={images.mobile_bg}
         style={{width: SIZES.width, height: SIZES.height, flex: 1}}
         imageStyle={{resizeMode: 'stretch'}}>
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }>
           <View style={styles.mainContainer}>
             <View style={{marginTop: SIZES.width * 0.026}}>
               <HeaderSection />
@@ -195,17 +217,23 @@ const WalletScreen = ({navigation}) => {
                 style={styles.customAmountInput}
                 placeholder="Custom amount"
                 keyboardType="numeric"
+                placeholderTextColor={'#000'}
                 value={customAmount}
                 onChangeText={setCustomAmount}
               />
             </View>
             <TouchableOpacity
               style={styles.transactionButton}
-              onPress={() => handlePayment()}>
+              onPress={() => handlePayment()}
+              disabled={buttonLoading}>
               <Text style={styles.buttonText}>
-                {customAmount
-                  ? `Custom Amount: ₹ ${customAmount}`
-                  : `Select Amount: ${selectedAmount}`}
+                {buttonLoading ? (
+                  <ActivityIndicator size={'small'} color={'#fff'} />
+                ) : customAmount ? (
+                  `Custom Amount: ₹ ${customAmount}`
+                ) : (
+                  `Select Amount: ${selectedAmount}`
+                )}
               </Text>
             </TouchableOpacity>
           </View>

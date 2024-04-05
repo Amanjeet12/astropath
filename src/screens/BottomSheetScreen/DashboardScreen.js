@@ -40,7 +40,7 @@ const DashboardScreen = () => {
 
   useEffect(() => {
     handleWalletBalance();
-  }, []);
+  }, [refreshing]);
 
   const handleRefresh = () => {
     setRefresh(!refresh);

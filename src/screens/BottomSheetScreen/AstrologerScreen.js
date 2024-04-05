@@ -1,6 +1,7 @@
 import {
   ActivityIndicator,
   ImageBackground,
+  RefreshControl,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -20,31 +21,37 @@ import {useIsFocused} from '@react-navigation/native';
 const AstrologerScreen = () => {
   const IsFocused = useIsFocused();
   const [astrologer, setAstrolger] = useState('');
+  const [refreshing, setRefreshing] = useState(false);
+  const onRefresh = () => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  };
 
   useEffect(() => {
-    if (IsFocused) {
-      const fetchAstrologer = async () => {
-        try {
-          const token = await Preferences.getPreferences(Preferences.key.Token);
-          if (token) {
-            const response = await WebMethods.getRequestWithHeader(
-              WebUrls.url.fetchAstrologer,
-              token,
-            );
-            if (response != null) {
-              console.log('response===>', response.data);
-              setAstrolger(response.data);
-            } else {
-              console.log('error');
-            }
-          }
-        } catch (error) {
-          console.error('Error handling payment:', error);
+    fetchAstrologer();
+  }, [refreshing]);
+
+  const fetchAstrologer = async () => {
+    try {
+      const token = await Preferences.getPreferences(Preferences.key.Token);
+      if (token) {
+        const response = await WebMethods.getRequestWithHeader(
+          WebUrls.url.fetchAstrologer,
+          token,
+        );
+        if (response != null) {
+          console.log('response===>', response.data);
+          setAstrolger(response.data);
+        } else {
+          console.log('error');
         }
-      };
-      fetchAstrologer();
+      }
+    } catch (error) {
+      console.error('Error handling payment:', error);
     }
-  }, [IsFocused]);
+  };
 
   return (
     <>
@@ -53,7 +60,11 @@ const AstrologerScreen = () => {
         source={images.mobile_bg}
         style={{width: SIZES.width, height: SIZES.height, flex: 1}}
         imageStyle={{resizeMode: 'stretch'}}>
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }>
           <View style={styles.mainContainer}>
             <View style={{marginTop: SIZES.width * 0.026}}>
               <HeaderSection />

@@ -1,5 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import {
+  ActivityIndicator,
   Alert,
   FlatList,
   StyleSheet,
@@ -7,9 +8,9 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import {kundaliData} from '../constant/data';
-import {SIZES} from '../constant/theme';
+import {COLORS, SIZES} from '../constant/theme';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
@@ -17,10 +18,11 @@ import WebUrls from '../screens/api/WebUrls';
 import WebMethods from '../screens/api/WebMethods';
 import Preferences from '../screens/api/Preferences';
 import {TimerContext} from '../constant/TimerContext';
+import LoadingScreen from './LoadingScreen';
 
 const backgroundColor = ['#1f2499', '#bf6424', '#1f2499', '#bf6424', '#1f2499'];
 
-const RecentKundali = ({data, screen, datas}) => {
+const RecentKundali = ({data, screen, datas, onVisibilityChange}) => {
   const navigation = useNavigation();
   const {showTimer} = useContext(TimerContext);
 
@@ -52,6 +54,7 @@ const RecentKundali = ({data, screen, datas}) => {
 
   const handleRequest = async (name, day, month, year, hour, min, lat, lon) => {
     let token;
+    onVisibilityChange(true);
     try {
       token = await Preferences.getPreferences(Preferences.key.Token);
     } catch (error) {
@@ -79,6 +82,7 @@ const RecentKundali = ({data, screen, datas}) => {
           if (response != null) {
             if (response.success === 'o') {
               console.log('Success false');
+              onVisibilityChange(false); // Hide loading
             } else {
               var params = {
                 astrologerId: datas.astrologerId,
@@ -91,6 +95,7 @@ const RecentKundali = ({data, screen, datas}) => {
                   token,
                 ).then(async response => {
                   if (response != null) {
+                    onVisibilityChange(false); // Hide loading
                     console.log(response.data);
                     navigation.navigate('AstrologerScreen');
                     showTimer();
@@ -99,14 +104,18 @@ const RecentKundali = ({data, screen, datas}) => {
                     );
                   }
                 });
-              } catch (error) {}
+              } catch (error) {
+                onVisibilityChange(false); // Hide loading
+              }
             }
           } else {
             console.log('Null response');
+            onVisibilityChange(false); // Hide loading
           }
         })
         .catch(error => {
           console.error('Error:', error);
+          onVisibilityChange(false); // Hide loading
         });
     }
   };
@@ -181,7 +190,7 @@ const RecentKundali = ({data, screen, datas}) => {
   return (
     <View>
       <FlatList
-        data={data}
+        data={data.slice(-3)} // Display only the last 3 items
         keyExtractor={(item, index) => index.toString()}
         renderItem={showlist}
         scrollEnabled={false}

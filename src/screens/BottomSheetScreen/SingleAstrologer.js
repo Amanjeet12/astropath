@@ -33,10 +33,11 @@ import WebUrls from '../api/WebUrls';
 import {fetchWalletbalance} from '../../redux/WalletBalanceSlice';
 import {useDispatch} from 'react-redux';
 import {TimerContext} from '../../constant/TimerContext';
+import RatingAstrologer from '../../components/RatingAstrologer';
 
 const SingleAstrologer = ({route, navigation}) => {
   const {item} = route.params;
-  console.log(item._id);
+  console.log(item);
   const dispatch = useDispatch();
   const {isVisible, hideTimer} = useContext(TimerContext);
 
@@ -73,7 +74,9 @@ const SingleAstrologer = ({route, navigation}) => {
               <Image
                 style={{width: '100%', height: '100%'}}
                 resizeMode="cover"
-                source={{uri: `https://robohash.org/${userInfo.userID}.png`}}
+                source={{
+                  uri: 'https://firebasestorage.googleapis.com/v0/b/zegocloudvideocall-b50bd.appspot.com/o/userprofile%2FWhatsApp%20Image%202024-04-03%20at%2012.55.45%20PM.jpeg?alt=media&token=729aae36-a285-4ccb-802d-ea512cbadb07',
+                }}
               />
             </View>
           );
@@ -192,7 +195,7 @@ const SingleAstrologer = ({route, navigation}) => {
                       style={{
                         position: 'absolute',
                         bottom: SIZES.width * 0.051,
-                        right: 10,
+                        right: 15,
                       }}>
                       <Image
                         source={images.verified_icon}
@@ -230,14 +233,12 @@ const SingleAstrologer = ({route, navigation}) => {
                     <Image source={images.experiance} style={styles.icon} />
                     <Text style={styles.profile_experience}>7 Years</Text>
                   </View>
-                  <View style={[styles.flexBox, {gap: 15}]}>
+                  <View style={[styles.flexBox, {gap: 15, marginLeft: -3}]}>
                     <Text style={styles.profile_rate}>
-                      ₹ {item.chat_price}/min - chat
+                      ₹ {item.chat_price}/min - Chat
                     </Text>
                     <TouchableOpacity style={styles.flexBox}>
-                      <Text style={{fontSize: 12, color: 'green'}}>
-                        view charges
-                      </Text>
+                      <Text style={{fontSize: 12, color: 'green'}}>Charge</Text>
                       <Icon
                         name={'error-outline'}
                         size={12}
@@ -301,6 +302,7 @@ const SingleAstrologer = ({route, navigation}) => {
               </View>
             </View>
             <AboutAstrologer data={item.bio} />
+            <RatingAstrologer data={item.reviews} />
           </View>
         </ScrollView>
       </ImageBackground>
@@ -319,12 +321,13 @@ const styles = StyleSheet.create({
   },
   mainBoxContainer: {
     width: '100%',
-    height: 220,
+    height: 230,
     borderWidth: 1,
     marginTop: 30,
     borderRadius: 10,
     backgroundColor: '#fff',
     padding: SIZES.width * 0.039,
+    borderColor: '#843c14',
   },
   featuresContainer: {
     height: 50,
@@ -333,9 +336,10 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   profile: {
-    width: SIZES.width * 0.3,
+    width: SIZES.width * 0.26,
     height: SIZES.width * 0.26,
-    resizeMode: 'contain',
+    resizeMode: 'cover',
+    borderRadius: 55,
   },
   profile_name: {
     color: COLORS.black,
@@ -345,25 +349,27 @@ const styles = StyleSheet.create({
   profile_categories: {
     color: '#707B81',
     fontFamily: 'KantumruyPro-Regular',
-    fontSize: SIZES.width * 0.031,
+    fontSize: SIZES.width * 0.035,
     paddingTop: 3,
   },
   profile_language: {
     color: '#0D6EFD',
     fontFamily: 'KantumruyPro-Regular',
-    fontSize: SIZES.width * 0.029,
+    fontSize: SIZES.width * 0.031,
   },
   profile_experience: {
     color: '#707B81',
     fontFamily: 'KantumruyPro-Regular',
-    fontSize: SIZES.width * 0.029,
+    fontSize: SIZES.width * 0.031,
   },
   profile_rate: {
     color: '#000',
     fontFamily: 'KantumruyPro-Regular',
-    fontSize: SIZES.width * 0.03,
+    fontSize: SIZES.width * 0.031,
     paddingTop: 5,
     paddingLeft: 5,
+    textTransform: 'capitalize',
+    fontWeight: 'bold',
   },
   ratingContainer: {
     position: 'absolute',
@@ -375,7 +381,8 @@ const styles = StyleSheet.create({
     paddingVertical: 3,
     bottom: -SIZES.width * 0.026,
     elevation: 3,
-    left: SIZES.width * 0.1,
+    left: SIZES.width * 0.061,
+    borderColor: '#843c14',
   },
   flexBox: {
     flexDirection: 'row',

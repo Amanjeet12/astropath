@@ -1,5 +1,7 @@
 import {
+  ActivityIndicator,
   ImageBackground,
+  RefreshControl,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -19,31 +21,40 @@ import {useIsFocused} from '@react-navigation/native';
 const OrderScreen = () => {
   const IsFocused = useIsFocused();
   const [orders, setOrders] = useState('');
+  const [refreshing, setRefreshing] = useState(false);
+  const onRefresh = () => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  };
 
   useEffect(() => {
-    if (IsFocused) {
-      const fetchAstrologer = async () => {
-        try {
-          const token = await Preferences.getPreferences(Preferences.key.Token);
-          if (token) {
-            const response = await WebMethods.getRequestWithHeader(
-              WebUrls.url.orders,
-              token,
-            );
-            if (response != null) {
-              console.log('response===>', response.data);
-              setOrders(response.data);
-            } else {
-              console.log('error');
-            }
-          }
-        } catch (error) {
-          console.error('Error handling payment:', error);
+    fetchAstrologer();
+  }, [refreshing]);
+
+  const fetchAstrologer = async () => {
+    try {
+      const token = await Preferences.getPreferences(Preferences.key.Token);
+      if (token) {
+        const response = await WebMethods.getRequestWithHeader(
+          WebUrls.url.orders,
+          token,
+        );
+        if (response != null) {
+          console.log('response===>', response.data);
+          const sortedOrder = response.data.sort(
+            (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
+          );
+          setOrders(sortedOrder);
+        } else {
+          console.log('error');
         }
-      };
-      fetchAstrologer();
+      }
+    } catch (error) {
+      console.error('Error handling payment:', error);
     }
-  }, [IsFocused]);
+  };
 
   return (
     <>
@@ -52,7 +63,11 @@ const OrderScreen = () => {
         source={images.mobile_bg}
         style={{width: SIZES.width, height: SIZES.height, flex: 1}}
         imageStyle={{resizeMode: 'stretch'}}>
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }>
           <View style={styles.mainContainer}>
             <View style={{marginTop: SIZES.width * 0.026}}>
               <HeaderSection />
@@ -60,7 +75,13 @@ const OrderScreen = () => {
             <View style={{marginTop: SIZES.width * 0.051}}>
               <Text style={styles.tagLine}>Recent orders and chats</Text>
               <View>
-                <OrderSection data={orders} />
+                {orders ? (
+                  <OrderSection data={orders} />
+                ) : (
+                  <View style={{marginTop: 55}}>
+                    <ActivityIndicator size={'small'} color={COLORS.black} />
+                  </View>
+                )}
               </View>
             </View>
           </View>

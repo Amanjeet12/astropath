@@ -10,10 +10,13 @@ const OrderSection = ({data}) => {
     const endTime = new Date(end);
     const durationInSeconds = (endTime - startTime) / 1000;
     const minutes = Math.floor(durationInSeconds / 60);
-    if (isNaN(minutes)) {
-      return 0;
+    const seconds = Math.floor(durationInSeconds % 60);
+
+    if (isNaN(minutes) || isNaN(seconds)) {
+      return '0 sec';
     }
-    return minutes;
+
+    return `${minutes} min ${seconds} sec`;
   };
 
   const formateDate = dateString => {
@@ -46,7 +49,7 @@ const OrderSection = ({data}) => {
                   alignItems: 'flex-end',
                 }}>
                 <Text style={[styles.categories, {color: COLORS.black}]}>
-                  Duration: {fetchDuration(item.startTime, item.endTime)} min
+                  Duration: {fetchDuration(item.startTime, item.endTime)}
                 </Text>
                 {item.rating && (
                   <TouchableOpacity style={styles.starContainer}>
@@ -80,28 +83,33 @@ const styles = StyleSheet.create({
     padding: SIZES.width * 0.041,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    borderColor: '#843c14',
   },
   name: {
     fontFamily: 'DMSerifDisplay-Regular',
     color: COLORS.black,
     fontSize: SIZES.width * 0.036,
+    textTransform: 'capitalize',
   },
   categories: {
     fontFamily: 'KantumruyPro-Regular',
     fontSize: SIZES.width * 0.031,
     color: '#707B81',
     paddingTop: SIZES.width * 0.01,
+    textTransform: 'capitalize',
   },
   experience: {
     fontFamily: 'KantumruyPro-Regular',
     fontSize: SIZES.width * 0.031,
     color: '#707B81',
+    textTransform: 'capitalize',
   },
   cost: {
     fontFamily: 'KantumruyPro-Bold',
     fontSize: SIZES.width * 0.026,
     color: COLORS.black,
     paddingTop: 3,
+    textTransform: 'capitalize',
   },
   starContainer: {
     flexDirection: 'row',

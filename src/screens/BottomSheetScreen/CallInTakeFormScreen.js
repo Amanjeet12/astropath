@@ -1,8 +1,11 @@
 /* eslint-disable react-native/no-inline-styles */
 import {
+  ActivityIndicator,
   Alert,
+  Button,
   Image,
   ImageBackground,
+  Modal,
   Platform,
   ScrollView,
   StatusBar,
@@ -29,6 +32,7 @@ import WebMethods from '../api/WebMethods';
 import WebUrls from '../api/WebUrls';
 import Preferences from '../api/Preferences';
 import {TimerContext} from '../../constant/TimerContext';
+import LoadingScreen from '../../components/LoadingScreen';
 
 const data = [
   {label: 'Male', value: '1'},
@@ -57,11 +61,16 @@ const CallInTakeFormScreen = ({navigation, route}) => {
   const [year, setYear] = useState('');
   const [recent, setRecent] = useState('');
   const {t} = useTranslation();
+  const [loadingVisible, setLoadingVisible] = useState(false);
 
   console.log(datas);
 
   const setToastMsg = msg => {
     ToastAndroid.showWithGravity(msg, ToastAndroid.SHORT, ToastAndroid.BOTTOM);
+  };
+
+  const handleVisibilityChange = value => {
+    setLoadingVisible(value);
   };
 
   useEffect(() => {
@@ -93,11 +102,14 @@ const CallInTakeFormScreen = ({navigation, route}) => {
     lon,
     value,
   ) => {
+    setLoadingVisible(true);
     let token;
     try {
       token = await Preferences.getPreferences(Preferences.key.Token);
     } catch (error) {
       console.error('Error getting token:', error);
+      setLoadingVisible(false);
+
       return;
     }
 
@@ -122,6 +134,7 @@ const CallInTakeFormScreen = ({navigation, route}) => {
           if (response != null) {
             if (response.success === 'o') {
               console.log('Success false');
+              setLoadingVisible(false);
             } else {
               var params = {
                 astrologerId: datas.astrologerId,
@@ -135,6 +148,7 @@ const CallInTakeFormScreen = ({navigation, route}) => {
                 ).then(async response => {
                   if (response != null) {
                     console.log(response.data);
+                    setLoadingVisible(false);
                     navigation.navigate('AstrologerScreen');
                     showTimer();
                     Alert.alert(
@@ -142,14 +156,18 @@ const CallInTakeFormScreen = ({navigation, route}) => {
                     );
                   }
                 });
-              } catch (error) {}
+              } catch (error) {
+                setLoadingVisible(false);
+              }
             }
           } else {
             console.log('Null response');
+            setLoadingVisible(false);
           }
         })
         .catch(error => {
           console.error('Error:', error);
+          setLoadingVisible(false);
         });
     }
   };
@@ -267,11 +285,11 @@ const CallInTakeFormScreen = ({navigation, route}) => {
                     data={recent}
                     screen={'AstrologerScreen'}
                     datas={datas}
+                    onVisibilityChange={handleVisibilityChange}
                   />
                 </View>
               </View>
             )}
-
             <View style={{marginTop: SIZES.width * 0.06}}>
               <View
                 style={{
@@ -437,6 +455,19 @@ const CallInTakeFormScreen = ({navigation, route}) => {
             </View>
           </View>
         </ScrollView>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={loadingVisible}
+          onRequestClose={() => {
+            setLoadingVisible(false);
+          }}>
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <ActivityIndicator size={'large'} color={COLORS.primary} />
+            </View>
+          </View>
+        </Modal>
       </ImageBackground>
     </View>
   );
@@ -444,6 +475,29 @@ const CallInTakeFormScreen = ({navigation, route}) => {
 export default CallInTakeFormScreen;
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 20,
+    alignItems: 'center',
+  },
+  modalText: {
+    marginBottom: 20,
+    textAlign: 'center',
+    fontSize: 20,
+    color: COLORS.black,
+  },
   mainContainer: {
     height: SIZES.width * 0.13,
     backgroundColor: COLORS.white,

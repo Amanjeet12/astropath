@@ -15,6 +15,7 @@ const ProfileSection = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [profile, setProfile] = useState('');
 
   useEffect(() => {
     fetchName();
@@ -25,11 +26,15 @@ const ProfileSection = () => {
       const name = await Preferences.getPreferences(Preferences.key.Name);
       const phone = await Preferences.getPreferences(Preferences.key.phone);
       const email = await Preferences.getPreferences(Preferences.key.email);
+      const profiles = await Preferences.getPreferences(
+        Preferences.key.Profile_pic,
+      );
 
       console.log('Name:', name);
       setName(name);
       setPhoneNumber(phone);
       setEmail(email);
+      setProfile(profiles);
     } catch (error) {
       console.log('Error fetching name:', error);
     }
@@ -43,11 +48,16 @@ const ProfileSection = () => {
     <View style={styles.mainContainer}>
       <View style={{width: '35%'}}>
         <Image
-          source={images.profile_image}
+          source={{
+            uri: profile
+              ? profile
+              : 'https://firebasestorage.googleapis.com/v0/b/zegocloudvideocall-b50bd.appspot.com/o/userprofile%2FWhatsApp%20Image%202024-04-03%20at%2012.55.45%20PM.jpeg?alt=media&token=729aae36-a285-4ccb-802d-ea512cbadb07',
+          }}
           style={{
             width: SIZES.width * 0.25,
             height: SIZES.width * 0.25,
-            resizeMode: 'contain',
+            resizeMode: 'cover',
+            borderRadius: 300,
           }}
         />
       </View>

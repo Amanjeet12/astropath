@@ -27,6 +27,7 @@ import WebUrls from '../api/WebUrls';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Preferences from '../api/Preferences';
 import DatePicker from 'react-native-date-picker';
+import storage from '@react-native-firebase/storage';
 
 const UpdateProfileScreen = () => {
   const navigation = useNavigation();
@@ -34,7 +35,6 @@ const UpdateProfileScreen = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [place, setPlace] = useState('');
-  const [profile, setProfile] = useState('');
   const [openTime, setOpenTime] = useState(false);
   const [Time, setTime] = useState(new Date());
   const [showTime, setShowTime] = useState('');
@@ -45,6 +45,7 @@ const UpdateProfileScreen = () => {
   const [pre, setPre] = useState('');
   const [change, setChnage] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [imageLoading, setImageLoading] = useState(false);
   const [loading_button, setLoading_Button] = useState(false);
 
   useEffect(() => {
@@ -69,7 +70,7 @@ const UpdateProfileScreen = () => {
           setEmail(response.email);
           setShowDate(response.dob);
           setPlace(response.birth_location);
-          setProfile(response.profile_photo);
+          setSelectedOption(response.profile_photo);
 
           const birthDate = new Date(response.dob);
           const birthDateLocal = birthDate.toLocaleDateString();
@@ -93,23 +94,60 @@ const UpdateProfileScreen = () => {
   };
 
   const selectImage = () => {
-    Keyboard.dismiss();
-    launchImageLibrary({quality: 0.5, selectionLimit: 1}, async fileobj => {
+    setImageLoading(true);
+    launchImageLibrary({quality: 0.5}, fileobj => {
+      console.log(fileobj);
       if (fileobj.errorCode || fileobj.didCancel) {
         return console.log('You should handle errors or user cancellation!');
       }
+      const img = fileobj.assets[0];
+      const storageRef = storage().ref().child(`/userprofile/${Date.now()}`);
+      const uploadTask = storageRef.putFile(img.uri);
 
-      try {
-        const imageUri = fileobj.assets[0].uri;
-        const fileName = imageUri.substring(imageUri.lastIndexOf('/') + 1);
-        console.log(fileName);
-        setSelectedOption(imageUri);
-      } catch (error) {
-        console.error(error);
-      }
+      uploadTask.on(
+        'state_changed',
+        snapshot => {
+          var progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log('Upload is ' + progress + '% done');
+          switch (snapshot.state) {
+            case 'paused':
+              console.log('Upload is paused');
+              break;
+            case 'running':
+              console.log('Upload is running');
+              break;
+          }
+        },
+        error => {
+          console.log(error.code);
+          setImageLoading(false);
+
+          switch (error.code) {
+            case 'storage/unauthorized':
+              console.log('User does not have permission to access the object');
+              break;
+            case 'storage/canceled':
+              console.log('User canceled the upload');
+              break;
+            case 'storage/unknown':
+              console.log(
+                'Unknown error occurred, inspect error.serverResponse',
+              );
+              break;
+          }
+        },
+        () => {
+          uploadTask.snapshot.ref.getDownloadURL().then(downloadURL => {
+            console.log('File available at', downloadURL);
+            setSelectedOption(downloadURL);
+            setImageLoading(false);
+            console.log('Image uploaded successfully!');
+          });
+        },
+      );
     });
   };
-
   const handleUpdateProfile = async () => {
     setLoading_Button(true);
     try {
@@ -122,7 +160,7 @@ const UpdateProfileScreen = () => {
       var params = {
         email: email,
         name: name,
-        profile_photo: null,
+        profile_photo: selectedOption,
         fcmtoken: null,
         gender: response.gender,
         dob: formattedDate,
@@ -149,6 +187,10 @@ const UpdateProfileScreen = () => {
         await Preferences.savePreferences(Preferences.key.Name, name);
         await Preferences.savePreferences(Preferences.key.email, email);
         await Preferences.savePreferences(Preferences.key.birthPlace, place);
+        await Preferences.savePreferences(
+          Preferences.key.Profile_pic,
+          selectedOption,
+        );
 
         navigation.goBack();
       });
@@ -225,19 +267,43 @@ const UpdateProfileScreen = () => {
                     marginTop: SIZES.width * 0.051,
                     alignItems: 'center',
                   }}>
-                  <Image
-                    source={
-                      selectedOption
-                        ? images.profile_image
-                        : images.profile_image
-                    }
-                    style={{
-                      width: SIZES.width * 0.31,
-                      height: SIZES.width * 0.31,
-                      borderRadius: 300,
-                      resizeMode: 'cover',
-                    }}
-                  />
+                  {imageLoading ? (
+                    <View
+                      style={{
+                        width: SIZES.width * 0.31,
+                        height: SIZES.width * 0.31,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        borderWidth: 0.5,
+                        borderColor: 'grey',
+                        borderRadius: 300,
+                      }}>
+                      <ActivityIndicator size={'small'} color={'#000'} />
+                    </View>
+                  ) : selectedOption ? (
+                    <Image
+                      source={{uri: selectedOption}}
+                      style={{
+                        width: SIZES.width * 0.31,
+                        height: SIZES.width * 0.31,
+                        borderRadius: 300,
+                        resizeMode: 'cover',
+                      }}
+                    />
+                  ) : (
+                    <Image
+                      source={{
+                        uri: 'https://firebasestorage.googleapis.com/v0/b/zegocloudvideocall-b50bd.appspot.com/o/userprofile%2FWhatsApp%20Image%202024-04-03%20at%2012.55.45%20PM.jpeg?alt=media&token=729aae36-a285-4ccb-802d-ea512cbadb07',
+                      }}
+                      style={{
+                        width: SIZES.width * 0.31,
+                        height: SIZES.width * 0.31,
+                        borderRadius: 300,
+                        resizeMode: 'cover',
+                      }}
+                    />
+                  )}
+
                   <TouchableOpacity
                     onPress={() => selectImage()}
                     activeOpacity={1}

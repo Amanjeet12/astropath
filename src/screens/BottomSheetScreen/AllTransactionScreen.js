@@ -37,7 +37,10 @@ const AllTransactionScreen = () => {
         token,
       ).then(async response => {
         if (response != null) {
-          setTransactions(response);
+          const sortedTransactions = response.sort(
+            (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
+          );
+          setTransactions(sortedTransactions);
         } else {
           console.log('error');
         }
@@ -53,7 +56,9 @@ const AllTransactionScreen = () => {
     return (
       <View style={styles.transactionItem}>
         <View style={styles.leftColumn}>
-          <Text style={styles.title}>{item._id}</Text>
+          <Text style={styles.title} numberOfLines={1}>
+            TAX-{item._id}
+          </Text>
           <Text style={styles.title}>Date: {formattedDate}</Text>
         </View>
         <View style={styles.rightColumn}>

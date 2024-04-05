@@ -16,6 +16,7 @@ const Preferences = {
     gender: 'gender',
     birthPlace: 'birthPlace',
     Time: 'Time',
+    Profile_pic: 'profile_pic',
   },
 
   horoscope: {
