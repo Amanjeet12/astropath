@@ -4,7 +4,6 @@ import {View, TouchableOpacity, StyleSheet} from 'react-native';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import Icon from 'react-native-vector-icons/AntDesign';
 import {useNavigation, useRoute} from '@react-navigation/native';
-import {COLORS} from '../../constant/theme';
 
 const SearchPlaceScreen = () => {
   const navigation = useNavigation();
@@ -18,10 +17,20 @@ const SearchPlaceScreen = () => {
       .then(response => response.json())
       .then(json => {
         const {lat, lng} = json.result.geometry.location;
-        console.log('Latitude:', lat);
-        console.log('Longitude:', lng);
+        const timezone = json.result.utc_offset;
+        const hours = Math.floor(Math.abs(timezone) / 60);
+        const minutes = Math.abs(timezone) % 60;
+        const sign = timezone >= 0 ? '+' : '-';
+        const timezoneString = `${sign}${hours}.${minutes
+          .toString()
+          .padStart(2, '0')}`;
         if (onPlaceSelect) {
-          onPlaceSelect(data.structured_formatting.main_text, lat, lng);
+          onPlaceSelect(
+            data.structured_formatting.main_text,
+            lat,
+            lng,
+            timezoneString,
+          );
         }
         navigation.goBack();
       })
@@ -29,7 +38,6 @@ const SearchPlaceScreen = () => {
         console.error('Error fetching place details:', error);
       });
   };
-
   return (
     <View
       style={{

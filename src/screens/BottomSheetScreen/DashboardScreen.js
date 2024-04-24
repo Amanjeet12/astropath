@@ -27,13 +27,19 @@ import {useDispatch, useSelector} from 'react-redux';
 import {fetchAllBlogs} from '../../redux/blogSlice';
 import {ZIMKit} from '@zegocloud/zimkit-rn';
 import appConfig from '../../constant/KeyCenter';
+import {fetchTopAstrologer} from '../../redux/AstrologerSlice';
+import WebUrls from '../api/WebUrls';
+import WebMethods from '../api/WebMethods';
+import FeatureAstrologerComponent from '../../components/FeatureAstrologerComponent';
 
 const DashboardScreen = () => {
   const dispatch = useDispatch();
   const {t} = useTranslation();
   const [refreshing, setRefreshing] = useState(false);
   const {isData} = useSelector(state => state.blog);
-  console.log(isData);
+  const [topAstrologer, setTopAstrologer] = useState('');
+
+  console.log('topAstrologer===>', topAstrologer);
 
   const onRefresh = () => {
     setRefreshing(true);
@@ -46,6 +52,7 @@ const DashboardScreen = () => {
     ZIMKit.init(appConfig.appID, appConfig.appSign);
     handleWalletBalance();
     handleBlog();
+    handleTopAstrologer();
   }, [refreshing]);
 
   const handleWalletBalance = async () => {
@@ -65,6 +72,26 @@ const DashboardScreen = () => {
       }
     } catch {
       console.log('error');
+    }
+  };
+
+  const handleTopAstrologer = async () => {
+    try {
+      const token = await Preferences.getPreferences(Preferences.key.Token);
+      if (token) {
+        const response = await WebMethods.getRequestWithHeader(
+          WebUrls.url.fetch_Top_All_Astrologer,
+          token,
+        );
+        if (response != null) {
+          console.log('Top response===>', response.data);
+          setTopAstrologer(response.data);
+        } else {
+          console.log('error');
+        }
+      }
+    } catch (error) {
+      console.error('Error handling payment:', error);
     }
   };
   return (
@@ -93,12 +120,16 @@ const DashboardScreen = () => {
               <AdvancePanchangSection />
             </View>
           </View>
-          {/* <View style={[styles.mainContainer, {marginTop: SIZES.width * 0.03}]}>
-            <Text style={[styles.tagLine, {marginBottom: 10}]}>
-              {t('Top Astrologers')}
-            </Text>
-            <AstrologerComponent data={Astrologer} />
-          </View> */}
+          {topAstrologer ? (
+            <View
+              style={[styles.mainContainer, {marginTop: SIZES.width * 0.03}]}>
+              <Text style={[styles.tagLine, {marginBottom: 10}]}>
+                {t('Top Astrologers')}
+              </Text>
+              <FeatureAstrologerComponent data={topAstrologer} />
+            </View>
+          ) : null}
+
           <View style={[styles.mainContainer, {marginTop: SIZES.width * 0.03}]}>
             <HoroscopeSection data={Horoscope} refreshing={refreshing} />
           </View>

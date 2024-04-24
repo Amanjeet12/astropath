@@ -51,6 +51,7 @@ const NumerologyFormScreen = ({navigation}) => {
   const [month, setMonth] = useState('');
   const [year, setYear] = useState('');
   const [recent, setRecent] = useState('');
+  const [timeZone, setTimeZone] = useState('+5.30');
 
   const setToastMsg = msg => {
     ToastAndroid.showWithGravity(msg, ToastAndroid.SHORT, ToastAndroid.BOTTOM);
@@ -75,7 +76,7 @@ const NumerologyFormScreen = ({navigation}) => {
   }, []);
 
   const handleNavigation = async () => {
-    const item = {name, day, month, year, hour, min, lat, lon, value};
+    const item = {name, day, month, year, hour, min, lat, lon, value, timeZone};
     console.log(item);
     dispatch(addToCart(item));
     try {
@@ -98,7 +99,8 @@ const NumerologyFormScreen = ({navigation}) => {
         min !== null &&
         lat &&
         lon &&
-        value
+        value &&
+        timeZone
       ) {
         navigation.navigate('NumerologyScreen', {
           name,
@@ -109,6 +111,7 @@ const NumerologyFormScreen = ({navigation}) => {
           min,
           lat,
           lon,
+          timeZone,
         });
       } else {
         console.log('Some values are missing');
@@ -119,11 +122,12 @@ const NumerologyFormScreen = ({navigation}) => {
     }
   };
 
-  const handlePlaceSelect = (placeName, lat, lng) => {
+  const handlePlaceSelect = (placeName, lat, lng, timeZone) => {
     setPlace(placeName);
     setLat(lat ? lat : '28.7041');
     setLon(lng ? lng : '77.1025');
-    console.log(placeName, lat, lng);
+    setTimeZone(timeZone ? timeZone : '+5.30');
+    console.log(placeName, lat, lng, timeZone);
   };
 
   const handleNavigateToSearchPlaceScreen = () => {

@@ -1,3 +1,4 @@
+import React, {useEffect, useState} from 'react';
 import {
   ActivityIndicator,
   ImageBackground,
@@ -7,8 +8,9 @@ import {
   StyleSheet,
   Text,
   View,
+  TouchableOpacity,
+  FlatList,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
 import {images} from '../../constant';
 import {COLORS, SIZES} from '../../constant/theme';
 import HeaderSection from '../../components/HeaderSection';
@@ -18,22 +20,41 @@ import WebUrls from '../api/WebUrls';
 import AstrologerComponent from '../../components/AstrologerComponent';
 import {useIsFocused} from '@react-navigation/native';
 
+const expertiseAreas = [
+  'All', // Adding the 'All' option at the beginning of the list
+  'Tarot',
+  'Numerology',
+  'KP',
+  'Crystal',
+  'Palmistry',
+  'Vedic',
+  'Nadal',
+  'Psychic',
+  'Face Reading',
+  'Vastu',
+  'Nadi',
+  'Muhurat',
+];
+
 const AstrologerScreen = () => {
   const IsFocused = useIsFocused();
-  const [astrologer, setAstrolger] = useState('');
+  const [astrologers, setAstrologers] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [selectedFilters, setSelectedFilters] = useState([]);
+
   const onRefresh = () => {
     setRefreshing(true);
     setTimeout(() => {
       setRefreshing(false);
+      fetchAstrologers();
     }, 2000);
   };
 
   useEffect(() => {
-    fetchAstrologer();
-  }, [refreshing]);
+    fetchAstrologers();
+  }, [refreshing, IsFocused]);
 
-  const fetchAstrologer = async () => {
+  const fetchAstrologers = async () => {
     try {
       const token = await Preferences.getPreferences(Preferences.key.Token);
       if (token) {
@@ -42,14 +63,30 @@ const AstrologerScreen = () => {
           token,
         );
         if (response != null) {
-          console.log('response===>', response.data);
-          setAstrolger(response.data);
+          setAstrologers(response.data);
         } else {
-          console.log('error');
+          console.log('error fetching astrologers');
         }
       }
     } catch (error) {
-      console.error('Error handling payment:', error);
+      console.error('Error fetching astrologers:', error);
+    }
+  };
+
+  const handleFilterChange = itemValue => {
+    if (itemValue === 'All') {
+      setSelectedFilters([]); // Clear all filters if 'All' is selected
+    } else {
+      const newFilters = selectedFilters.includes('All')
+        ? [itemValue] // Start new filter array with the selected item if 'All' was previously selected
+        : [...selectedFilters];
+      const index = newFilters.indexOf(itemValue);
+      if (index > -1) {
+        newFilters.splice(index, 1); // Remove filter if it's already selected
+      } else {
+        newFilters.push(itemValue); // Add filter if not selected
+      }
+      setSelectedFilters(newFilters);
     }
   };
 
@@ -70,15 +107,45 @@ const AstrologerScreen = () => {
               <HeaderSection />
             </View>
             <View style={{marginTop: SIZES.width * 0.051}}>
-              <Text style={styles.tagLine}>All Astrologer</Text>
-              <View style={{marginTop: 30}}>
-                {astrologer ? (
-                  <AstrologerComponent data={astrologer} />
-                ) : (
-                  <View>
-                    <ActivityIndicator size={'small'} color={COLORS.black} />
-                  </View>
+              <FlatList
+                data={expertiseAreas}
+                showsHorizontalScrollIndicator={false}
+                renderItem={({item}) => (
+                  <TouchableOpacity
+                    onPress={() => handleFilterChange(item)}
+                    style={{
+                      padding: 5,
+                      borderWidth: 1,
+                      marginHorizontal: 3,
+                      paddingHorizontal: 10,
+                      borderRadius: 5,
+                      backgroundColor:
+                        (selectedFilters.length === 0 && item === 'All') ||
+                        selectedFilters.includes(item)
+                          ? COLORS.primary
+                          : COLORS.transparent,
+                    }}>
+                    <Text
+                      style={[
+                        styles.tagLine,
+                        {
+                          color: selectedFilters.includes(item)
+                          ? COLORS.black
+                          : COLORS.black,
+                        },
+                      ]}>
+                      {item}
+                    </Text>
+                  </TouchableOpacity>
                 )}
+                keyExtractor={item => item}
+                horizontal
+              />
+              <View style={{marginTop: 30}}>
+                <AstrologerComponent
+                  data={astrologers}
+                  filters={selectedFilters}
+                />
               </View>
             </View>
           </View>

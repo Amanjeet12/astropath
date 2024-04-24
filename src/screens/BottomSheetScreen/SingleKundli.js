@@ -76,7 +76,7 @@ const SingleKundli = ({route}) => {
     }
   }, []);
 
-  const {name, day, month, year, hour, min, lat, lon} = route.params;
+  const {name, day, month, year, hour, min, lat, lon, timeZone} = route.params;
   console.log('params', name, day, month, year, hour, min, lat, lon);
 
   const fetchData = async () => {
@@ -97,7 +97,7 @@ const SingleKundli = ({route}) => {
         min: min,
         lat,
         lon,
-        tzone: '5.5',
+        tzone: timeZone,
       };
 
       const [panchangData, astroDetailData, manglikReportData] =
@@ -150,7 +150,7 @@ const SingleKundli = ({route}) => {
           min: min,
           lat: lat,
           lon: lon,
-          tzone: '5.5',
+          tzone: timeZone,
         };
         const [dashaData, currentDashaData] = await Promise.all([
           WebMethods.postRequestWithHeader(
@@ -198,7 +198,7 @@ const SingleKundli = ({route}) => {
           min: min,
           lat: lat,
           lon: lon,
-          tzone: '5.5',
+          tzone: timeZone,
         };
 
         const [planetData] = await Promise.all([
@@ -238,7 +238,7 @@ const SingleKundli = ({route}) => {
           min: min,
           lat: lat,
           lon: lon,
-          tzone: '5.5',
+          tzone: timeZone,
         };
 
         for (let i = 0; i < routeNames.length; i++) {
@@ -338,7 +338,7 @@ const SingleKundli = ({route}) => {
           min: min,
           lat: lat,
           lon: lon,
-          tzone: '5.5',
+          tzone: timeZone,
         };
 
         const [lalkitabPlanet, lalKitabStory] = await Promise.all([

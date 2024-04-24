@@ -25,11 +25,11 @@ const HeaderSection = () => {
       <View>
         <Astropath_logo />
       </View>
-      <TouchableOpacity
+      {/* <TouchableOpacity
         style={{marginLeft: 40}}
         onPress={() => navigation.navigate('ChatScreen')}>
         <Icon name={'message1'} size={25} color={'#000'} />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
       <TouchableOpacity
         style={styles.walletContainer}
         onPress={() => navigation.navigate('WalletScreen')}>

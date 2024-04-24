@@ -72,6 +72,7 @@ const WebUrls = {
     // blogs
 
     fetch_All_blogs: 'customer/customer/fetch_all_blogs',
+    fetch_Top_All_Astrologer: 'customer/customer/get_all_featured_astrologer',
 
     // review
 

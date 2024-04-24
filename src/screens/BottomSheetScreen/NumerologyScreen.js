@@ -19,7 +19,7 @@ import WebMethods from '../api/WebMethods';
 import WebUrls from '../api/WebUrls';
 
 const NumerologyScreen = ({route}) => {
-  const {name, day, month, year, hour, min, lat, lon} = route.params;
+  const {name, day, month, year, hour, min, lat, lon, timeZone} = route.params;
   const [nero, setNero] = useState('');
   const [loading, setLOading] = useState(true);
 
@@ -47,7 +47,7 @@ const NumerologyScreen = ({route}) => {
         min: min,
         lat,
         lon,
-        tzone: '5.5',
+        tzone: timeZone,
       };
 
       const [nueroReportData] = await Promise.all([

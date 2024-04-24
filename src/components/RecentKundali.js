@@ -37,6 +37,7 @@ const RecentKundali = ({data, screen, datas, onVisibilityChange}) => {
         item.min,
         item.lat,
         item.lon,
+        item.timeZone
       );
     } else {
       navigation.navigate(screen, {
@@ -48,11 +49,12 @@ const RecentKundali = ({data, screen, datas, onVisibilityChange}) => {
         min: item.min,
         lat: item.lat,
         lon: item.lon,
+        timeZone: item.timeZone
       });
     }
   };
 
-  const handleRequest = async (name, day, month, year, hour, min, lat, lon) => {
+  const handleRequest = async (name, day, month, year, hour, min, lat, lon, timeZone) => {
     let token;
     onVisibilityChange(true);
     try {
@@ -73,6 +75,7 @@ const RecentKundali = ({data, screen, datas, onVisibilityChange}) => {
         day: day,
         month: month,
         year: year,
+        timeZone: timeZone
       },
     };
 

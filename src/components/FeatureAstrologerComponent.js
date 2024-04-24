@@ -6,21 +6,8 @@ import {images} from '../constant';
 import Icon from 'react-native-vector-icons/Octicons';
 import {useNavigation} from '@react-navigation/native';
 
-const AstrologerComponent = ({data, filters}) => {
-  console.log("filters==>", filters)
+const FeatureAstrologerComponent = ({data}) => {
   const navigation = useNavigation();
-  const getFilteredAstrologers = () => {
-    if (filters.length === 0) {
-      return data; // If no filters are selected, return all data
-    }
-    return data.filter(astrologer =>
-      astrologer.expertise.some(expertise => filters.includes(expertise))
-    );
-  };
-
-  // Call the filter function
-  const filteredAstrologers = getFilteredAstrologers();
-
 
   const handlenavigation = item => {
     navigation.navigate('SingleAstrologer', {item});
@@ -28,8 +15,8 @@ const AstrologerComponent = ({data, filters}) => {
 
   return (
     <View>
-      {filteredAstrologers &&
-        filteredAstrologers.map((item, index) => {
+      {data &&
+        data.map((item, index) => {
           return (
             <View key={index} style={styles.container}>
               <View style={{flexDirection: 'row'}}>
@@ -127,7 +114,7 @@ const AstrologerComponent = ({data, filters}) => {
   );
 };
 
-export default AstrologerComponent;
+export default FeatureAstrologerComponent;
 
 const styles = StyleSheet.create({
   container: {
