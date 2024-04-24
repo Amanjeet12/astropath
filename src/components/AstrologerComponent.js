@@ -12,6 +12,7 @@ const AstrologerComponent = ({data}) => {
   const handlenavigation = item => {
     navigation.navigate('SingleAstrologer', {item});
   };
+
   return (
     <View>
       {data &&
@@ -22,7 +23,7 @@ const AstrologerComponent = ({data}) => {
                 <View style={{width: '31%'}}>
                   <View>
                     <Image
-                      source={{uri: item.profile_photo}}
+                      source={{uri: item?.profile_photo}}
                       style={styles.profile}
                     />
                     <View
@@ -40,24 +41,32 @@ const AstrologerComponent = ({data}) => {
                         }}
                       />
                     </View>
-                    <View style={styles.ratingContainer}>
-                      <Image
-                        source={images.star_icon}
-                        style={{
-                          width: SIZES.width * 0.051,
-                          height: SIZES.width * 0.051,
-                          resizeMode: 'contain',
-                        }}
-                      />
-                      <Text style={{color: 'grey'}}>5</Text>
-                    </View>
+                    {item.totalCount !== 0 ? (
+                      <View style={styles.ratingContainer}>
+                        <Image
+                          source={images.star_icon}
+                          style={{
+                            width: SIZES.width * 0.051,
+                            height: SIZES.width * 0.051,
+                            resizeMode: 'contain',
+                          }}
+                        />
+                        <Text style={{color: 'grey'}}>{item.totalCount}</Text>
+                      </View>
+                    ) : null}
                   </View>
                 </View>
                 <View style={{width: '45%'}}>
-                  <Text style={styles.profile_name}>{item.name}</Text>
+                  <Text style={styles.profile_name} numberOfLines={1}>
+                    {item.name}
+                  </Text>
                   <Text style={styles.profile_categories}>{item.gender}</Text>
-                  <Text style={styles.profile_language}>{item.language}</Text>
-                  <Text style={styles.profile_experience}>Exp 4+ Years</Text>
+                  <Text style={styles.profile_language} numberOfLines={1}>
+                    {item.language}
+                  </Text>
+                  <Text style={styles.profile_experience} numberOfLines={1}>
+                    Exp 4+ Years
+                  </Text>
                   <Text style={styles.profile_rate}>
                     ₹ {item.chat_price}/min - Chat
                   </Text>

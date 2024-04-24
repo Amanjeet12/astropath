@@ -14,6 +14,7 @@ import {images} from '../constant';
 import {SIZES} from '../constant/theme';
 import {useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
+import Icon from 'react-native-vector-icons/AntDesign';
 
 const HeaderSection = () => {
   const navigation = useNavigation();
@@ -24,6 +25,11 @@ const HeaderSection = () => {
       <View>
         <Astropath_logo />
       </View>
+      <TouchableOpacity
+        style={{marginLeft: 40}}
+        onPress={() => navigation.navigate('ChatScreen')}>
+        <Icon name={'message1'} size={25} color={'#000'} />
+      </TouchableOpacity>
       <TouchableOpacity
         style={styles.walletContainer}
         onPress={() => navigation.navigate('WalletScreen')}>

@@ -27,6 +27,8 @@ import AllTransaction from '../BottomSheetScreen/AllTransactionScreen';
 import AllTransactionScreen from '../BottomSheetScreen/AllTransactionScreen';
 import CallInTakeFormScreen from '../BottomSheetScreen/CallInTakeFormScreen';
 import CustomerSupportScreen from '../BottomSheetScreen/CustomerSupportScreen';
+import ChatScreen from '../BottomSheetScreen/ChatScreen';
+import {MessageListPage} from '@zegocloud/zimkit-rn';
 
 const Stack = createStackNavigator();
 
@@ -186,6 +188,17 @@ const AppNavigator = () => {
         options={{headerShown: false}}
         name="CustomerSupportScreen"
         component={CustomerSupportScreen}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="ChatScreen"
+        component={ChatScreen}
+      />
+
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="MessageListPage"
+        component={MessageListPage}
       />
       <Stack.Screen
         options={{headerShown: false}}

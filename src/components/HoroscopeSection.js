@@ -24,7 +24,7 @@ import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 import {useTranslation} from 'react-i18next';
 
-const HoroscopeSection = ({data, refresh, refreshing}) => {
+const HoroscopeSection = ({data, refreshing}) => {
   const {t} = useTranslation();
   const focused = useIsFocused();
   const navigation = useNavigation();
@@ -52,7 +52,7 @@ const HoroscopeSection = ({data, refresh, refreshing}) => {
   useEffect(() => {
     console.log('refreshing');
     fetchData();
-  }, [focused, refresh]);
+  }, [focused]);
 
   useEffect(() => {
     if (selectedItem !== null && Zodiac[selectedItem] !== undefined) {

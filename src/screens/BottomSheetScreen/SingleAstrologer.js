@@ -5,6 +5,7 @@ import {
   Alert,
   Image,
   ImageBackground,
+  Modal,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -31,20 +32,34 @@ import Preferences from '../api/Preferences';
 import WebMethods from '../api/WebMethods';
 import WebUrls from '../api/WebUrls';
 import {fetchWalletbalance} from '../../redux/WalletBalanceSlice';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {TimerContext} from '../../constant/TimerContext';
 import RatingAstrologer from '../../components/RatingAstrologer';
+import RatingSection from '../../components/RatingSection';
+import Triangle from 'react-native-vector-icons/Octicons';
+import Cross from 'react-native-vector-icons/Entypo';
+import {Circle} from 'react-native-svg';
 
 const SingleAstrologer = ({route, navigation}) => {
   const {item} = route.params;
   console.log(item);
   const dispatch = useDispatch();
   const {isVisible, hideTimer} = useContext(TimerContext);
+  const [showRate, setShowRate] = useState(false);
+  const [show, setShow] = useState(false);
+  const {isData, walletBalance} = useSelector(state => state.wallet);
+
+  const handleTilTop = () => {
+    setShowRate(true);
+    setTimeout(() => {
+      setShowRate(false);
+    }, 3000); // 3 seconds
+  };
 
   const onUserLogin = async (userID, userName) => {
     return ZegoUIKitPrebuiltCallService.init(
-      678662769,
-      'a88556743e933ecfa883c17d34de63633098a9ee8acb7e4ea5544b5504268707',
+      95716287,
+      'b9d92528359b15d3038a79816eb37fac308c5a1c1bc221190598bfd2e47d5b56',
       userID,
       userName,
       [ZIM, ZPNs],
@@ -141,7 +156,11 @@ const SingleAstrologer = ({route, navigation}) => {
     } catch {}
   };
 
-  const handlCallAndVideoCallRequest = async service => {
+  const handlCallAndVideoCallRequest = async (service, price) => {
+    if (walletBalance < price) {
+      setShow(true);
+      return;
+    }
     if (isVisible) {
       Alert.alert(
         'Cannot Make Another Call',
@@ -188,7 +207,7 @@ const SingleAstrologer = ({route, navigation}) => {
                 <View style={{width: '40%'}}>
                   <View>
                     <Image
-                      source={{uri: item.profile_photo}}
+                      source={{uri: item?.profile_photo}}
                       style={styles.profile}
                     />
                     <View
@@ -215,19 +234,23 @@ const SingleAstrologer = ({route, navigation}) => {
                           resizeMode: 'contain',
                         }}
                       />
-                      <Text style={{color: 'grey'}}>5</Text>
+                      <Text style={{color: 'grey'}}>{item.totalCount}</Text>
                     </View>
                   </View>
                 </View>
                 <View style={{width: '60%'}}>
-                  <Text style={styles.profile_name}>{item.name}</Text>
+                  <Text style={styles.profile_name}>{item?.name}</Text>
                   <View style={styles.flexBox}>
                     <Image source={images.knowledge} style={styles.icon} />
-                    <Text style={styles.profile_categories}>{item.gender}</Text>
+                    <Text style={styles.profile_categories}>
+                      {item?.gender}
+                    </Text>
                   </View>
                   <View style={[styles.flexBox, {marginTop: 3}]}>
                     <Image source={images.language} style={styles.icon} />
-                    <Text style={styles.profile_language}>{item.language}</Text>
+                    <Text style={styles.profile_language}>
+                      {item?.language}
+                    </Text>
                   </View>
                   <View style={[styles.flexBox, {marginTop: 3}]}>
                     <Image source={images.experiance} style={styles.icon} />
@@ -235,10 +258,54 @@ const SingleAstrologer = ({route, navigation}) => {
                   </View>
                   <View style={[styles.flexBox, {gap: 15, marginLeft: -3}]}>
                     <Text style={styles.profile_rate}>
-                      ₹ {item.chat_price}/min - Chat
+                      ₹ {item?.chat_price}/ min - Chat
                     </Text>
-                    <TouchableOpacity style={styles.flexBox}>
-                      <Text style={{fontSize: 12, color: 'green'}}>Charge</Text>
+                    {showRate && (
+                      <View style={styles.tiltop}>
+                        <Text style={[styles.profile_rate, {fontSize: 12}]}>
+                          Charges
+                        </Text>
+                        <Text
+                          style={[
+                            styles.profile_rate,
+                            {fontSize: 10, color: 'grey'},
+                          ]}>
+                          ₹ {item?.chat_price}/ min - Chat
+                        </Text>
+                        <Text
+                          style={[
+                            styles.profile_rate,
+                            {fontSize: 10, color: 'grey'},
+                          ]}>
+                          ₹ {item?.voice_call_price}/ min - Call
+                        </Text>
+                        <Text
+                          style={[
+                            styles.profile_rate,
+                            {fontSize: 10, color: 'grey'},
+                          ]}>
+                          ₹ {item?.video_call_price}/ min - VC
+                        </Text>
+                        <View
+                          style={{
+                            position: 'absolute',
+                            bottom: -15,
+                            right: 20,
+                          }}>
+                          <Triangle
+                            name={'triangle-down'}
+                            size={25}
+                            color={COLORS.primary}
+                          />
+                        </View>
+                      </View>
+                    )}
+                    <TouchableOpacity
+                      style={styles.flexBox}
+                      onPress={handleTilTop}>
+                      <Text style={{fontSize: 12, color: 'green'}}>
+                        View Charge
+                      </Text>
                       <Icon
                         name={'error-outline'}
                         size={12}
@@ -256,11 +323,11 @@ const SingleAstrologer = ({route, navigation}) => {
                     styles.flexBox,
                     styles.singlebox,
                     {width: '25%'},
-                    !item.work_schedule.services.includes('chat') && {
+                    !item.work_schedule?.services.includes('chat') && {
                       opacity: 0.5,
                     },
                   ]}
-                  disabled={!item.work_schedule.services.includes('chat')}>
+                  disabled={!item.work_schedule?.services.includes('chat')}>
                   <Text style={{fontSize: 15, color: '#000'}}>Chat</Text>
                   <Chat
                     name={'chatbubble-ellipses-outline'}
@@ -274,12 +341,19 @@ const SingleAstrologer = ({route, navigation}) => {
                     styles.flexBox,
                     styles.singlebox,
                     {width: '30%'},
-                    !item.work_schedule.services.includes('voice call') && {
+                    !item.work_schedule?.services.includes('voice call') && {
                       opacity: 0.5,
                     },
                   ]}
-                  disabled={!item.work_schedule.services.includes('voice call')}
-                  onPress={() => handlCallAndVideoCallRequest('voice call')}>
+                  disabled={
+                    !item.work_schedule?.services.includes('voice call')
+                  }
+                  onPress={() =>
+                    handlCallAndVideoCallRequest(
+                      'voice call',
+                      item.video_call_price,
+                    )
+                  }>
                   <Text style={{fontSize: 15, color: '#000'}}>Call</Text>
                   <Chat name={'call'} color={'#000'} size={15} />
                 </TouchableOpacity>
@@ -290,21 +364,92 @@ const SingleAstrologer = ({route, navigation}) => {
                     styles.flexBox,
                     styles.singlebox,
                     {width: '40%'},
-                    !item.work_schedule.services.includes('video call') && {
+                    !item.work_schedule?.services.includes('video call') && {
                       opacity: 0.5,
                     },
                   ]}
-                  disabled={!item.work_schedule.services.includes('video call')}
-                  onPress={() => handlCallAndVideoCallRequest('video call')}>
+                  disabled={
+                    !item.work_schedule?.services.includes('video call')
+                  }
+                  onPress={() =>
+                    handlCallAndVideoCallRequest(
+                      'video call',
+                      item.video_call_price,
+                    )
+                  }>
                   <Text style={{fontSize: 15, color: '#000'}}>Video Call</Text>
                   <Chat name={'videocam'} color={'#000'} size={15} />
                 </TouchableOpacity>
               </View>
             </View>
-            <AboutAstrologer data={item.bio} />
-            <RatingAstrologer data={item.reviews} />
+            <AboutAstrologer data={item?.bio} />
+            <View
+              style={{
+                backgroundColor: COLORS.white,
+                padding: 10,
+                marginTop: 15,
+                marginBottom: 50,
+              }}>
+              <RatingSection data={item?.ratingStats} />
+              <RatingAstrologer data={item?.reviews} />
+            </View>
           </View>
         </ScrollView>
+        <Modal animationType="fade" transparent={true} visible={show}>
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <TouchableOpacity
+                style={{position: 'absolute', right: 10, top: 10}}
+                onPress={() => setShow(false)}>
+                <Cross name={'cross'} size={24} color={COLORS.black} />
+              </TouchableOpacity>
+
+              <View
+                style={{
+                  alignItems: 'center',
+                }}>
+                <Image
+                  source={images.erroricon}
+                  style={{width: 70, height: 70}}
+                />
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontWeight: '800',
+                    color: 'red',
+                    textTransform: 'capitalize',
+                    marginTop: 0,
+                    textAlign: 'left',
+                  }}>
+                  Insufficient Funds !!
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 14,
+                    color: 'grey',
+                    marginTop: 5,
+                    textTransform: 'capitalize',
+                    textAlign: 'center',
+                  }}>
+                  Please Update your wallet to start the conversation to
+                  Astrologer
+                </Text>
+                <TouchableOpacity
+                  style={[styles.button, {marginTop: 15}]}
+                  onPress={() => {
+                    setShow(false), navigation.navigate('WalletScreen');
+                  }}>
+                  <Text
+                    style={[
+                      {color: '#fff', textTransform: 'uppercase', fontSize: 12},
+                    ]}>
+                    Add Money
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
       </ImageBackground>
     </>
   );
@@ -316,14 +461,40 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  button: {
+    width: 120,
+    height: 45,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 5,
+    backgroundColor: COLORS.primary,
+  },
   mainContainer: {
     marginHorizontal: SIZES.width * 0.051,
   },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    borderRadius: 5,
+    padding: 15,
+    width: '90%',
+    height: '30%',
+  },
+  modalText: {
+    marginBottom: 20,
+    textAlign: 'center',
+    fontSize: 20,
+    color: COLORS.black,
+  },
   mainBoxContainer: {
     width: '100%',
-    height: 230,
     borderWidth: 1,
-    marginTop: 30,
+    marginTop: 20,
     borderRadius: 10,
     backgroundColor: '#fff',
     padding: SIZES.width * 0.039,
@@ -353,7 +524,7 @@ const styles = StyleSheet.create({
     paddingTop: 3,
   },
   profile_language: {
-    color: '#0D6EFD',
+    color: '#707B81',
     fontFamily: 'KantumruyPro-Regular',
     fontSize: SIZES.width * 0.031,
   },
@@ -409,5 +580,17 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#FFB443',
     marginTop: 5,
+  },
+  tiltop: {
+    position: 'absolute',
+    zIndex: 999,
+    top: -105,
+    left: 60,
+    borderWidth: 1,
+    borderRadius: 15,
+    paddingHorizontal: 30,
+    borderColor: COLORS.primary,
+    backgroundColor: COLORS.white,
+    paddingVertical: 10,
   },
 });

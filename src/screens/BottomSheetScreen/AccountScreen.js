@@ -122,12 +122,14 @@ const AccountScreen = () => {
                   <CustomeDesignNavigation
                     title={'Terms and Conditions'}
                     icon={images.terms}
-                    screen={'TermsAndConditionScreen'}
+                    screen={''}
+                    url={'https://astropath.co.in/terms-and-conditions'}
                   />
                   <CustomeDesignNavigation
                     title={'Privacy Policy'}
                     icon={images.privacy}
-                    screen={'PrivacyScreen'}
+                    screen={''}
+                    url={'https://astropath.co.in/privacy-policy'}
                   />
                   <CustomeDesignNavigation
                     title={'Customer Support'}

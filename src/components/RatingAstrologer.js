@@ -10,67 +10,69 @@ const RatingAstrologer = ({data}) => {
     return null;
   }
   return (
-    <View
-      style={{
-        marginTop: 30,
-        padding: 10,
-        backgroundColor: '#fff',
-        paddingBottom: 20,
-      }}>
-      {data.map((item, index) => {
-        const stars = [];
-        for (let i = 0; i < item.rating; i++) {
-          stars.push(
-            <Icon key={i} name={'star'} size={14} color={'#FFB443'} />,
-          );
-        }
-        return (
-          <View key={index} style={styles.container}>
-            <View>
-              <Image
-                source={images.Profile1}
-                style={{
-                  width: 50,
-                  height: 50,
-                  resizeMode: 'contain',
-                  borderRadius: 55,
-                  borderColor: 'red',
-                  borderWidth: 0.5,
-                }}
-              />
-            </View>
-            <View>
-              <Text
-                key={index}
-                style={{
-                  fontSize: 18,
-                  color: '#000',
-                  textTransform: 'capitalize',
-                }}>
-                {item.customerName}
-              </Text>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  paddingTop: 5,
-                }}>
-                {stars}
+    <>
+      <View
+        style={{
+          marginTop: 10,
+          padding: 10,
+          backgroundColor: '#fff',
+          paddingBottom: 20,
+        }}>
+        {data.map((item, index) => {
+          const stars = [];
+          for (let i = 0; i < item.rating; i++) {
+            stars.push(
+              <Icon key={i} name={'star'} size={14} color={'#FFB443'} />,
+            );
+          }
+          return (
+            <View key={index} style={styles.container}>
+              <View style={{width: '12%'}}>
+                <Image
+                  source={images.Profile1}
+                  style={{
+                    width: 50,
+                    height: 50,
+                    resizeMode: 'contain',
+                    borderRadius: 55,
+                    borderColor: 'red',
+                    borderWidth: 0.5,
+                  }}
+                />
               </View>
-              <Text
-                style={{
-                  fontSize: 14,
-                  color: '#000',
-                  textTransform: 'capitalize',
-                  paddingTop: 5,
-                }}>
-                {item.review}
-              </Text>
+              <View style={{width: '75%'}}>
+                <Text
+                  key={index}
+                  style={{
+                    fontSize: 18,
+                    color: '#000',
+                    textTransform: 'capitalize',
+                  }}>
+                  {item.customerName}
+                </Text>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    paddingTop: 5,
+                  }}>
+                  {stars}
+                </View>
+                <Text
+                  style={{
+                    fontSize: 14,
+                    color: '#000',
+                    textTransform: 'capitalize',
+                    paddingTop: 5,
+                  }}>
+                  {item.review}
+                </Text>
+              </View>
             </View>
-          </View>
-        );
-      })}
-    </View>
+          );
+        })}
+      </View>
+    </>
   );
 };
 

@@ -114,6 +114,7 @@ const styles = StyleSheet.create({
     height: 120,
     justifyContent: 'center',
     marginHorizontal: 16,
+    borderRadius: 5,
   },
   timer: {
     fontSize: 18,

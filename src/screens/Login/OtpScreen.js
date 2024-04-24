@@ -147,6 +147,10 @@ const OtpScreen = ({navigation, route}) => {
             Preferences.key.birthLon,
             existingCustomer.birth_lon,
           ),
+          Preferences.savePreferences(
+            Preferences.key.Profile_pic,
+            existingCustomer.profile_photo,
+          ),
         ];
 
         await Promise.all(preferences);

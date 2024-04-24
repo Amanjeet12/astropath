@@ -19,7 +19,7 @@ import {
 } from 'react-native';
 import BackButton from '../../components/BackButton';
 import HeaderSection from '../../components/HeaderSection';
-import {SIZES} from '../../constant/theme';
+import {COLORS, SIZES} from '../../constant/theme';
 import {images} from '../../constant';
 import Preferences from '../api/Preferences';
 import RazorpayCheckout from 'react-native-razorpay';
@@ -248,6 +248,19 @@ const WalletScreen = ({navigation}) => {
         }}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
+            <View style={{marginVertical: 20}}>
+              {modalMessage === 'Payment Successful' ? (
+                <Image
+                  source={images.successicon}
+                  style={{width: 80, height: 80, resizeMode: 'cover'}}
+                />
+              ) : (
+                <Image
+                  source={images.erroricon}
+                  style={{width: 80, height: 80, resizeMode: 'cover'}}
+                />
+              )}
+            </View>
             <Text style={styles.modalText}>{modalMessage}</Text>
           </View>
         </View>
@@ -302,6 +315,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 10,
     marginTop: 10,
+    color: 'black',
   },
   divider: {
     borderBottomColor: '#DDDDDD',
@@ -332,7 +346,7 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     backgroundColor: '#FFFFFF',
-    padding: 20,
+    padding: 40,
     borderRadius: 10,
     alignItems: 'center',
   },

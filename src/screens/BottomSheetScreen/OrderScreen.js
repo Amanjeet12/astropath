@@ -22,6 +22,7 @@ const OrderScreen = () => {
   const IsFocused = useIsFocused();
   const [orders, setOrders] = useState('');
   const [refreshing, setRefreshing] = useState(false);
+  const [refresh, setRefresh] = useState(false);
   const onRefresh = () => {
     setRefreshing(true);
     setTimeout(() => {
@@ -31,7 +32,7 @@ const OrderScreen = () => {
 
   useEffect(() => {
     fetchAstrologer();
-  }, [refreshing]);
+  }, [refreshing, refresh]);
 
   const fetchAstrologer = async () => {
     try {
@@ -56,6 +57,11 @@ const OrderScreen = () => {
     }
   };
 
+  const handleRefresh = () => {
+    console.log('first');
+    setRefresh(!refresh);
+  };
+
   return (
     <>
       <StatusBar backgroundColor={'#f7f1e1'} barStyle={'dark-content'} />
@@ -76,7 +82,7 @@ const OrderScreen = () => {
               <Text style={styles.tagLine}>Recent orders and chats</Text>
               <View>
                 {orders ? (
-                  <OrderSection data={orders} />
+                  <OrderSection data={orders} refreshing={handleRefresh} />
                 ) : (
                   <View style={{marginTop: 55}}>
                     <ActivityIndicator size={'small'} color={COLORS.black} />

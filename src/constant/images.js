@@ -62,6 +62,9 @@ const knowledge = require('../assets/images/knowledge.png');
 const experiance = require('../assets/images/experiance.png');
 const walletbanner = require('../assets/images/walletbanner.png');
 const upload = require('../assets/images/upload.png');
+const erroricon = require('../assets/images/erroricon.png');
+const successicon = require('../assets/images/successicon.png');
+
 
 // Zodic
 
@@ -79,6 +82,8 @@ const Capicorn = require('../assets/images/icon/horo2.png');
 const Pisces = require('../assets/images/icon/horo1.png');
 
 export default {
+  erroricon,
+  successicon,
   walletbanner,
   knowledge,
   experiance,

@@ -23,14 +23,18 @@ import AstrologerComponent from '../../components/AstrologerComponent';
 import {useTranslation} from 'react-i18next';
 import {fetchWalletbalance} from '../../redux/WalletBalanceSlice';
 import Preferences from '../api/Preferences';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import {fetchAllBlogs} from '../../redux/blogSlice';
+import {ZIMKit} from '@zegocloud/zimkit-rn';
+import appConfig from '../../constant/KeyCenter';
 
 const DashboardScreen = () => {
   const dispatch = useDispatch();
-
   const {t} = useTranslation();
-  const [refresh, setRefresh] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  const {isData} = useSelector(state => state.blog);
+  console.log(isData);
+
   const onRefresh = () => {
     setRefreshing(true);
     setTimeout(() => {
@@ -39,12 +43,10 @@ const DashboardScreen = () => {
   };
 
   useEffect(() => {
+    ZIMKit.init(appConfig.appID, appConfig.appSign);
     handleWalletBalance();
+    handleBlog();
   }, [refreshing]);
-
-  const handleRefresh = () => {
-    setRefresh(!refresh);
-  };
 
   const handleWalletBalance = async () => {
     try {
@@ -53,6 +55,17 @@ const DashboardScreen = () => {
         dispatch(fetchWalletbalance(token));
       }
     } catch {}
+  };
+
+  const handleBlog = async () => {
+    try {
+      const token = await Preferences.getPreferences(Preferences.key.Token);
+      if (token) {
+        dispatch(fetchAllBlogs(token));
+      }
+    } catch {
+      console.log('error');
+    }
   };
   return (
     <View style={styles.container}>
@@ -87,11 +100,7 @@ const DashboardScreen = () => {
             <AstrologerComponent data={Astrologer} />
           </View> */}
           <View style={[styles.mainContainer, {marginTop: SIZES.width * 0.03}]}>
-            <HoroscopeSection
-              data={Horoscope}
-              refresh={refresh}
-              refreshing={refreshing}
-            />
+            <HoroscopeSection data={Horoscope} refreshing={refreshing} />
           </View>
           <View>
             <View style={[styles.mainContainer]}>
@@ -99,7 +108,7 @@ const DashboardScreen = () => {
             </View>
             <View
               style={[styles.mainContainer, {marginTop: SIZES.width * 0.051}]}>
-              <BlogSection data={Blog} />
+              <BlogSection data={isData} />
             </View>
           </View>
         </ScrollView>

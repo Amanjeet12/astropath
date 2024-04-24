@@ -16,7 +16,17 @@ import {SIZES} from '../../constant/theme';
 import Icon from 'react-native-vector-icons/Entypo';
 import {Blog} from '../../constant/data';
 
-const BlogScreen = () => {
+const BlogScreen = ({route}) => {
+  const {item} = route.params;
+  console.log(item);
+  const calculateDate = data => {
+    const updatedAt = data;
+    const updatedAtDate = new Date(updatedAt);
+    const currentDate = new Date();
+    const diffInMs = Math.abs(currentDate - updatedAtDate);
+    const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+    return diffInDays;
+  };
   return (
     <>
       <StatusBar backgroundColor={'#f7f1e1'} barStyle={'dark-content'} />
@@ -34,16 +44,17 @@ const BlogScreen = () => {
             </View>
             <View style={{marginTop: SIZES.width * 0.051}}>
               <Image
-                source={images.blogScreen}
+                source={{uri: item.photo}}
                 style={{
                   width: '100%',
                   height: SIZES.width * 0.6,
                   resizeMode: 'contain',
+                  borderRadius: 15,
                 }}
               />
             </View>
             <View style={{marginTop: SIZES.width * 0.025}}>
-              <Text style={styles.title}>A Lively New Moon Aquarius</Text>
+              <Text style={styles.title}>{item.title}</Text>
             </View>
 
             <View style={styles.flexBox}>
@@ -53,20 +64,10 @@ const BlogScreen = () => {
                 size={SIZES.width * 0.041}
               />
               <Text style={{fontSize: SIZES.width * 0.031, color: '#000'}}>
-                Posted 2 days ago
+                Posted {calculateDate(item.updatedAt)} days ago
               </Text>
             </View>
-            <Text style={styles.description}>
-              This New Moon falls in star sign Aquarius, ruling friends, groups
-              and the collective. It’s a networking and social New Moon in the
-              star sign linked to technology, astrology and all things modern.
-              As Aquarius is the future-oriented star sign, it’s an ideal Moon
-              to set your intentions not only for the month ahead but the year
-              ahead as well. New Moon energy kicks in a couple of days after the
-              exact date/time of the New Moon. Make a wish when you first see
-              the crescent Moon in the night sky which will appear at the
-              weekend.
-            </Text>
+            <Text style={styles.description}>{item.description}</Text>
           </View>
         </ScrollView>
       </ImageBackground>

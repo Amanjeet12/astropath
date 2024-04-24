@@ -1,3 +1,4 @@
+/* eslint-disable react/self-closing-comp */
 /* eslint-disable react-native/no-inline-styles */
 import {
   Image,
@@ -14,15 +15,42 @@ import {COLORS, SIZES} from '../constant/theme';
 import useNavigateToScreen from './Navigation';
 import Icon from 'react-native-vector-icons/Entypo';
 import Eys from 'react-native-vector-icons/AntDesign';
+import {useNavigation} from '@react-navigation/native';
+import LinearGradient from 'react-native-linear-gradient';
+import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
+const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
 const BlogSection = ({data}) => {
-  const navigation = useNavigateToScreen();
-  const handleNavigation = () => {
-    navigation('BlogScreen');
+  const navigation = useNavigation();
+  if (!data || !data.data) {
+    return (
+      <ShimmerPlaceHolder
+        style={{
+          height: SIZES.width * 0.6,
+          width: '100%',
+          marginBottom: 10,
+          borderRadius: 10,
+        }}
+        shimmerColors={['#fae3d2', '#FFD0AC', '#FFD0AC']}
+        visible={false}></ShimmerPlaceHolder>
+    );
+  }
+  const handleNavigation = item => {
+    console.log(item);
+    navigation.navigate('BlogScreen', {item});
+  };
+
+  const calculateDate = data => {
+    const updatedAt = data;
+    const updatedAtDate = new Date(updatedAt);
+    const currentDate = new Date();
+    const diffInMs = Math.abs(currentDate - updatedAtDate);
+    const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+    return diffInDays;
   };
   return (
     <>
-      {data.map((item, index) => {
+      {data.data.map((item, index) => {
         return (
           <View key={index} style={styles.container}>
             <ImageBackground
@@ -36,16 +64,19 @@ const BlogSection = ({data}) => {
                   gap: SIZES.width * 0.026,
                 }}>
                 <Image
-                  source={item.image}
+                  source={{uri: item.photo}}
                   style={{
                     width: SIZES.width * 0.22,
                     height: SIZES.width * 0.141,
                     resizeMode: 'contain',
+                    borderRadius: 10,
                   }}
                 />
                 <View>
                   <Text style={styles.title}>{item.title}</Text>
-                  <Text style={styles.publisher}>{item.publisher}</Text>
+                  <Text style={styles.publisher}>
+                    {item.publisher ? item.publisher : 'Admin'}
+                  </Text>
                 </View>
               </View>
               <View>
@@ -55,7 +86,7 @@ const BlogSection = ({data}) => {
                     paddingHorizontal: SIZES.width * 0.039,
                   }}
                   style={{marginTop: 0}}>
-                  {item.categories.map((category, index) => (
+                  {item.tags.map((category, index) => (
                     <View
                       key={index}
                       style={{marginRight: SIZES.width * 0.031}}>
@@ -64,7 +95,9 @@ const BlogSection = ({data}) => {
                   ))}
                 </ScrollView>
                 <View style={{padding: SIZES.width * 0.039}}>
-                  <Text style={styles.description}>{item.description}</Text>
+                  <Text style={styles.description} numberOfLines={3}>
+                    {item.description}
+                  </Text>
                 </View>
               </View>
 
@@ -76,7 +109,7 @@ const BlogSection = ({data}) => {
                 }}>
                 <TouchableOpacity
                   style={styles.buttonContainer}
-                  onPress={() => handleNavigation()}>
+                  onPress={() => handleNavigation(item)}>
                   <Text style={styles.buttonText}>View</Text>
                   <Image
                     source={images.button_icon}
@@ -95,16 +128,18 @@ const BlogSection = ({data}) => {
                     color={'#000'}
                     size={SIZES.width * 0.041}
                   />
-                  <Text style={styles.bottomText}>Posted 2 days ago</Text>
+                  <Text style={styles.bottomText}>
+                    Posted {calculateDate(item.updatedAt)} days ago
+                  </Text>
                 </View>
-                <View style={styles.flexBox}>
+                {/* <View style={styles.flexBox}>
                   <Eys
                     name={'eyeo'}
                     color={'#000'}
                     size={SIZES.width * 0.041}
                   />
                   <Text style={styles.bottomText}>1704</Text>
-                </View>
+                </View> */}
               </View>
             </ImageBackground>
           </View>
@@ -161,7 +196,8 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'KantumruyPro-Light',
     fontSize: SIZES.width * 0.031,
-    color: '#494949',
+    color: '#000',
+    fontWeight: '700',
   },
   publisher: {
     fontFamily: 'KantumruyPro-Light',

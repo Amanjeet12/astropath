@@ -19,7 +19,7 @@ export default AboutAstrologer;
 const styles = StyleSheet.create({
   mainContainer: {
     marginTop: 20,
-    borderWidth: 1,
+    borderWidth: 2,
     padding: 10,
     borderStyle: 'dashed',
     backgroundColor: '#FFF1CC',

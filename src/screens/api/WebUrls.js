@@ -68,6 +68,14 @@ const WebUrls = {
     // support
 
     support: 'customer/customer/create_support_ticket',
+
+    // blogs
+
+    fetch_All_blogs: 'customer/customer/fetch_all_blogs',
+
+    // review
+
+    review_to_astrologer: 'customer/customer/give_review_and_rating',
   },
 };
 
