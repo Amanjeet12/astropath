@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "919550891528",
-    "project_id": "zegocloudvideocall-b50bd",
-    "storage_bucket": "zegocloudvideocall-b50bd.appspot.com"
+    "project_number": "468878750063",
+    "project_id": "zegocloudvideocall-6612f",
+    "storage_bucket": "zegocloudvideocall-6612f.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:919550891528:android:bfb610d75793d38dffe3bd",
+        "mobilesdk_app_id": "1:468878750063:android:5eaf5469c80a7ad283389a",
         "android_client_info": {
           "package_name": "com.astrolger"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCGu-y80sJIikMnXahE8AMKC9ynZN2zmXs"
+          "current_key": "AIzaSyAxEekx6xVSKCU5M1ZiUa2JPORtPqLHxPY"
         }
       ],
       "services": {
@@ -26,7 +26,7 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:919550891528:android:b52a847aa4d04e4cffe3bd",
+        "mobilesdk_app_id": "1:468878750063:android:debef9ffb971a7f783389a",
         "android_client_info": {
           "package_name": "com.astropath"
         }
@@ -34,7 +34,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCGu-y80sJIikMnXahE8AMKC9ynZN2zmXs"
+          "current_key": "AIzaSyAxEekx6xVSKCU5M1ZiUa2JPORtPqLHxPY"
         }
       ],
       "services": {

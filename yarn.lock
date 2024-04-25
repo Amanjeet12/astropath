@@ -2292,11 +2292,6 @@
     zego-zim-react-native "2.12.1"
     zego-zpns-react-native "2.5.0-alpha"
 
-"@zegocloud/zimkit-rn@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.npmjs.org/@zegocloud/zimkit-rn/-/zimkit-rn-2.0.0.tgz"
-  integrity sha512-NfJa7cZzj19q7pUh7EX6xNU+7A58wioSnc52R57rDtU/vvNqu29k6US8X0K5Op5RZoVIs3z3fyiLNmN1J/4B4w==
-
 abort-controller@^3.0.0:
   version "3.0.0"
   resolved "https://registry.npmjs.org/abort-controller/-/abort-controller-3.0.0.tgz"
