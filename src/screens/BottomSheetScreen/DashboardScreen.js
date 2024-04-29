@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import {
   ImageBackground,
@@ -25,9 +26,6 @@ import {fetchWalletbalance} from '../../redux/WalletBalanceSlice';
 import Preferences from '../api/Preferences';
 import {useDispatch, useSelector} from 'react-redux';
 import {fetchAllBlogs} from '../../redux/blogSlice';
-import {ZIMKit} from '@zegocloud/zimkit-rn';
-import appConfig from '../../constant/KeyCenter';
-import {fetchTopAstrologer} from '../../redux/AstrologerSlice';
 import WebUrls from '../api/WebUrls';
 import WebMethods from '../api/WebMethods';
 import FeatureAstrologerComponent from '../../components/FeatureAstrologerComponent';
@@ -49,7 +47,6 @@ const DashboardScreen = () => {
   };
 
   useEffect(() => {
-    ZIMKit.init(appConfig.appID, appConfig.appSign);
     handleWalletBalance();
     handleBlog();
     handleTopAstrologer();

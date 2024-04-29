@@ -58,8 +58,8 @@ const SingleAstrologer = ({route, navigation}) => {
 
   const onUserLogin = async (userID, userName) => {
     return ZegoUIKitPrebuiltCallService.init(
-      1987329102,
-      '1c95f4e4a7bd24726e6cb72a987d62298541eb1070bdaf2c02ecc06dfe0f0ccd',
+      1759920386,
+      '1bed4d8b514a73e376a4251a5e7f7d6f85952b98976dba33a30404f18646a37a',
       userID,
       userName,
       [ZIM, ZPNs],

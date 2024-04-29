@@ -29,7 +29,6 @@
     "@zegocloud/react-native-callkeep": "^4.3.9",
     "@zegocloud/zego-uikit-prebuilt-call-rn": "^4.6.0",
     "@zegocloud/zego-uikit-rn": "^2.7.4",
-    "@zegocloud/zimkit-rn": "^2.0.0",
     "axios": "^1.6.8",
     "base-64": "^1.0.0",
     "i18next": "^23.10.1",
