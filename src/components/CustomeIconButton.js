@@ -1,11 +1,26 @@
 /* eslint-disable react-native/no-inline-styles */
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Image,
+  StyleSheet,
+  Text,
+  ToastAndroid,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React from 'react';
 import {SIZES} from '../constant/theme';
 
 const CustomeIconButton = ({icon, placeholder}) => {
+  const setToastMsg = msg => {
+    ToastAndroid.showWithGravity(msg, ToastAndroid.SHORT, ToastAndroid.BOTTOM);
+  };
+
   return (
-    <TouchableOpacity style={styles.mainContainer}>
+    <TouchableOpacity
+      style={styles.mainContainer}
+      onPress={() => {
+        setToastMsg('Email suthentication activate');
+      }}>
       <View style={styles.boxContainer}>
         <View style={styles.imageContainer}>
           <Image source={icon} style={styles.image} />

@@ -44,7 +44,7 @@ const RatingAstrologer = ({data}) => {
                 <Text
                   key={index}
                   style={{
-                    fontSize: 18,
+                    fontSize: 16,
                     color: '#000',
                     textTransform: 'capitalize',
                   }}>
@@ -84,5 +84,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginTop: 20,
     gap: 20,
+    borderBottomWidth: 0.5,
+    paddingBottom: 5,
   },
 });

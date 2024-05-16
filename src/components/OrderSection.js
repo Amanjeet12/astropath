@@ -8,12 +8,13 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {COLORS, SIZES} from '../constant/theme';
 import Icon from 'react-native-vector-icons/Entypo';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import StarRating from 'react-native-star-rating';
 import {TextInput} from 'react-native-gesture-handler';
+import NetInfo from '@react-native-community/netinfo';
 import Preferences from '../screens/api/Preferences';
 import WebMethods from '../screens/api/WebMethods';
 import WebUrls from '../screens/api/WebUrls';
@@ -30,6 +31,26 @@ const OrderSection = ({data, refreshing}) => {
     ToastAndroid.showWithGravity(msg, ToastAndroid.SHORT, ToastAndroid.BOTTOM);
   };
 
+  useEffect(() => {
+    const isFirstItemNotRated = data && data.length > 0 && !data[0].rating;
+
+    if (isFirstItemNotRated) {
+      setTimeout(() => {
+        refRBSheet.current.open();
+        setID(data[0]._id);
+      }, 1000);
+    }
+  }, [data]);
+
+  const checkConnectivity = async () => {
+    const state = await NetInfo.fetch();
+    const isConnected = state.isConnected;
+    if (!isConnected) {
+      setToastMsg('No internet connection');
+    }
+    return isConnected;
+  };
+
   const fetchDuration = (start, end) => {
     const startTime = new Date(start);
     const endTime = new Date(end);
@@ -43,6 +64,7 @@ const OrderSection = ({data, refreshing}) => {
 
     return `${minutes} min ${seconds} sec`;
   };
+
   const formateDate = dateString => {
     const date = new Date(dateString);
     const formattedDate = `${date.getDate()}-${
@@ -53,9 +75,9 @@ const OrderSection = ({data, refreshing}) => {
   };
 
   const onStarRatingPress = rating => {
-    console.log(rating);
     setRating(rating);
   };
+
   const handleBioChange = text => {
     setBio(text);
     setWordCount(text.split(' ').filter(Boolean).length);
@@ -66,12 +88,17 @@ const OrderSection = ({data, refreshing}) => {
       setToastMsg('Fill All The Details');
     } else {
       setLoading(true);
-      var params = {
+      const isConnected = await checkConnectivity();
+      if (!isConnected) {
+        setLoading(false);
+        return;
+      }
+
+      const params = {
         interactionId: id,
         review: bio,
         rating: rating,
       };
-      console.log('first', params);
       try {
         const token = await Preferences.getPreferences(Preferences.key.Token);
         if (token) {
@@ -89,12 +116,12 @@ const OrderSection = ({data, refreshing}) => {
             setToastMsg('Thanks For Rating');
             refRBSheet.current.close();
           } else {
-            console.log('error');
+            console.log('Error posting review');
             setLoading(false);
           }
         }
       } catch (error) {
-        console.error('Error handling payment:', error);
+        console.error('Error posting review:', error);
         setLoading(false);
       }
     }
@@ -107,13 +134,13 @@ const OrderSection = ({data, refreshing}) => {
           return (
             <View key={index} style={styles.container}>
               <View>
-                <Text style={styles.name}>{item.customerName}</Text>
+                <Text style={styles.name}>{item.astrologerName}</Text>
                 <Text style={styles.categories}>
                   date - {formateDate(item.date)}
                 </Text>
-                <Text style={styles.experience}>service -{item.service}</Text>
+                <Text style={styles.experience}>service - {item.service}</Text>
                 <Text style={styles.experience}>status - {item.status}</Text>
-                <Text style={styles.cost}>Total Cost -{item.cost}</Text>
+                <Text style={styles.cost}>Total Cost - {item.cost}</Text>
               </View>
               <View
                 style={{

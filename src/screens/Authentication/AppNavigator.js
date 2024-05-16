@@ -5,7 +5,6 @@ import HoroscopeScreen from '../BottomSheetScreen/HoroscopeScreen';
 import BlogScreen from '../BottomSheetScreen/BlogScreen';
 import SingleKundli from '../BottomSheetScreen/SingleKundli';
 import MarraigeKundli from '../BottomSheetScreen/MarraigeKundli';
-import KundliScreen from '../BottomSheetScreen/KundliScreen';
 import TermsAndConditionScreen from '../BottomSheetScreen/TermsAndConditionScreen';
 import LanguageScreen from '../BottomSheetScreen/LanguageScreen';
 import WalletScreen from '../BottomSheetScreen/WalletScreen';
@@ -27,6 +26,8 @@ import AllTransaction from '../BottomSheetScreen/AllTransactionScreen';
 import AllTransactionScreen from '../BottomSheetScreen/AllTransactionScreen';
 import CallInTakeFormScreen from '../BottomSheetScreen/CallInTakeFormScreen';
 import CustomerSupportScreen from '../BottomSheetScreen/CustomerSupportScreen';
+import ChatingScreen from '../BottomSheetScreen/ChatingScreen';
+import Chathistory from '../BottomSheetScreen/Chathistory';
 
 const Stack = createStackNavigator();
 
@@ -101,11 +102,7 @@ const AppNavigator = () => {
         name="TermsAndConditionScreen"
         component={TermsAndConditionScreen}
       />
-      <Stack.Screen
-        options={{headerShown: false}}
-        name="KundliScreen"
-        component={KundliScreen}
-      />
+
       <Stack.Screen
         options={{headerShown: false}}
         name="MarraigeKundli"
@@ -186,6 +183,16 @@ const AppNavigator = () => {
         options={{headerShown: false}}
         name="CustomerSupportScreen"
         component={CustomerSupportScreen}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="ChatingScreen"
+        component={ChatingScreen}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="Chathistory"
+        component={Chathistory}
       />
       <Stack.Screen
         options={{headerShown: false}}

@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React from 'react';
+import React, {useContext} from 'react';
 import {Astropath_logo} from '../screens/SvgComponent/BottomSvgComponent';
 import {images} from '../constant';
 import {SIZES} from '../constant/theme';
@@ -25,11 +25,11 @@ const HeaderSection = () => {
       <View>
         <Astropath_logo />
       </View>
-      {/* <TouchableOpacity
+      <TouchableOpacity
         style={{marginLeft: 40}}
-        onPress={() => navigation.navigate('ChatScreen')}>
+        onPress={() => navigation.navigate('Chathistory')}>
         <Icon name={'message1'} size={25} color={'#000'} />
-      </TouchableOpacity> */}
+      </TouchableOpacity>
       <TouchableOpacity
         style={styles.walletContainer}
         onPress={() => navigation.navigate('WalletScreen')}>
@@ -39,7 +39,9 @@ const HeaderSection = () => {
           </View>
         ) : (
           <View>
-            <Text style={styles.title}>₹ {walletBalance}</Text>
+            <Text style={styles.title}>
+              ₹ {Number(walletBalance).toFixed(2)}
+            </Text>
           </View>
         )}
 

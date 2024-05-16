@@ -64,7 +64,8 @@ const walletbanner = require('../assets/images/walletbanner.png');
 const upload = require('../assets/images/upload.png');
 const erroricon = require('../assets/images/erroricon.png');
 const successicon = require('../assets/images/successicon.png');
-
+const tag = require('../assets/images/tag.png');
+const tag2 = require('../assets/images/tag2.png');
 
 // Zodic
 
@@ -82,6 +83,9 @@ const Capicorn = require('../assets/images/icon/horo2.png');
 const Pisces = require('../assets/images/icon/horo1.png');
 
 export default {
+  tag,
+  tag2,
+
   erroricon,
   successicon,
   walletbanner,

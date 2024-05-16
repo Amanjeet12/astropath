@@ -9,6 +9,7 @@ import {
   StatusBar,
   StyleSheet,
   Text,
+  ToastAndroid,
   View,
 } from 'react-native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
@@ -20,12 +21,28 @@ import TableComponent from '../../components/TableComponent';
 import Preferences from '../api/Preferences';
 import WebMethods from '../api/WebMethods';
 import WebUrls from '../api/WebUrls';
+import NetInfo from '@react-native-community/netinfo';
+
 
 const AdvancePanchangScreen = () => {
   const [data, setData] = useState('');
   const [loading, setLoading] = useState('');
   const [refreshing, setRefreshing] = useState('');
   const calledOnceRef = useRef(false);
+
+
+  const checkConnectivity = async () => {
+    const state = await NetInfo.fetch();
+    const isConnected = state.isConnected;
+    if (!isConnected) {
+      ToastAndroid.showWithGravity(
+        'No internet connection',
+        ToastAndroid.LONG,
+        ToastAndroid.BOTTOM,
+      );
+    }
+    return isConnected;
+  };
 
   const getOrdinalSuffix = useCallback(day => {
     if (day >= 11 && day <= 13) {
@@ -69,6 +86,11 @@ const AdvancePanchangScreen = () => {
       console.log(error);
     }
     setLoading(true);
+    const isConnected = await checkConnectivity();
+    if (!isConnected) {
+      console.warn('No internet connection: Skipping wallet balance fetch');
+      return;
+    }
     try {
       const {day, month, year, hour, minute} = getCurrentDateTime();
       try {

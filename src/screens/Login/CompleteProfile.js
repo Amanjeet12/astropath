@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react/self-closing-comp */
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   ActivityIndicator,
   Image,
@@ -22,6 +22,8 @@ import CheckBox from '@react-native-community/checkbox';
 import Preferences from '../api/Preferences';
 import WebMethods from '../api/WebMethods';
 import WebUrls from '../api/WebUrls';
+import messaging from '@react-native-firebase/messaging';
+import NetInfo from '@react-native-community/netinfo';
 
 const CompleteProfile = ({route, navigation}) => {
   const {response} = route.params;
@@ -40,6 +42,42 @@ const CompleteProfile = ({route, navigation}) => {
   const [loading, setLoading] = useState(false);
   const [showTime, setShowTime] = useState('');
   const [showDay, setShowDay] = useState('');
+  const [fcmtoken, setFcmToken] = useState('');
+
+  useEffect(() => {
+    requestUserPermission();
+  }, []);
+
+  const checkConnectivity = async () => {
+    const state = await NetInfo.fetch();
+    const isConnected = state.isConnected;
+    if (!isConnected) {
+      ToastAndroid.showWithGravity(
+        'No internet connection',
+        ToastAndroid.LONG,
+        ToastAndroid.BOTTOM,
+      );
+    }
+    return isConnected;
+  };
+
+  async function requestUserPermission() {
+    const authStatus = await messaging().requestPermission();
+    const enabled =
+      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+    if (enabled) {
+      console.log('Authorization status:', authStatus);
+      getToken();
+    }
+  }
+
+  async function getToken() {
+    const token = await messaging().getToken();
+    console.log('Device FCM Token:', token);
+    setFcmToken(token);
+  }
 
   const handlePlaceSelect = (placeName, lat, lng) => {
     setPlace(placeName);
@@ -59,6 +97,11 @@ const CompleteProfile = ({route, navigation}) => {
   };
 
   const handleNavigation = async () => {
+    const isConnected = await checkConnectivity();
+    if (!isConnected) {
+      console.warn('No internet connection:');
+      return;
+    }
     setLoading(true);
     try {
       console.log('enter', lat, lon, date, Time, place, name, email, gender);
@@ -112,7 +155,7 @@ const CompleteProfile = ({route, navigation}) => {
           email: email,
           name: name,
           profile_photo: null,
-          fcmtoken: null,
+          fcmtoken: fcmtoken,
           gender: gender,
           dob: date,
           birth_location: place,

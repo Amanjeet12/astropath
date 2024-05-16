@@ -164,7 +164,7 @@ const PanchangSection = ({refreshing}) => {
             height: SIZES.height * 0.42,
             width: '100%',
             marginBottom: 10,
-            borderRadius: 10,
+            borderRadius: 5,
           }}
           shimmerColors={['#fae3d2', '#FFD0AC', '#FFD0AC']}
           visible={!loading}></ShimmerPlaceHolder>
@@ -179,7 +179,7 @@ const PanchangSection = ({refreshing}) => {
             },
           ]}
           imageStyle={{
-            borderRadius: SIZES.width * 0.077,
+            borderRadius: 5,
             width: SIZES.width * 0.515,
             height: SIZES.height * 0.42,
             resizeMode: 'cover',
@@ -260,13 +260,13 @@ const styles = StyleSheet.create({
   mainContainer: {
     width: SIZES.width - 40,
     height: SIZES.height * 0.42,
-    borderRadius: SIZES.width * 0.077,
+    borderRadius: 5,
     borderColor: '#843C14',
     backgroundColor: '#fff',
   },
   mainContainer2: {
     height: SIZES.height * 0.42,
-    borderRadius: SIZES.width * 0.077,
+    borderRadius: 5,
     borderColor: '#843C14',
   },
   headerContainer: {

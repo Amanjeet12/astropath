@@ -13,6 +13,11 @@ const FeatureAstrologerComponent = ({data}) => {
     navigation.navigate('SingleAstrologer', {item});
   };
 
+  const formatExpertise = expertiseArray => {
+    if (!expertiseArray || expertiseArray.length === 0) return 'Astrology';
+    return expertiseArray.join(', ');
+  };
+
   return (
     <View>
       {data &&
@@ -51,7 +56,9 @@ const FeatureAstrologerComponent = ({data}) => {
                             resizeMode: 'contain',
                           }}
                         />
-                        <Text style={{color: 'grey'}}>{item.totalCount}</Text>
+                        <Text style={{color: 'grey'}}>
+                          {Math.floor(item.averageRating)}
+                        </Text>
                       </View>
                     ) : null}
                   </View>
@@ -60,12 +67,12 @@ const FeatureAstrologerComponent = ({data}) => {
                   <Text style={styles.profile_name} numberOfLines={1}>
                     {item.name}
                   </Text>
-                  <Text style={styles.profile_categories}>{item.gender}</Text>
                   <Text style={styles.profile_language} numberOfLines={1}>
-                    {item.language}
+                    {formatExpertise(item.expertise)}
                   </Text>
+                  <Text style={styles.profile_categories}>{item.gender}</Text>
                   <Text style={styles.profile_experience} numberOfLines={1}>
-                    Exp 4+ Years
+                    Exp {item?.experience} Years
                   </Text>
                   <Text style={styles.profile_rate}>
                     ₹ {item.chat_price}/min - Chat
@@ -140,13 +147,12 @@ const styles = StyleSheet.create({
   profile_categories: {
     color: '#707B81',
     fontFamily: 'KantumruyPro-Regular',
-    fontSize: SIZES.width * 0.035,
-    paddingTop: 3,
+    fontSize: SIZES.width * 0.026,
   },
   profile_language: {
-    color: '#0D6EFD',
+    color: '#707B81',
     fontFamily: 'KantumruyPro-Regular',
-    fontSize: SIZES.width * 0.021,
+    fontSize: SIZES.width * 0.035,
   },
   profile_experience: {
     color: '#707B81',

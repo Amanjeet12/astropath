@@ -15,9 +15,22 @@ import {images} from '../../constant';
 import {SIZES} from '../../constant/theme';
 import Icon from 'react-native-vector-icons/Entypo';
 import {Blog} from '../../constant/data';
+import RenderHtml from 'react-native-render-html';
 
 const BlogScreen = ({route}) => {
   const {item} = route.params;
+  const tagsStyles = {
+    p: {
+      color: '#000', // Change color to red for <p> tag
+      fontSize: 18,
+    },
+    h4: {
+      color: '#000',
+    },
+    h3: {
+      color: '#000',
+    },
+  };
   console.log(item);
   const calculateDate = data => {
     const updatedAt = data;
@@ -67,7 +80,11 @@ const BlogScreen = ({route}) => {
                 Posted {calculateDate(item.updatedAt)} days ago
               </Text>
             </View>
-            <Text style={styles.description}>{item.description}</Text>
+            <RenderHtml
+              contentWidth={SIZES.width}
+              source={{html: item.description}}
+              tagsStyles={tagsStyles}
+            />
           </View>
         </ScrollView>
       </ImageBackground>

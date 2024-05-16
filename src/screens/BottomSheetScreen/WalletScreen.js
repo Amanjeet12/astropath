@@ -27,6 +27,8 @@ import WebMethods from '../api/WebMethods';
 import WebUrls from '../api/WebUrls';
 import {useDispatch, useSelector} from 'react-redux';
 import {fetchWalletbalance} from '../../redux/WalletBalanceSlice';
+import BannerSection from '../../components/BannerSection';
+import NetInfo from '@react-native-community/netinfo';
 
 const WalletScreen = ({navigation}) => {
   const dispatch = useDispatch();
@@ -38,6 +40,7 @@ const WalletScreen = ({navigation}) => {
   const {isData, walletBalance} = useSelector(state => state.wallet);
   const [refreshing, setRefreshing] = useState(false);
   const [buttonLoading, setButtonLoading] = useState(false);
+  const {data} = useSelector(state => state.banner);
 
   const onRefresh = () => {
     setRefreshing(true);
@@ -46,6 +49,18 @@ const WalletScreen = ({navigation}) => {
     }, 2000);
   };
 
+  const checkConnectivity = async () => {
+    const state = await NetInfo.fetch();
+    const isConnected = state.isConnected;
+    if (!isConnected) {
+      ToastAndroid.showWithGravity(
+        'No internet connection',
+        ToastAndroid.LONG,
+        ToastAndroid.BOTTOM,
+      );
+    }
+    return isConnected;
+  };
   // Sample data representing top amounts
 
   console.log(walletBalance);
@@ -83,7 +98,7 @@ const WalletScreen = ({navigation}) => {
       image:
         'https://firebasestorage.googleapis.com/v0/b/zegocloudvideocall-b50bd.appspot.com/o/userprofile%2FWhatsApp%20Image%202024-04-03%20at%2012.55.45%20PM.jpeg?alt=media&token=729aae36-a285-4ccb-802d-ea512cbadb07',
       currency: 'INR',
-      key: 'rzp_test_f2dxSEQgSlFtDB',
+      key: 'rzp_live_yp6sA6BGU2yJAY',
       amount: transactionAmount,
       name: 'Astropath',
       order_id: orderId,
@@ -113,6 +128,11 @@ const WalletScreen = ({navigation}) => {
   };
 
   const handleWalletBalance = async () => {
+    const isConnected = await checkConnectivity();
+    if (!isConnected) {
+      console.warn('No internet connection: Skipping wallet balance fetch');
+      return;
+    }
     try {
       const token = await Preferences.getPreferences(Preferences.key.Token);
       if (token) {
@@ -122,6 +142,11 @@ const WalletScreen = ({navigation}) => {
   };
 
   const handlePayment = async () => {
+    const isConnected = await checkConnectivity();
+    if (!isConnected) {
+      console.warn('No internet connection: Skipping wallet balance fetch');
+      return;
+    }
     if (!customAmount && !selectedAmount) {
       setToastMsg('Please enter amount');
       return;
@@ -177,6 +202,9 @@ const WalletScreen = ({navigation}) => {
             <View style={{width: SIZES.width * 0.38}}>
               <BackButton placeholder={'Wallet'} />
             </View>
+            <View style={{marginTop: SIZES.width * 0.026}}>
+              <BannerSection data={data} set={1} />
+            </View>
             <View style={{height: 120, marginTop: 20}}>
               <Image
                 source={images.walletbanner}
@@ -187,7 +215,7 @@ const WalletScreen = ({navigation}) => {
                   Current Wallet Balance
                 </Text>
                 <Text style={{fontSize: 28, color: '#000', fontWeight: '600'}}>
-                  ₹ {walletBalance}
+                  ₹ {Number(walletBalance).toFixed(2)}
                 </Text>
               </View>
               <TouchableOpacity

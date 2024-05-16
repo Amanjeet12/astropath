@@ -110,7 +110,6 @@ const WebMethods = {
       .then(json => {
         if (json != null) {
           const result = JSON.parse(JSON.stringify(json));
-          console.log('result==search===>', result);
           return result;
         } else {
           console.log('return null');

@@ -19,9 +19,22 @@ import {useNavigation} from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
+import RenderHtml from 'react-native-render-html';
 
 const BlogSection = ({data}) => {
   const navigation = useNavigation();
+  const tagsStyles = {
+    p: {
+      color: '#000', // Change color to red for <p> tag
+      fontSize: 18,
+    },
+    h4: {
+      color: '#000',
+    },
+    h3: {
+      color: '#000',
+    },
+  };
   if (!data || !data.data) {
     return (
       <ShimmerPlaceHolder
@@ -132,14 +145,6 @@ const BlogSection = ({data}) => {
                     Posted {calculateDate(item.updatedAt)} days ago
                   </Text>
                 </View>
-                {/* <View style={styles.flexBox}>
-                  <Eys
-                    name={'eyeo'}
-                    color={'#000'}
-                    size={SIZES.width * 0.041}
-                  />
-                  <Text style={styles.bottomText}>1704</Text>
-                </View> */}
               </View>
             </ImageBackground>
           </View>

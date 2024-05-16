@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {useEffect, useState} from 'react';
 import {
   ActivityIndicator,
@@ -10,7 +11,9 @@ import {
   View,
   TouchableOpacity,
   FlatList,
+  ToastAndroid,
 } from 'react-native';
+import NetInfo from '@react-native-community/netinfo';
 import {images} from '../../constant';
 import {COLORS, SIZES} from '../../constant/theme';
 import HeaderSection from '../../components/HeaderSection';
@@ -37,25 +40,46 @@ const expertiseAreas = [
 ];
 
 const AstrologerScreen = () => {
-  const IsFocused = useIsFocused();
+  const isFocused = useIsFocused();
   const [astrologers, setAstrologers] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [selectedFilters, setSelectedFilters] = useState([]);
+  const [sortedAstrologers, setSortedAstrologers] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const onRefresh = () => {
-    setRefreshing(true);
-    setTimeout(() => {
-      setRefreshing(false);
-      fetchAstrologers();
-    }, 2000);
+  const checkConnectivity = async () => {
+    const state = await NetInfo.fetch();
+    const isConnected = state.isConnected;
+    if (!isConnected) {
+      ToastAndroid.showWithGravity(
+        'No internet connection',
+        ToastAndroid.LONG,
+        ToastAndroid.BOTTOM,
+      );
+    }
+    return isConnected;
   };
 
-  useEffect(() => {
-    fetchAstrologers();
-  }, [refreshing, IsFocused]);
+  const onRefresh = async () => {
+    setRefreshing(true);
+    setLoading(true);
+    const isConnected = await checkConnectivity();
+    if (isConnected) {
+      fetchAstrologers();
+    } else {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
 
   const fetchAstrologers = async () => {
     try {
+      const isConnected = await checkConnectivity();
+      if (!isConnected) {
+        setLoading(false);
+        return;
+      }
+
       const token = await Preferences.getPreferences(Preferences.key.Token);
       if (token) {
         const response = await WebMethods.getRequestWithHeader(
@@ -64,21 +88,41 @@ const AstrologerScreen = () => {
         );
         if (response != null) {
           setAstrologers(response.data);
+          console.log(response.data);
+          setSortedAstrologers(
+            sortAndFilterAstrologers(response.data, selectedFilters),
+          );
         } else {
-          console.log('error fetching astrologers');
+          console.log('Error fetching astrologers');
         }
       }
     } catch (error) {
       console.error('Error fetching astrologers:', error);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
     }
   };
 
+  useEffect(() => {
+    if (refreshing || isFocused) {
+      fetchAstrologers();
+    }
+  }, [refreshing, isFocused]);
+
+  useEffect(() => {
+    setSortedAstrologers(
+      sortAndFilterAstrologers(astrologers, selectedFilters),
+    );
+  }, [astrologers, selectedFilters]);
+
   const handleFilterChange = itemValue => {
+    let newFilters = [];
     if (itemValue === 'All') {
-      setSelectedFilters([]); // Clear all filters if 'All' is selected
+      newFilters = []; // Clear all filters if 'All' is selected
     } else {
-      const newFilters = selectedFilters.includes('All')
-        ? [itemValue] // Start new filter array with the selected item if 'All' was previously selected
+      newFilters = selectedFilters.includes('All')
+        ? [itemValue]
         : [...selectedFilters];
       const index = newFilters.indexOf(itemValue);
       if (index > -1) {
@@ -86,9 +130,28 @@ const AstrologerScreen = () => {
       } else {
         newFilters.push(itemValue); // Add filter if not selected
       }
-      setSelectedFilters(newFilters);
     }
+    setSelectedFilters(newFilters);
   };
+
+  function sortAndFilterAstrologers(astrologers, filters) {
+    // Create a copy of the astrologers array to avoid modifying the original
+    const sortedAstrologers = [...astrologers].sort((a, b) => {
+      if (a.featured === b.featured) {
+        return a.name.localeCompare(b.name);
+      }
+      return a.featured ? -1 : 1;
+    });
+
+    // Filtering Logic
+    if (filters.length === 0 || filters.includes('All')) {
+      return sortedAstrologers;
+    }
+
+    return sortedAstrologers.filter(astrologer =>
+      filters.some(filter => astrologer.expertise.includes(filter)),
+    );
+  }
 
   return (
     <>
@@ -106,48 +169,59 @@ const AstrologerScreen = () => {
             <View style={{marginTop: SIZES.width * 0.026}}>
               <HeaderSection />
             </View>
-            <View style={{marginTop: SIZES.width * 0.051}}>
-              <FlatList
-                data={expertiseAreas}
-                showsHorizontalScrollIndicator={false}
-                renderItem={({item}) => (
-                  <TouchableOpacity
-                    onPress={() => handleFilterChange(item)}
-                    style={{
-                      padding: 5,
-                      borderWidth: 1,
-                      marginHorizontal: 3,
-                      paddingHorizontal: 10,
-                      borderRadius: 5,
-                      backgroundColor:
-                        (selectedFilters.length === 0 && item === 'All') ||
-                        selectedFilters.includes(item)
-                          ? COLORS.primary
-                          : COLORS.transparent,
-                    }}>
-                    <Text
-                      style={[
-                        styles.tagLine,
-                        {
-                          color: selectedFilters.includes(item)
-                          ? COLORS.black
-                          : COLORS.black,
-                        },
-                      ]}>
-                      {item}
-                    </Text>
-                  </TouchableOpacity>
-                )}
-                keyExtractor={item => item}
-                horizontal
-              />
-              <View style={{marginTop: 30}}>
-                <AstrologerComponent
-                  data={astrologers}
-                  filters={selectedFilters}
-                />
+            {loading ? (
+              <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color={COLORS.primary} />
               </View>
-            </View>
+            ) : (
+              <View style={{marginTop: SIZES.width * 0.031}}>
+                <FlatList
+                  data={expertiseAreas}
+                  showsHorizontalScrollIndicator={false}
+                  renderItem={({item}) => (
+                    <TouchableOpacity
+                      onPress={() => handleFilterChange(item)}
+                      style={{
+                        padding: 5,
+                        borderWidth:
+                          (selectedFilters.length === 0 && item === 'All') ||
+                          selectedFilters.includes(item)
+                            ? 1.5
+                            : 0.5,
+                        marginHorizontal: 3,
+                        paddingHorizontal: 15,
+                        borderRadius: 15,
+                        backgroundColor: COLORS.white,
+                        borderColor:
+                          (selectedFilters.length === 0 && item === 'All') ||
+                          selectedFilters.includes(item)
+                            ? COLORS.primary
+                            : COLORS.black,
+                      }}>
+                      <Text
+                        style={[
+                          styles.tagLine,
+                          {
+                            color: selectedFilters.includes(item)
+                              ? COLORS.black
+                              : COLORS.black,
+                          },
+                        ]}>
+                        {item}
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+                  keyExtractor={item => item}
+                  horizontal
+                />
+                <View style={{marginTop: 15}}>
+                  <AstrologerComponent
+                    data={sortedAstrologers}
+                    filters={selectedFilters}
+                  />
+                </View>
+              </View>
+            )}
           </View>
         </ScrollView>
       </ImageBackground>
@@ -164,10 +238,21 @@ const styles = StyleSheet.create({
   mainContainer: {
     marginHorizontal: SIZES.width * 0.051,
   },
+  mainContainers: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginHorizontal: SIZES.width * 0.051,
+  },
   tagLine: {
-    fontSize: SIZES.width * 0.051,
+    fontSize: SIZES.width * 0.031,
     fontFamily: 'DMSerifDisplay-Regular',
     color: COLORS.black,
     textTransform: 'capitalize',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

@@ -1,29 +1,33 @@
 /* eslint-disable react-native/no-inline-styles */
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useContext} from 'react';
+import React from 'react';
 import {COLORS, SIZES} from '../constant/theme';
 import {images} from '../constant';
 import Icon from 'react-native-vector-icons/Octicons';
 import {useNavigation} from '@react-navigation/native';
 
 const AstrologerComponent = ({data, filters}) => {
-  console.log("filters==>", filters)
   const navigation = useNavigation();
+
   const getFilteredAstrologers = () => {
     if (filters.length === 0) {
       return data; // If no filters are selected, return all data
     }
     return data.filter(astrologer =>
-      astrologer.expertise.some(expertise => filters.includes(expertise))
+      astrologer.expertise.some(expertise => filters.includes(expertise)),
     );
   };
 
   // Call the filter function
   const filteredAstrologers = getFilteredAstrologers();
 
-
   const handlenavigation = item => {
     navigation.navigate('SingleAstrologer', {item});
+  };
+
+  const formatExpertise = expertiseArray => {
+    if (!expertiseArray || expertiseArray.length === 0) return 'Astrology';
+    return expertiseArray.join(', ');
   };
 
   return (
@@ -31,7 +35,18 @@ const AstrologerComponent = ({data, filters}) => {
       {filteredAstrologers &&
         filteredAstrologers.map((item, index) => {
           return (
-            <View key={index} style={styles.container}>
+            <View
+              key={index}
+              style={[
+                styles.container,
+                {
+                  height: item.featured
+                    ? SIZES.width * 0.35
+                    : SIZES.width * 0.32,
+
+                  justifyContent: 'center',
+                },
+              ]}>
               <View style={{flexDirection: 'row'}}>
                 <View style={{width: '31%'}}>
                   <View>
@@ -64,21 +79,38 @@ const AstrologerComponent = ({data, filters}) => {
                             resizeMode: 'contain',
                           }}
                         />
-                        <Text style={{color: 'grey'}}>{item.totalCount}</Text>
+                        <Text style={{color: 'grey'}}>
+                          {Math.floor(item.averageRating)}
+                        </Text>
                       </View>
                     ) : null}
                   </View>
                 </View>
                 <View style={{width: '45%'}}>
-                  <Text style={styles.profile_name} numberOfLines={1}>
-                    {item.name}
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      gap: 10,
+                    }}>
+                    <Text style={[styles.profile_name]} numberOfLines={1}>
+                      {item.name.length > 12
+                        ? `${item.name.substring(0, 12)}...`
+                        : item.name}
+                    </Text>
+
+                    <Image
+                      source={images.tag2}
+                      style={{width: 20, height: 20, resizeMode: 'contain'}}
+                    />
+                  </View>
+
+                  <Text style={styles.profile_language} numberOfLines={1}>
+                    {formatExpertise(item.expertise)}
                   </Text>
                   <Text style={styles.profile_categories}>{item.gender}</Text>
-                  <Text style={styles.profile_language} numberOfLines={1}>
-                    {item.language}
-                  </Text>
                   <Text style={styles.profile_experience} numberOfLines={1}>
-                    Exp 4+ Years
+                    Exp {item?.experience} Years
                   </Text>
                   <Text style={styles.profile_rate}>
                     ₹ {item.chat_price}/min - Chat
@@ -120,6 +152,22 @@ const AstrologerComponent = ({data, filters}) => {
                   </TouchableOpacity>
                 </View>
               </View>
+              {item.featured && (
+                <View
+                  style={{
+                    position: 'absolute',
+                    top: -40,
+                  }}>
+                  <Image
+                    source={images.tag}
+                    style={{
+                      width: 111,
+                      height: 111,
+                      resizeMode: 'contain',
+                    }}
+                  />
+                </View>
+              )}
             </View>
           );
         })}
@@ -153,18 +201,17 @@ const styles = StyleSheet.create({
   profile_categories: {
     color: '#707B81',
     fontFamily: 'KantumruyPro-Regular',
-    fontSize: SIZES.width * 0.035,
-    paddingTop: 3,
+    fontSize: SIZES.width * 0.026,
   },
   profile_language: {
-    color: '#0D6EFD',
+    color: '#707B81',
     fontFamily: 'KantumruyPro-Regular',
-    fontSize: SIZES.width * 0.021,
+    fontSize: SIZES.width * 0.035,
   },
   profile_experience: {
     color: '#707B81',
     fontFamily: 'KantumruyPro-Regular',
-    fontSize: SIZES.width * 0.031,
+    fontSize: SIZES.width * 0.025,
   },
   profile_rate: {
     color: '#000',

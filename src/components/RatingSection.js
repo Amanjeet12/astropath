@@ -6,11 +6,11 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import * as Progress from 'react-native-progress';
 
 const RatingSection = ({data}) => {
-  console.log('data===>', data);
+  console.log('data===>', data.ratingStats);
   if (!data) {
     return null;
   }
-  const sortedRatingStats = [...data].sort((a, b) => b._id - a._id);
+  const sortedRatingStats = [...data.ratingStats].sort((a, b) => b._id - a._id);
 
   console.log(data.ratingStats);
   const renderItem = ({item, index}) => {
@@ -20,7 +20,7 @@ const RatingSection = ({data}) => {
         <View>
           <Progress.Bar
             progress={item.totalRating / 100}
-            width={150}
+            width={130}
             height={8}
             color="#FFB443"
             unfilledColor="#D9D9D9"
@@ -45,7 +45,7 @@ const RatingSection = ({data}) => {
             Your Rating
           </Text>
           <Text style={{fontSize: 35, color: '#000', fontWeight: '700'}}>
-            {data.averageRating ? data.averageRating : 0}/
+            {data.averageRating ? Math.floor(data.averageRating) : 0}/
             <Text style={{fontSize: 20}}>5 </Text>
           </Text>
           <View style={{flexDirection: 'row', marginTop: 10}}>

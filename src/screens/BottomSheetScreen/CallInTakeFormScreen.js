@@ -64,7 +64,6 @@ const CallInTakeFormScreen = ({navigation, route}) => {
   const [loadingVisible, setLoadingVisible] = useState(false);
   const [timeZone, setTimeZone] = useState('+5.30');
 
-
   console.log(datas);
 
   const setToastMsg = msg => {
@@ -103,7 +102,7 @@ const CallInTakeFormScreen = ({navigation, route}) => {
     lat,
     lon,
     value,
-    timeZone
+    timeZone,
   ) => {
     setLoadingVisible(true);
     let token;
@@ -128,7 +127,7 @@ const CallInTakeFormScreen = ({navigation, route}) => {
         day: day,
         month: month,
         year: year,
-        timeZone: timeZone
+        timeZone: timeZone,
       },
     };
 
@@ -156,7 +155,8 @@ const CallInTakeFormScreen = ({navigation, route}) => {
                     navigation.navigate('AstrologerScreen');
                     showTimer();
                     Alert.alert(
-                      `Successfully Added queue List No ${response.data}`,
+                      'Success',
+                      `Request sent to our astrologer successfully.`,
                     );
                   }
                 });
@@ -177,10 +177,10 @@ const CallInTakeFormScreen = ({navigation, route}) => {
   };
 
   const handleNavigation = async () => {
-    const item = {name, day, month, year, hour, min, lat, lon, value,timeZone};
+    const item = {name, day, month, year, hour, min, lat, lon, value, timeZone};
     console.log(item);
     try {
-      console.log(name, day, month, year, hour, min, lat, lon, value,timeZone);
+      console.log(name, day, month, year, hour, min, lat, lon, value, timeZone);
       if (
         name &&
         day &&
@@ -201,7 +201,18 @@ const CallInTakeFormScreen = ({navigation, route}) => {
         } catch (error) {
           console.log(error);
         }
-        handleRequest(name, day, month, year, hour, min, lat, lon, value,timeZone);
+        handleRequest(
+          name,
+          day,
+          month,
+          year,
+          hour,
+          min,
+          lat,
+          lon,
+          value,
+          timeZone,
+        );
       } else {
         console.log('Some values are missing');
         setToastMsg('All feilds are compalsary');
@@ -211,7 +222,6 @@ const CallInTakeFormScreen = ({navigation, route}) => {
     }
   };
 
-
   const handlePlaceSelect = (placeName, lat, lng, timeZone) => {
     setPlace(placeName);
     setLat(lat ? lat : '28.7041');
@@ -219,7 +229,6 @@ const CallInTakeFormScreen = ({navigation, route}) => {
     setTimeZone(timeZone ? timeZone : '+5.30');
     console.log(placeName, lat, lng, timeZone);
   };
-
 
   const handleNavigateToSearchPlaceScreen = () => {
     navigation.navigate('SearchPlaceScreen', {

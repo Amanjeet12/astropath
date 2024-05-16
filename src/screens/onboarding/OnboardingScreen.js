@@ -115,7 +115,7 @@ const OnboardingScreen = ({navigation}) => {
                 fontSize: SIZES.width * 0.051,
                 fontFamily: 'KantumruyPro-Bold',
               }}>
-              Started Now
+              Start Now
             </Text>
           </TouchableOpacity>
         </View>

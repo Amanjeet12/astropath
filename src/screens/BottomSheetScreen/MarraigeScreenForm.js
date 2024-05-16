@@ -19,6 +19,7 @@ import HeaderSection from '../../components/HeaderSection';
 import BackButton from '../../components/BackButton';
 import DatePicker from 'react-native-date-picker';
 import {useTranslation} from 'react-i18next';
+import NetInfo from '@react-native-community/netinfo';
 
 const MarraigeScreenForm = ({navigation}) => {
   const {t} = useTranslation();
@@ -59,6 +60,19 @@ const MarraigeScreenForm = ({navigation}) => {
   const [lon_f, setLon_f] = useState('28.7041');
   const [lat_f, setLat_f] = useState('77.1025');
 
+  const checkConnectivity = async () => {
+    const state = await NetInfo.fetch();
+    const isConnected = state.isConnected;
+    if (!isConnected) {
+      ToastAndroid.showWithGravity(
+        'No internet connection',
+        ToastAndroid.SHORT,
+        ToastAndroid.BOTTOM,
+      );
+    }
+    return isConnected;
+  };
+
   const setToastMsg = msg => {
     ToastAndroid.showWithGravity(msg, ToastAndroid.SHORT, ToastAndroid.BOTTOM);
   };
@@ -71,25 +85,12 @@ const MarraigeScreenForm = ({navigation}) => {
     setTime(new Date());
   };
 
-  const handleNavigation = () => {
-    console.log(
-      name_m,
-      lat_m,
-      lon_m,
-      day_m,
-      month_m,
-      year_m,
-      hour_m,
-      min_m,
-      name_f,
-      lat_f,
-      lon_f,
-      day_f,
-      month_f,
-      year_f,
-      hour_f,
-      min_f,
-    );
+  const handleNavigation = async () => {
+    const isConnected = await checkConnectivity();
+    if (!isConnected) {
+      return;
+    }
+
     if (
       name_m &&
       lat_m &&

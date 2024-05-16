@@ -29,6 +29,7 @@ import {useNavigation} from '@react-navigation/native';
 import Preferences from '../api/Preferences';
 import WebMethods from '../api/WebMethods';
 import WebUrls from '../api/WebUrls';
+import NetInfo from '@react-native-community/netinfo';
 
 const CustomerSupportScreen = () => {
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(null);
@@ -40,13 +41,32 @@ const CustomerSupportScreen = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
-  const uploadImage = () => {
-    setLoading(true);
+  const checkConnectivity = async () => {
+    const state = await NetInfo.fetch();
+    const isConnected = state.isConnected;
+    if (!isConnected) {
+      ToastAndroid.showWithGravity(
+        'No internet connection',
+        ToastAndroid.SHORT,
+        ToastAndroid.BOTTOM,
+      );
+    }
+    return isConnected;
+  };
+
+  const uploadImage = async () => {
+    const isConnected = await checkConnectivity();
+    if (!isConnected) {
+      setLoading(false);
+      return;
+    }
     launchImageLibrary({quality: 0.5}, fileobj => {
       console.log(fileobj);
       if (fileobj.errorCode || fileobj.didCancel) {
         return console.log('You should handle errors or user cancellation!');
       }
+      setLoading(true);
+
       const img = fileobj.assets[0];
       const storageRef = storage().ref().child(`/userprofile/${Date.now()}`);
       const uploadTask = storageRef.putFile(img.uri);
@@ -172,6 +192,11 @@ const CustomerSupportScreen = () => {
 
   const handleFormSubmit = async () => {
     if (!validateInputs()) {
+      return;
+    }
+    const isConnected = await checkConnectivity();
+    if (!isConnected) {
+      setLoading(false);
       return;
     }
     setLoading(true);
@@ -301,12 +326,17 @@ const CustomerSupportScreen = () => {
                 <TextInput
                   placeholder={'Write Message'}
                   style={{
+                    paddingLeft: SIZES.width * 0.025,
                     color: COLORS.black,
+                    textTransform: 'capitalize',
+                    textAlignVertical: 'top',
+                    paddingTop: SIZES.width * 0.035,
                     width: '100%',
-                    height: SIZES.width * 0.35,
+                    height: '100%',
                   }}
-                  keyboardType="default"
                   multiline={true}
+                  numberOfLines={10}
+                  maxLength={150}
                   onChangeText={setMessage}
                 />
               </View>

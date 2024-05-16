@@ -5,6 +5,7 @@ import {
   FlatList,
   StyleSheet,
   Text,
+  ToastAndroid,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -19,6 +20,7 @@ import WebMethods from '../screens/api/WebMethods';
 import Preferences from '../screens/api/Preferences';
 import {TimerContext} from '../constant/TimerContext';
 import LoadingScreen from './LoadingScreen';
+import NetInfo from '@react-native-community/netinfo';
 
 const backgroundColor = ['#1f2499', '#bf6424', '#1f2499', '#bf6424', '#1f2499'];
 
@@ -26,7 +28,24 @@ const RecentKundali = ({data, screen, datas, onVisibilityChange}) => {
   const navigation = useNavigation();
   const {showTimer} = useContext(TimerContext);
 
-  const handleNavigation = item => {
+  const checkConnectivity = async () => {
+    const state = await NetInfo.fetch();
+    const isConnected = state.isConnected;
+    if (!isConnected) {
+      ToastAndroid.showWithGravity(
+        'No internet connection',
+        ToastAndroid.SHORT,
+        ToastAndroid.BOTTOM,
+      );
+    }
+    return isConnected;
+  };
+
+  const handleNavigation = async item => {
+    const isConnected = await checkConnectivity();
+    if (!isConnected) {
+      return;
+    }
     if (datas) {
       handleRequest(
         item.name,
@@ -37,7 +56,7 @@ const RecentKundali = ({data, screen, datas, onVisibilityChange}) => {
         item.min,
         item.lat,
         item.lon,
-        item.timeZone
+        item.timeZone,
       );
     } else {
       navigation.navigate(screen, {
@@ -49,12 +68,22 @@ const RecentKundali = ({data, screen, datas, onVisibilityChange}) => {
         min: item.min,
         lat: item.lat,
         lon: item.lon,
-        timeZone: item.timeZone
+        timeZone: item.timeZone,
       });
     }
   };
 
-  const handleRequest = async (name, day, month, year, hour, min, lat, lon, timeZone) => {
+  const handleRequest = async (
+    name,
+    day,
+    month,
+    year,
+    hour,
+    min,
+    lat,
+    lon,
+    timeZone,
+  ) => {
     let token;
     onVisibilityChange(true);
     try {
@@ -75,7 +104,7 @@ const RecentKundali = ({data, screen, datas, onVisibilityChange}) => {
         day: day,
         month: month,
         year: year,
-        timeZone: timeZone
+        timeZone: timeZone,
       },
     };
 

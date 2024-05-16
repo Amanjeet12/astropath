@@ -20,6 +20,7 @@ import WebMethods from '../api/WebMethods';
 import WebUrls from '../api/WebUrls';
 import Preferences from '../api/Preferences';
 import {useAuth} from '../../constant/Auth';
+import NetInfo from '@react-native-community/netinfo';
 
 const OtpScreen = ({navigation, route}) => {
   const {orderId, phoneNumber} = route.params;
@@ -27,6 +28,19 @@ const OtpScreen = ({navigation, route}) => {
   const [loading, setLoading] = useState(false);
   const [resendCounter, setResendCounter] = useState(60); // Initial counter value, in seconds
   const {login} = useAuth();
+
+  const checkConnectivity = async () => {
+    const state = await NetInfo.fetch();
+    const isConnected = state.isConnected;
+    if (!isConnected) {
+      ToastAndroid.showWithGravity(
+        'No internet connection',
+        ToastAndroid.LONG,
+        ToastAndroid.BOTTOM,
+      );
+    }
+    return isConnected;
+  };
 
   const setToastMsg = msg => {
     ToastAndroid.showWithGravity(msg, ToastAndroid.SHORT, ToastAndroid.BOTTOM);
@@ -40,7 +54,12 @@ const OtpScreen = ({navigation, route}) => {
     startResendTimer();
   }, []);
 
-  const handleResendOption = () => {
+  const handleResendOption = async () => {
+    const isConnected = await checkConnectivity();
+    if (!isConnected) {
+      console.warn('No internet connection:');
+      return;
+    }
     setResendCounter(60);
     startResendTimer();
     try {
@@ -84,6 +103,11 @@ const OtpScreen = ({navigation, route}) => {
   };
 
   const handleOtpVerification = async () => {
+    const isConnected = await checkConnectivity();
+    if (!isConnected) {
+      console.warn('No internet connection:');
+      return;
+    }
     const phone = '+91' + phoneNumber;
     if (phoneNumber === '7717755796') {
       googlePlayStore(phone, orderId);

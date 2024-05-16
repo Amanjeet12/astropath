@@ -24,6 +24,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {addToCart} from '../../redux/cartSlice';
 import RecentKundali from '../../components/RecentKundali';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import NetInfo from '@react-native-community/netinfo';
 
 const data = [
   {label: 'Male', value: '1'},
@@ -57,6 +58,19 @@ const NumerologyFormScreen = ({navigation}) => {
     ToastAndroid.showWithGravity(msg, ToastAndroid.SHORT, ToastAndroid.BOTTOM);
   };
 
+  const checkConnectivity = async () => {
+    const state = await NetInfo.fetch();
+    const isConnected = state.isConnected;
+    if (!isConnected) {
+      ToastAndroid.showWithGravity(
+        'No internet connection',
+        ToastAndroid.SHORT,
+        ToastAndroid.BOTTOM,
+      );
+    }
+    return isConnected;
+  };
+
   useEffect(() => {
     const retrieveItems = async () => {
       try {
@@ -79,6 +93,10 @@ const NumerologyFormScreen = ({navigation}) => {
     const item = {name, day, month, year, hour, min, lat, lon, value, timeZone};
     console.log(item);
     dispatch(addToCart(item));
+    const isConnected = await checkConnectivity();
+    if (!isConnected) {
+      return;
+    }
     try {
       console.log(name, day, month, year, hour, min, lat, lon, value);
       try {

@@ -3,7 +3,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import {Text, TouchableOpacity, View, StyleSheet, Alert} from 'react-native';
 import {TimerContext} from '../constant/TimerContext';
 import {COLORS} from '../constant/theme';
-import Icon from 'react-native-vector-icons/AntDesign';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const TimerComponent = () => {
   const [second, setSeconds] = useState('');
@@ -30,6 +30,8 @@ const TimerComponent = () => {
     }
   }, [isActive, seconds]);
 
+  console.log(remainingSeconds);
+
   const handleRequest = () => {
     Alert.alert(
       'Confirmation',
@@ -53,49 +55,60 @@ const TimerComponent = () => {
   return (
     isVisible && (
       <View style={styles.container}>
-        <View>
-          <Icon name={'clockcircleo'} size={20} color={'#fff'} />
-        </View>
-        <View>
-          <Text
-            style={{
-              color: '#fff',
-              fontSize: 16,
-              fontWeight: 'bold',
-              textTransform: 'capitalize',
-            }}>
-            Our astrologer connect with you in
-          </Text>
-          <View>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <View style={{width: '13%'}}>
+            <Icon name={'telegram'} size={30} color={'#843c14'} />
+          </View>
+          <View style={{width: '65%'}}>
             <Text
               style={{
-                color: '#fff',
-                textAlign: 'center',
-                fontSize: 20,
-                fontWeight: 'bold',
-                paddingTop: 10,
-                paddingRight: 30,
+                color: '#000',
+                fontSize: 16,
+                fontWeight: '600',
+                textTransform: 'capitalize',
               }}>
-              {minutes < 10 ? '0' + minutes : minutes}:
-              {remainingSeconds < 10
-                ? '0' + remainingSeconds
-                : remainingSeconds}
+              Chat Request Send
+            </Text>
+            <Text
+              style={{
+                color: '#000',
+                fontSize: 14,
+                textTransform: 'capitalize',
+              }}>
+              Our astrologer will revert in
             </Text>
           </View>
-          <TouchableOpacity style={{marginRight: 10}} onPress={handleRequest}>
-            <Text
-              style={{
-                color: '#fff',
-                textAlign: 'center',
-                fontWeight: 'bold',
-                borderWidth: 1,
-                marginTop: 7,
-                padding: 5,
-                borderColor: '#fff',
-              }}>
-              <Text>Cancel Request</Text>
-            </Text>
-          </TouchableOpacity>
+          {remainingSeconds !== 0 ? (
+            <View>
+              <Text
+                style={{
+                  color: '#000',
+                  textAlign: 'center',
+                  fontSize: 20,
+                  fontWeight: 'bold',
+                  paddingRight: 30,
+                }}>
+                {minutes < 10 ? '0' + minutes : minutes}:
+                {remainingSeconds < 10
+                  ? '0' + remainingSeconds
+                  : remainingSeconds}
+              </Text>
+            </View>
+          ) : (
+            <TouchableOpacity onPress={handleRequest}>
+              <View
+                style={{
+                  textAlign: 'center',
+                  borderWidth: 1,
+                  marginTop: 7,
+                  padding: 5,
+                  borderColor: '#fff',
+                  paddingHorizontal: 15,
+                }}>
+                <Text style={{fontSize: 14, fontWeight: 'bold'}}> Cancel</Text>
+              </View>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
     )
@@ -104,17 +117,15 @@ const TimerComponent = () => {
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    bottom: 80,
+    bottom: 75,
     left: 0,
     right: 0,
     padding: 10,
-    backgroundColor: COLORS.primary,
+    backgroundColor: '#ffb443',
     flexDirection: 'row',
     gap: 10,
-    height: 120,
-    justifyContent: 'center',
-    marginHorizontal: 16,
-    borderRadius: 5,
+    height: 70,
+    justifyContent: 'flex-start',
   },
   timer: {
     fontSize: 18,

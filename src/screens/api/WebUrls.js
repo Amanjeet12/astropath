@@ -77,6 +77,15 @@ const WebUrls = {
     // review
 
     review_to_astrologer: 'customer/customer/give_review_and_rating',
+
+    // chat history
+    chat_history: 'customer/customer/get_chat_history',
+    terminate_chat: 'customer/customer/terminate_chat',
+
+    //banner
+    banner: 'customer/customer/banner',
+
+    check_status: 'customer/customer/order_status',
   },
 };
 

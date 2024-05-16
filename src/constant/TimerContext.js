@@ -1,12 +1,21 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {createContext, useState, useEffect} from 'react';
 
 export const TimerContext = createContext();
 
 export const TimerProvider = ({children}) => {
-  const initialSeconds = 5 * 60; // 5 minutes in seconds
+  const initialSeconds = 2 * 60; // 5 minutes in seconds
   const [seconds, setSeconds] = useState(initialSeconds);
   const [isActive, setIsActive] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+
+  // second timer
+  const initialSecondarySeconds = 5 * 60;
+  const [secondarySeconds, setSecondarySeconds] = useState(
+    initialSecondarySeconds,
+  );
+  const [isSecondaryActive, setIsSecondaryActive] = useState(false);
+  const [isSecondaryVisible, setIsSecondaryVisible] = useState(false);
 
   useEffect(() => {
     let interval = null;
@@ -40,6 +49,42 @@ export const TimerProvider = ({children}) => {
     setIsActive(false);
   };
 
+  useEffect(() => {
+    let interval = null;
+    if (isSecondaryActive && secondarySeconds > 0) {
+      interval = setInterval(() => {
+        setSecondarySeconds(prevSeconds => prevSeconds - 1);
+      }, 1000);
+    } else if (
+      !isSecondaryActive &&
+      secondarySeconds !== initialSecondarySeconds
+    ) {
+      clearInterval(interval);
+    }
+    return () => clearInterval(interval);
+  }, [isSecondaryActive, secondarySeconds]);
+
+  const toggleSecondaryTimer = () => {
+    setIsSecondaryActive(!isSecondaryActive);
+  };
+
+  const resetSecondaryTimer = () => {
+    setSecondarySeconds(initialSecondarySeconds);
+    setIsSecondaryActive(false);
+  };
+
+  const showSecondaryTimer = () => {
+    setSecondarySeconds(initialSecondarySeconds);
+    setIsSecondaryVisible(true);
+    setIsSecondaryActive(true);
+  };
+
+  const hideSecondaryTimer = () => {
+    setSecondarySeconds(0);
+    setIsSecondaryVisible(false);
+    setIsSecondaryActive(false);
+  };
+
   return (
     <TimerContext.Provider
       value={{
@@ -50,6 +95,15 @@ export const TimerProvider = ({children}) => {
         resetTimer,
         showTimer,
         hideTimer,
+
+        //second
+        secondarySeconds,
+        isSecondaryActive,
+        isSecondaryVisible,
+        toggleSecondaryTimer,
+        resetSecondaryTimer,
+        showSecondaryTimer,
+        hideSecondaryTimer,
       }}>
       {children}
     </TimerContext.Provider>

@@ -12,6 +12,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  ToastAndroid,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -28,6 +29,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import Preferences from '../api/Preferences';
 import DatePicker from 'react-native-date-picker';
 import storage from '@react-native-firebase/storage';
+import NetInfo from '@react-native-community/netinfo';
 
 const UpdateProfileScreen = () => {
   const navigation = useNavigation();
@@ -48,11 +50,29 @@ const UpdateProfileScreen = () => {
   const [imageLoading, setImageLoading] = useState(false);
   const [loading_button, setLoading_Button] = useState(false);
 
+  const checkConnectivity = async () => {
+    const state = await NetInfo.fetch();
+    const isConnected = state.isConnected;
+    if (!isConnected) {
+      ToastAndroid.showWithGravity(
+        'No internet connection',
+        ToastAndroid.SHORT,
+        ToastAndroid.BOTTOM,
+      );
+    }
+    return isConnected;
+  };
+
   useEffect(() => {
     fetchData();
   }, []);
 
   const fetchData = async () => {
+    const isConnected = await checkConnectivity();
+    if (!isConnected) {
+      setLoading(false);
+      return;
+    }
     try {
       let token;
       try {
@@ -93,11 +113,18 @@ const UpdateProfileScreen = () => {
     } catch (error) {}
   };
 
-  const selectImage = () => {
+  const selectImage = async () => {
+    const isConnected = await checkConnectivity();
+    if (!isConnected) {
+      setLoading(false);
+      return;
+    }
     setImageLoading(true);
     launchImageLibrary({quality: 0.5}, fileobj => {
       console.log(fileobj);
       if (fileobj.errorCode || fileobj.didCancel) {
+        setImageLoading(false);
+
         return console.log('You should handle errors or user cancellation!');
       }
       const img = fileobj.assets[0];
@@ -149,6 +176,11 @@ const UpdateProfileScreen = () => {
     });
   };
   const handleUpdateProfile = async () => {
+    const isConnected = await checkConnectivity();
+    if (!isConnected) {
+      setLoading(false);
+      return;
+    }
     setLoading_Button(true);
     try {
       const parts = showDate.split('/');

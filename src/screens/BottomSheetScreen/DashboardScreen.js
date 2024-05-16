@@ -8,17 +8,17 @@ import {
   Text,
   View,
   RefreshControl,
+  ToastAndroid,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {COLORS, SIZES} from '../../constant/theme';
 import HeaderSection from '../../components/HeaderSection';
 import {images} from '../../constant';
-import {Astrologer, Blog, Horoscope} from '../../constant/data';
+import {Horoscope} from '../../constant/data';
 import HoroscopeSection from '../../components/HoroscopeSection';
 import BlogSection from '../../components/BlogSection';
 import PanchangSection from '../../components/PanchangSection';
 import KundliSecion from '../../components/KundliSecion';
-import ShowPopUp from '../../components/ShowPopUp';
 import AdvancePanchangSection from '../../components/AdvancePanchangSection';
 import AstrologerComponent from '../../components/AstrologerComponent';
 import {useTranslation} from 'react-i18next';
@@ -29,21 +29,117 @@ import {fetchAllBlogs} from '../../redux/blogSlice';
 import WebUrls from '../api/WebUrls';
 import WebMethods from '../api/WebMethods';
 import FeatureAstrologerComponent from '../../components/FeatureAstrologerComponent';
+import OneSignal from 'react-native-onesignal';
+import {fetchBanner} from '../../redux/BannerSlice';
+import BannerSection from '../../components/BannerSection';
+import NetInfo from '@react-native-community/netinfo';
 
 const DashboardScreen = () => {
   const dispatch = useDispatch();
   const {t} = useTranslation();
   const [refreshing, setRefreshing] = useState(false);
   const {isData} = useSelector(state => state.blog);
-  const [topAstrologer, setTopAstrologer] = useState('');
-
-  console.log('topAstrologer===>', topAstrologer);
+  const {data} = useSelector(state => state.banner);
+  const [topAstrologers, setTopAstrologers] = useState([]);
+  const [playerId, setPlayerId] = useState('');
 
   const onRefresh = () => {
     setRefreshing(true);
     setTimeout(() => {
       setRefreshing(false);
+      handleWalletBalance();
+      handleBlog();
+      handleTopAstrologer();
     }, 2000);
+  };
+
+  const checkConnectivity = async () => {
+    const state = await NetInfo.fetch();
+    const isConnected = state.isConnected;
+    if (!isConnected) {
+      ToastAndroid.showWithGravity(
+        'No internet connection',
+        ToastAndroid.LONG,
+        ToastAndroid.BOTTOM,
+      );
+    }
+    return isConnected;
+  };
+
+  const handleWalletBalance = async () => {
+    try {
+      const isConnected = await checkConnectivity();
+      if (!isConnected) {
+        console.warn('No internet connection: Skipping wallet balance fetch');
+        return;
+      }
+
+      const token = await Preferences.getPreferences(Preferences.key.Token);
+      if (token) {
+        dispatch(fetchWalletbalance(token));
+      }
+    } catch (error) {
+      console.error('Error fetching wallet balance:', error);
+    }
+  };
+
+  const handleBlog = async () => {
+    try {
+      const isConnected = await checkConnectivity();
+      if (!isConnected) {
+        console.warn('No internet connection: Skipping blog fetch');
+        return;
+      }
+
+      const token = await Preferences.getPreferences(Preferences.key.Token);
+      if (token) {
+        dispatch(fetchAllBlogs(token));
+        dispatch(fetchBanner(token));
+      }
+    } catch (error) {
+      console.error('Error fetching blogs:', error);
+    }
+  };
+
+  const handleTopAstrologer = async () => {
+    try {
+      const isConnected = await checkConnectivity();
+      console.log('isConnected', isConnected);
+      if (!isConnected) {
+        console.warn('No internet connection: Skipping top astrologers fetch');
+        return;
+      }
+
+      const token = await Preferences.getPreferences(Preferences.key.Token);
+      if (token) {
+        const response = await WebMethods.getRequestWithHeader(
+          WebUrls.url.fetch_Top_All_Astrologer,
+          token,
+        );
+        if (response !== null) {
+          setTopAstrologers(response.data);
+        } else {
+          console.log('Error fetching top astrologers');
+        }
+      }
+    } catch (error) {
+      console.error('Error handling top astrologers:', error);
+    }
+  };
+
+  const fetchAndSetOneSignalId = async () => {
+    try {
+      const deviceState = await OneSignal.getDeviceState();
+      if (deviceState?.userId) {
+        setPlayerId(deviceState.userId);
+        const userId = await Preferences.getPreferences(Preferences.key.UserId);
+        await OneSignal.setExternalUserId(userId);
+      } else {
+        console.warn('OneSignal: Unable to fetch Player ID');
+      }
+    } catch (error) {
+      console.error('Error fetching OneSignal IDs:', error);
+    }
   };
 
   useEffect(() => {
@@ -52,45 +148,10 @@ const DashboardScreen = () => {
     handleTopAstrologer();
   }, [refreshing]);
 
-  const handleWalletBalance = async () => {
-    try {
-      const token = await Preferences.getPreferences(Preferences.key.Token);
-      if (token) {
-        dispatch(fetchWalletbalance(token));
-      }
-    } catch {}
-  };
+  useEffect(() => {
+    fetchAndSetOneSignalId();
+  }, []);
 
-  const handleBlog = async () => {
-    try {
-      const token = await Preferences.getPreferences(Preferences.key.Token);
-      if (token) {
-        dispatch(fetchAllBlogs(token));
-      }
-    } catch {
-      console.log('error');
-    }
-  };
-
-  const handleTopAstrologer = async () => {
-    try {
-      const token = await Preferences.getPreferences(Preferences.key.Token);
-      if (token) {
-        const response = await WebMethods.getRequestWithHeader(
-          WebUrls.url.fetch_Top_All_Astrologer,
-          token,
-        );
-        if (response != null) {
-          console.log('Top response===>', response.data);
-          setTopAstrologer(response.data);
-        } else {
-          console.log('error');
-        }
-      }
-    } catch (error) {
-      console.error('Error handling payment:', error);
-    }
-  };
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor={'#f7f1e1'} barStyle={'dark-content'} />
@@ -108,6 +169,9 @@ const DashboardScreen = () => {
               <HeaderSection />
             </View>
             <View style={{marginTop: SIZES.width * 0.026}}>
+              <BannerSection data={data} set={0} />
+            </View>
+            <View style={{marginTop: SIZES.width * 0.026}}>
               <PanchangSection refreshing={refreshing} />
             </View>
             <View style={{marginTop: SIZES.width * 0.03}}>
@@ -117,16 +181,15 @@ const DashboardScreen = () => {
               <AdvancePanchangSection />
             </View>
           </View>
-          {topAstrologer ? (
+          {topAstrologers.length > 0 && (
             <View
               style={[styles.mainContainer, {marginTop: SIZES.width * 0.03}]}>
               <Text style={[styles.tagLine, {marginBottom: 10}]}>
                 {t('Top Astrologers')}
               </Text>
-              <FeatureAstrologerComponent data={topAstrologer} />
+              <FeatureAstrologerComponent data={topAstrologers} />
             </View>
-          ) : null}
-
+          )}
           <View style={[styles.mainContainer, {marginTop: SIZES.width * 0.03}]}>
             <HoroscopeSection data={Horoscope} refreshing={refreshing} />
           </View>

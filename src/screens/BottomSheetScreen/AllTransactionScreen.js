@@ -6,45 +6,78 @@ import {
   StatusBar,
   StyleSheet,
   Text,
+  ToastAndroid,
   View,
+  ActivityIndicator,
 } from 'react-native';
 import BackButton from '../../components/BackButton';
-import {SIZES} from '../../constant/theme';
+import {SIZES, COLORS} from '../../constant/theme';
 import HeaderSection from '../../components/HeaderSection';
 import {images} from '../../constant';
 import WebUrls from '../api/WebUrls';
 import WebMethods from '../api/WebMethods';
 import Preferences from '../api/Preferences';
+import NetInfo from '@react-native-community/netinfo';
 
 const AllTransactionScreen = () => {
   const [transactions, setTransactions] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchTransaction();
   }, []);
 
+  const setToastMsg = msg => {
+    ToastAndroid.showWithGravity(msg, ToastAndroid.LONG, ToastAndroid.BOTTOM);
+  };
+
+  const checkConnectivity = async () => {
+    const state = await NetInfo.fetch();
+    const isConnected = state.isConnected;
+    if (!isConnected) {
+      setToastMsg('No internet connection');
+    }
+    return isConnected;
+  };
+
   const fetchTransaction = async () => {
+    setLoading(true);
+    const isConnected = await checkConnectivity();
+    if (!isConnected) {
+      setLoading(false);
+      return;
+    }
+
     let token;
     try {
       token = await Preferences.getPreferences(Preferences.key.Token);
     } catch (error) {
-      console.error('Error getting latitude and longitude:', error);
+      console.error('Error getting token:', error);
+      setLoading(false);
       return;
     }
+
     if (token) {
-      WebMethods.getRequestWithHeader(
-        WebUrls.url.transaction_history,
-        token,
-      ).then(async response => {
-        if (response != null) {
+      try {
+        const response = await WebMethods.getRequestWithHeader(
+          WebUrls.url.transaction_history,
+          token,
+        );
+        if (response !== null) {
           const sortedTransactions = response.sort(
             (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
           );
           setTransactions(sortedTransactions);
         } else {
-          console.log('error');
+          console.log('Error fetching transactions');
         }
-      });
+      } catch (error) {
+        console.error('Error fetching transactions:', error);
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      setLoading(false);
     }
   };
 
@@ -68,6 +101,7 @@ const AllTransactionScreen = () => {
       </View>
     );
   };
+
   return (
     <>
       <StatusBar backgroundColor={'#f7f1e1'} barStyle={'dark-content'} />
@@ -83,13 +117,19 @@ const AllTransactionScreen = () => {
             <View style={{width: SIZES.width * 0.38}}>
               <BackButton placeholder={'Transactions'} />
             </View>
-            <FlatList
-              scrollEnabled={false}
-              data={transactions}
-              renderItem={renderItem}
-              keyExtractor={item => item._id}
-              contentContainerStyle={{marginTop: 10}}
-            />
+            {loading ? (
+              <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color={COLORS.primary} />
+              </View>
+            ) : (
+              <FlatList
+                scrollEnabled={false}
+                data={transactions}
+                renderItem={renderItem}
+                keyExtractor={item => item._id}
+                contentContainerStyle={{marginTop: 10}}
+              />
+            )}
           </View>
         </ScrollView>
       </ImageBackground>
@@ -106,7 +146,12 @@ const styles = StyleSheet.create({
   mainContainer: {
     marginHorizontal: SIZES.width * 0.051,
   },
-
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: SIZES.width * 0.2,
+  },
   transactionItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',

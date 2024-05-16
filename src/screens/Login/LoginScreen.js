@@ -12,6 +12,7 @@ import {
   View,
   ActivityIndicator,
   ToastAndroid,
+  Linking,
 } from 'react-native';
 import {COLORS, SIZES} from '../../constant/theme';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
@@ -21,10 +22,26 @@ import CustomeIconButton from '../../components/CustomeIconButton';
 import WebMethods from '../api/WebMethods';
 import WebUrls from '../api/WebUrls';
 import Preferences from '../api/Preferences';
+import NetInfo from '@react-native-community/netinfo';
 
 const LoginScreen = ({navigation}) => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // Initialize OneSignal
+
+  const checkConnectivity = async () => {
+    const state = await NetInfo.fetch();
+    const isConnected = state.isConnected;
+    if (!isConnected) {
+      ToastAndroid.showWithGravity(
+        'No internet connection',
+        ToastAndroid.LONG,
+        ToastAndroid.BOTTOM,
+      );
+    }
+    return isConnected;
+  };
 
   const setToastMsg = msg => {
     ToastAndroid.showWithGravity(msg, ToastAndroid.SHORT, ToastAndroid.BOTTOM);
@@ -48,6 +65,12 @@ const LoginScreen = ({navigation}) => {
   };
 
   const handleNavigation = async () => {
+    const isConnected = await checkConnectivity();
+    if (!isConnected) {
+      console.warn('No internet connection:');
+      return;
+    }
+
     if (!phoneNumber) {
       setToastMsg('Enter phone no');
       return;
@@ -76,6 +99,14 @@ const LoginScreen = ({navigation}) => {
       console.log('error', error);
       setLoading(false);
     }
+  };
+
+  const handleTermsOfUseClick = () => {
+    Linking.openURL('https://astropath.co.in/terms-and-conditions');
+  };
+
+  const handlePrivacyPolicyClick = () => {
+    Linking.openURL('https://astropath.co.in/privacy-policy');
   };
 
   const Divider = ({Placeholder}) => {
@@ -143,13 +174,17 @@ const LoginScreen = ({navigation}) => {
               placeholder={'Continue with email id'}
             />
           </View>
-          <View style={{marginTop: SIZES.width * 0.034}}>
-            <Text
-              style={[styles.description, {lineHeight: SIZES.width * 0.055}]}>
+          <View style={{marginTop: 15, flexDirection: 'row', flexWrap: 'wrap'}}>
+            <Text style={styles.description}>
               By signing up, you agree to our{' '}
-              <Text style={styles.linkText}>Terms of Use </Text> and
-              <Text style={styles.linkText}> Privacy Policy </Text>
             </Text>
+            <TouchableOpacity onPress={handleTermsOfUseClick}>
+              <Text style={styles.linkText}>Terms of Use</Text>
+            </TouchableOpacity>
+            <Text style={[styles.description, {paddingLeft: 5}]}>and</Text>
+            <TouchableOpacity onPress={handlePrivacyPolicyClick}>
+              <Text style={styles.linkText}>Privacy Policy</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </KeyboardAwareScrollView>

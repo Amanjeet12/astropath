@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Text,
   View,
+  ToastAndroid,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {COLORS, SIZES} from '../../constant/theme';
@@ -16,49 +17,81 @@ import {images} from '../../constant';
 import Preferences from '../api/Preferences';
 import WebMethods from '../api/WebMethods';
 import WebUrls from '../api/WebUrls';
+import NetInfo from '@react-native-community/netinfo';
 import {useIsFocused} from '@react-navigation/native';
 
 const OrderScreen = () => {
-  const IsFocused = useIsFocused();
+  const isFocused = useIsFocused();
   const [orders, setOrders] = useState('');
   const [refreshing, setRefreshing] = useState(false);
   const [refresh, setRefresh] = useState(false);
-  const onRefresh = () => {
+  const [loading, setLoading] = useState(true);
+
+  const checkConnectivity = async () => {
+    const state = await NetInfo.fetch();
+    const isConnected = state.isConnected;
+    if (!isConnected) {
+      ToastAndroid.showWithGravity(
+        'No internet connection',
+        ToastAndroid.LONG,
+        ToastAndroid.BOTTOM,
+      );
+    }
+    return isConnected;
+  };
+
+  const onRefresh = async () => {
     setRefreshing(true);
-    setTimeout(() => {
+    setLoading(true);
+    const isConnected = await checkConnectivity();
+    if (isConnected) {
+      fetchOrders();
+    } else {
+      setLoading(false);
       setRefreshing(false);
-    }, 2000);
+    }
   };
 
   useEffect(() => {
-    fetchAstrologer();
-  }, [refreshing, refresh]);
+    if (refreshing || refresh || isFocused) {
+      fetchOrders();
+    }
+  }, [refreshing, refresh, isFocused]);
 
-  const fetchAstrologer = async () => {
+  const fetchOrders = async () => {
     try {
+      const isConnected = await checkConnectivity();
+      if (!isConnected) {
+        setLoading(false);
+        setRefreshing(false);
+        return;
+      }
+
       const token = await Preferences.getPreferences(Preferences.key.Token);
       if (token) {
         const response = await WebMethods.getRequestWithHeader(
           WebUrls.url.orders,
           token,
         );
-        if (response != null) {
+        if (response !== null) {
           console.log('response===>', response.data);
           const sortedOrder = response.data.sort(
             (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
           );
           setOrders(sortedOrder);
         } else {
-          console.log('error');
+          console.log('Error fetching orders');
         }
       }
     } catch (error) {
-      console.error('Error handling payment:', error);
+      console.error('Error fetching orders:', error);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
     }
   };
 
   const handleRefresh = () => {
-    console.log('first');
     setRefresh(!refresh);
   };
 
@@ -81,12 +114,12 @@ const OrderScreen = () => {
             <View style={{marginTop: SIZES.width * 0.051}}>
               <Text style={styles.tagLine}>Recent orders and chats</Text>
               <View>
-                {orders ? (
-                  <OrderSection data={orders} refreshing={handleRefresh} />
-                ) : (
+                {loading ? (
                   <View style={{marginTop: 55}}>
                     <ActivityIndicator size={'small'} color={COLORS.black} />
                   </View>
+                ) : (
+                  <OrderSection data={orders} refreshing={handleRefresh} />
                 )}
               </View>
             </View>

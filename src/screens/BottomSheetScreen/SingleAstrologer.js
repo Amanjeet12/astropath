@@ -42,7 +42,6 @@ import {Circle} from 'react-native-svg';
 
 const SingleAstrologer = ({route, navigation}) => {
   const {item} = route.params;
-  console.log(item);
   const dispatch = useDispatch();
   const {isVisible, hideTimer} = useContext(TimerContext);
   const [showRate, setShowRate] = useState(false);
@@ -110,7 +109,7 @@ const SingleAstrologer = ({route, navigation}) => {
 
             onHangUp: duration => {
               handleWalletBalance();
-              navigation.navigate('DashboardScreen');
+              navigation.navigate('OrderScreen');
             },
 
             hangUpConfirmInfo: {
@@ -125,7 +124,7 @@ const SingleAstrologer = ({route, navigation}) => {
             },
             onWindowMinimized: () => {
               console.log('[Demo]CallInvitation onWindowMinimized');
-              navigation.navigate('DashboardScreen');
+              navigation.navigate('OrderScreen');
             },
             onWindowMaximized: () => {
               console.log('[Demo]CallInvitation onWindowMaximized');
@@ -187,6 +186,11 @@ const SingleAstrologer = ({route, navigation}) => {
     } catch (error) {}
   };
 
+  const formatExpertise = expertiseArray => {
+    if (!expertiseArray || expertiseArray.length === 0) return 'Astrology';
+    return expertiseArray.slice(0, 3).join(', ');
+  };
+
   return (
     <>
       <StatusBar backgroundColor={'#f7f1e1'} barStyle={'dark-content'} />
@@ -234,7 +238,9 @@ const SingleAstrologer = ({route, navigation}) => {
                           resizeMode: 'contain',
                         }}
                       />
-                      <Text style={{color: 'grey'}}>{item.totalCount}</Text>
+                      <Text style={{color: 'grey'}}>
+                        {Math.floor(item.averageRating)}
+                      </Text>
                     </View>
                   </View>
                 </View>
@@ -249,12 +255,14 @@ const SingleAstrologer = ({route, navigation}) => {
                   <View style={[styles.flexBox, {marginTop: 3}]}>
                     <Image source={images.language} style={styles.icon} />
                     <Text style={styles.profile_language}>
-                      {item?.language}
+                      {formatExpertise(item?.expertise)}
                     </Text>
                   </View>
                   <View style={[styles.flexBox, {marginTop: 3}]}>
                     <Image source={images.experiance} style={styles.icon} />
-                    <Text style={styles.profile_experience}>7 Years</Text>
+                    <Text style={styles.profile_experience}>
+                      {item?.experience} Years
+                    </Text>
                   </View>
                   <View style={[styles.flexBox, {gap: 15, marginLeft: -3}]}>
                     <Text style={styles.profile_rate}>
@@ -316,71 +324,6 @@ const SingleAstrologer = ({route, navigation}) => {
                   </View>
                 </View>
               </View>
-              <View style={styles.border} />
-              <View style={styles.featuresContainer}>
-                <TouchableOpacity
-                  style={[
-                    styles.flexBox,
-                    styles.singlebox,
-                    {width: '25%'},
-                    !item.work_schedule?.services.includes('chat') && {
-                      opacity: 0.5,
-                    },
-                  ]}
-                  disabled={!item.work_schedule?.services.includes('chat')}>
-                  <Text style={{fontSize: 15, color: '#000'}}>Chat</Text>
-                  <Chat
-                    name={'chatbubble-ellipses-outline'}
-                    color={'#000'}
-                    size={15}
-                  />
-                </TouchableOpacity>
-                <View style={styles.verticalBorder} />
-                <TouchableOpacity
-                  style={[
-                    styles.flexBox,
-                    styles.singlebox,
-                    {width: '30%'},
-                    !item.work_schedule?.services.includes('voice call') && {
-                      opacity: 0.5,
-                    },
-                  ]}
-                  disabled={
-                    !item.work_schedule?.services.includes('voice call')
-                  }
-                  onPress={() =>
-                    handlCallAndVideoCallRequest(
-                      'voice call',
-                      item.video_call_price,
-                    )
-                  }>
-                  <Text style={{fontSize: 15, color: '#000'}}>Call</Text>
-                  <Chat name={'call'} color={'#000'} size={15} />
-                </TouchableOpacity>
-                <View style={styles.verticalBorder} />
-
-                <TouchableOpacity
-                  style={[
-                    styles.flexBox,
-                    styles.singlebox,
-                    {width: '40%'},
-                    !item.work_schedule?.services.includes('video call') && {
-                      opacity: 0.5,
-                    },
-                  ]}
-                  disabled={
-                    !item.work_schedule?.services.includes('video call')
-                  }
-                  onPress={() =>
-                    handlCallAndVideoCallRequest(
-                      'video call',
-                      item.video_call_price,
-                    )
-                  }>
-                  <Text style={{fontSize: 15, color: '#000'}}>Video Call</Text>
-                  <Chat name={'videocam'} color={'#000'} size={15} />
-                </TouchableOpacity>
-              </View>
             </View>
             <AboutAstrologer data={item?.bio} />
             <View
@@ -390,7 +333,7 @@ const SingleAstrologer = ({route, navigation}) => {
                 marginTop: 15,
                 marginBottom: 50,
               }}>
-              <RatingSection data={item?.ratingStats} />
+              <RatingSection data={item} />
               <RatingAstrologer data={item?.reviews} />
             </View>
           </View>
@@ -450,6 +393,79 @@ const SingleAstrologer = ({route, navigation}) => {
             </View>
           </View>
         </Modal>
+        <View
+          style={{
+            position: 'absolute',
+            bottom: 0,
+            paddingHorizontal: 25,
+            height: 75,
+            backgroundColor: '#fff',
+            alignItems: 'center',
+          }}>
+          <View style={styles.featuresContainer}>
+            <TouchableOpacity
+              style={[
+                styles.flexBox,
+                styles.singlebox,
+                {width: '25%'},
+                !item.work_schedule?.services.includes('chat') && {
+                  opacity: 0.5,
+                },
+              ]}
+              disabled={!item.work_schedule?.services.includes('chat')}
+              onPress={() =>
+                handlCallAndVideoCallRequest('Chat', item.chat_price)
+              }>
+              <Text style={{fontSize: 15, color: '#000'}}>Chat</Text>
+              <Chat
+                name={'chatbubble-ellipses-outline'}
+                color={'#000'}
+                size={15}
+              />
+            </TouchableOpacity>
+            <View style={styles.verticalBorder} />
+            <TouchableOpacity
+              style={[
+                styles.flexBox,
+                styles.singlebox,
+                {width: '30%'},
+                !item.work_schedule?.services.includes('voice call') && {
+                  opacity: 0.5,
+                },
+              ]}
+              disabled={!item.work_schedule?.services.includes('voice call')}
+              onPress={() =>
+                handlCallAndVideoCallRequest(
+                  'voice call',
+                  item.video_call_price,
+                )
+              }>
+              <Text style={{fontSize: 15, color: '#000'}}>Call</Text>
+              <Chat name={'call'} color={'#000'} size={15} />
+            </TouchableOpacity>
+            <View style={styles.verticalBorder} />
+
+            <TouchableOpacity
+              style={[
+                styles.flexBox,
+                styles.singlebox,
+                {width: '40%'},
+                !item.work_schedule?.services.includes('video call') && {
+                  opacity: 0.5,
+                },
+              ]}
+              disabled={!item.work_schedule?.services.includes('video call')}
+              onPress={() =>
+                handlCallAndVideoCallRequest(
+                  'video call',
+                  item.video_call_price,
+                )
+              }>
+              <Text style={{fontSize: 15, color: '#000'}}>Video Call</Text>
+              <Chat name={'videocam'} color={'#000'} size={15} />
+            </TouchableOpacity>
+          </View>
+        </View>
       </ImageBackground>
     </>
   );
