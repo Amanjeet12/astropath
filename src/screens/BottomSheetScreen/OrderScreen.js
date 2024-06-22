@@ -19,13 +19,16 @@ import WebMethods from '../api/WebMethods';
 import WebUrls from '../api/WebUrls';
 import NetInfo from '@react-native-community/netinfo';
 import {useIsFocused} from '@react-navigation/native';
+import {fetchWalletbalance} from '../../redux/WalletBalanceSlice';
+import {useDispatch} from 'react-redux';
 
 const OrderScreen = () => {
   const isFocused = useIsFocused();
-  const [orders, setOrders] = useState('');
+  const [orders, setOrders] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [refresh, setRefresh] = useState(false);
   const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
 
   const checkConnectivity = async () => {
     const state = await NetInfo.fetch();
@@ -46,6 +49,7 @@ const OrderScreen = () => {
     const isConnected = await checkConnectivity();
     if (isConnected) {
       fetchOrders();
+      handleWalletBalance();
     } else {
       setLoading(false);
       setRefreshing(false);
@@ -55,8 +59,26 @@ const OrderScreen = () => {
   useEffect(() => {
     if (refreshing || refresh || isFocused) {
       fetchOrders();
+      handleWalletBalance();
     }
   }, [refreshing, refresh, isFocused]);
+
+  const handleWalletBalance = async () => {
+    try {
+      const isConnected = await checkConnectivity();
+      if (!isConnected) {
+        console.warn('No internet connection: Skipping wallet balance fetch');
+        return;
+      }
+
+      const token = await Preferences.getPreferences(Preferences.key.Token);
+      if (token) {
+        dispatch(fetchWalletbalance(token));
+      }
+    } catch (error) {
+      console.error('Error fetching wallet balance:', error);
+    }
+  };
 
   const fetchOrders = async () => {
     try {
@@ -118,6 +140,8 @@ const OrderScreen = () => {
                   <View style={{marginTop: 55}}>
                     <ActivityIndicator size={'small'} color={COLORS.black} />
                   </View>
+                ) : orders.length === 0 ? (
+                  <Text style={styles.emptyMessage}>No orders available.</Text>
                 ) : (
                   <OrderSection data={orders} refreshing={handleRefresh} />
                 )}
@@ -144,5 +168,11 @@ const styles = StyleSheet.create({
     fontFamily: 'DMSerifDisplay-Regular',
     color: COLORS.black,
     textTransform: 'capitalize',
+  },
+  emptyMessage: {
+    marginTop: 150,
+    fontSize: SIZES.width * 0.04,
+    color: COLORS.black,
+    textAlign: 'center',
   },
 });

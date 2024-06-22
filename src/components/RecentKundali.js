@@ -132,7 +132,8 @@ const RecentKundali = ({data, screen, datas, onVisibilityChange}) => {
                     navigation.navigate('AstrologerScreen');
                     showTimer();
                     Alert.alert(
-                      `Successfully Added queue List No ${response.data}`,
+                      'Success',
+                      `Request sent to our astrologer successfully.`,
                     );
                   }
                 });

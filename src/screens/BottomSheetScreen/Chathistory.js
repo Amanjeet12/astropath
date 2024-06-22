@@ -11,6 +11,8 @@ import {
   TouchableOpacity,
   ToastAndroid,
   RefreshControl,
+  Modal,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useContext, useEffect, useState} from 'react';
 import Preferences from '../api/Preferences';
@@ -19,7 +21,7 @@ import {fetchChatHistrory} from '../../redux/FetchChatHistroySlice';
 import {images} from '../../constant';
 import HeaderSection from '../../components/HeaderSection';
 import NewBackButton from '../../components/NewBackButton';
-import {SIZES} from '../../constant/theme';
+import {COLORS, SIZES} from '../../constant/theme';
 
 import * as ZIM from 'zego-zim-react-native';
 import * as ZPNs from 'zego-zpns-react-native';
@@ -34,7 +36,7 @@ import {TimerContext} from '../../constant/TimerContext';
 
 const Chathistory = ({navigation}) => {
   const dispatch = useDispatch();
-  const {isData} = useSelector(state => state.chat);
+  const {isChatData} = useSelector(state => state.chat);
   const [chatHistory, setChatHistory] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [refresh, setRefresh] = useState(false);
@@ -165,6 +167,8 @@ const Chathistory = ({navigation}) => {
 
   const fetchChatHistroryData = async () => {
     console.log('chek');
+    setLoading(true);
+
     const isConnected = await checkConnectivity();
     if (!isConnected) {
       return;
@@ -184,8 +188,8 @@ const Chathistory = ({navigation}) => {
   };
 
   useEffect(() => {
-    if (isData?.data) {
-      const sortedData = [...isData.data].sort((a, b) => {
+    if (isChatData?.data) {
+      const sortedData = [...isChatData.data].sort((a, b) => {
         if (a.status === 'In-Progress' && b.status !== 'In-Progress') {
           return -1;
         } else if (a.status !== 'In-Progress' && b.status === 'In-Progress') {
@@ -195,7 +199,7 @@ const Chathistory = ({navigation}) => {
       });
       setChatHistory(sortedData);
     }
-  }, [isData?.data]);
+  }, [isChatData?.data]);
 
   const handleNavigation = item => {
     hideTimer();
@@ -210,6 +214,10 @@ const Chathistory = ({navigation}) => {
 
     return formattedDate;
   };
+
+  const ListEmptyComponent = () => (
+    <Text style={styles.noDataText}>No data is available</Text>
+  );
 
   const renderItem = ({item}) => (
     <TouchableOpacity
@@ -254,16 +262,28 @@ const Chathistory = ({navigation}) => {
           }>
           <View style={styles.mainContainer}>
             <HeaderSection />
-            <NewBackButton placeholder={'Chat History'} />
+            <View>
+              <Text style={styles.tagLine}>Chat History</Text>
+            </View>
             <FlatList
               data={chatHistory}
               renderItem={renderItem}
               keyExtractor={item => item._id}
               style={styles.list}
               scrollEnabled={false}
+              ListEmptyComponent={ListEmptyComponent}
             />
           </View>
         </ScrollView>
+        {loading && (
+          <Modal transparent={true} animationType="none" visible={loading}>
+            <View style={styles.modalBackground}>
+              <View style={styles.activityIndicatorWrapper}>
+                <ActivityIndicator size="large" color="#0000ff" />
+              </View>
+            </View>
+          </Modal>
+        )}
       </ImageBackground>
     </View>
   );
@@ -306,5 +326,33 @@ const styles = StyleSheet.create({
   },
   list: {
     borderRadius: 10,
+  },
+  noDataText: {
+    textAlign: 'center',
+    marginTop: 20,
+    fontSize: 16,
+    color: '#888',
+  },
+  tagLine: {
+    fontSize: SIZES.width * 0.051,
+    fontFamily: 'DMSerifDisplay-Regular',
+    color: COLORS.black,
+    textTransform: 'capitalize',
+  },
+  modalBackground: {
+    flex: 1,
+    alignItems: 'center',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+  activityIndicatorWrapper: {
+    backgroundColor: '#FFFFFF',
+    height: 100,
+    width: 100,
+    borderRadius: 10,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

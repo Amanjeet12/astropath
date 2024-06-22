@@ -86,6 +86,9 @@ const WebUrls = {
     banner: 'customer/customer/banner',
 
     check_status: 'customer/customer/order_status',
+
+    //live
+    live: 'customer/customer/live_astrologers',
   },
 };
 

@@ -156,7 +156,7 @@ const SingleAstrologer = ({route, navigation}) => {
   };
 
   const handlCallAndVideoCallRequest = async (service, price) => {
-    if (walletBalance < price) {
+    if (walletBalance < price * 5) {
       setShow(true);
       return;
     }
@@ -239,7 +239,13 @@ const SingleAstrologer = ({route, navigation}) => {
                         }}
                       />
                       <Text style={{color: 'grey'}}>
-                        {Math.floor(item.averageRating)}
+                        {item.averageRating !== undefined &&
+                        item.averageRating !== null
+                          ? item.averageRating ===
+                            Math.floor(item.averageRating)
+                            ? 5
+                            : Math.floor(item.averageRating)
+                          : 5}
                       </Text>
                     </View>
                   </View>
@@ -312,7 +318,7 @@ const SingleAstrologer = ({route, navigation}) => {
                       style={styles.flexBox}
                       onPress={handleTilTop}>
                       <Text style={{fontSize: 12, color: 'green'}}>
-                        View Charge
+                        View Charges
                       </Text>
                       <Icon
                         name={'error-outline'}

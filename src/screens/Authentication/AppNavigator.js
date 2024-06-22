@@ -28,6 +28,7 @@ import CallInTakeFormScreen from '../BottomSheetScreen/CallInTakeFormScreen';
 import CustomerSupportScreen from '../BottomSheetScreen/CustomerSupportScreen';
 import ChatingScreen from '../BottomSheetScreen/ChatingScreen';
 import Chathistory from '../BottomSheetScreen/Chathistory';
+import AudiencePage from '../BottomSheetScreen/AudiencePage';
 
 const Stack = createStackNavigator();
 
@@ -193,6 +194,11 @@ const AppNavigator = () => {
         options={{headerShown: false}}
         name="Chathistory"
         component={Chathistory}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="AudiencePage"
+        component={AudiencePage}
       />
       <Stack.Screen
         options={{headerShown: false}}

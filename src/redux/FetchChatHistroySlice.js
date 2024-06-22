@@ -4,10 +4,11 @@ import WebUrls from '../screens/api/WebUrls';
 import {API} from '../constant/api';
 
 const initialState = {
-  isData: null,
+  isChatData: null,
   isloading: false,
   isSuccess: false,
   isError: false,
+  isInProcess: false,
 };
 
 export const fetchChatHistrory = createAsyncThunk(
@@ -23,7 +24,7 @@ export const fetchChatHistrory = createAsyncThunk(
       return response.data;
     } catch (error) {
       console.log('error===>', error);
-      thunkApi.rejectWithValue(error);
+      return thunkApi.rejectWithValue(error);
     }
   },
 );
@@ -31,7 +32,14 @@ export const fetchChatHistrory = createAsyncThunk(
 const FetchChatHistroySlice = createSlice({
   name: 'chatHistory',
   initialState,
-  reducers: {},
+  reducers: {
+    setInProcess(state) {
+      state.isInProcess = true;
+    },
+    resetInProcess(state) {
+      state.isInProcess = false;
+    },
+  },
   extraReducers: builder => {
     builder.addCase(fetchChatHistrory.pending, state => {
       state.isloading = true;
@@ -40,7 +48,7 @@ const FetchChatHistroySlice = createSlice({
       state.isloading = false;
       state.isError = false;
       state.isSuccess = true;
-      state.isData = action.payload;
+      state.isChatData = action.payload;
     });
     builder.addCase(fetchChatHistrory.rejected, state => {
       state.isloading = false;
@@ -50,4 +58,5 @@ const FetchChatHistroySlice = createSlice({
   },
 });
 
+export const {setInProcess, resetInProcess} = FetchChatHistroySlice.actions;
 export default FetchChatHistroySlice.reducer;

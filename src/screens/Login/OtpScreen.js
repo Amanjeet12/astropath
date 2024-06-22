@@ -85,16 +85,30 @@ const OtpScreen = ({navigation, route}) => {
 
     setTimeout(() => {
       clearInterval(timer);
-    }, 60000); // Stop the timer after 60 seconds
+    }, 60000);
   };
 
   const googlePlayStore = async ({phoneNumber, orderId}) => {
     const token =
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdXBlcl9hZG1pbl91c2VyX2lkIjpudWxsLCJhc3Ryb2xvZ2VyX3VzZXJfaWQiOm51bGwsImN1c3RvbWVyX3VzZXJfaWQiOiI2NWRjY2Q2ODM1MzhjYmVkNjhiYTc2ZWEiLCJpYXQiOjE3MDkyMTEwMTd9.mneZw5bbsxNn-t2ozIM9ll2UYMhSURpTjOY-h2f6qYc';
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdXBlcl9hZG1pbl91c2VyX2lkIjpudWxsLCJhc3Ryb2xvZ2VyX3VzZXJfaWQiOm51bGwsImN1c3RvbWVyX3VzZXJfaWQiOiI2NjIyMDNlY2E5YzFlNzNmYWYxNmI1NjMiLCJpYXQiOjE3MTY1NzQ5NTJ9.Dv8-a00FaUrxWYwAJzLohhIPrnbliAukYyXTTHBtWoE';
     try {
-      await Preferences.savePreferences(Preferences.key.UserId, 'orderId');
-      await Preferences.savePreferences(Preferences.key.Token, token);
-      await Preferences.savePreferences(Preferences.key.phone, 'phoneNumber');
+      const preferences = [
+        Preferences.savePreferences(
+          Preferences.key.UserId,
+          '662203eca9c1e73faf16b563',
+        ),
+        Preferences.savePreferences(Preferences.key.phone, '+917717755796'),
+        Preferences.savePreferences(Preferences.key.Token, token),
+        Preferences.savePreferences(Preferences.key.Name, 'test'),
+        Preferences.savePreferences(Preferences.key.email, 'test@gmail.com'),
+        Preferences.savePreferences(Preferences.key.birthPlace, null),
+        Preferences.savePreferences(Preferences.key.gender, null),
+        Preferences.savePreferences(Preferences.key.birthLat, null),
+        Preferences.savePreferences(Preferences.key.birthLon, null),
+        Preferences.savePreferences(Preferences.key.Profile_pic, null),
+      ];
+
+      await Promise.all(preferences);
       console.log('done');
       login();
     } catch (error) {

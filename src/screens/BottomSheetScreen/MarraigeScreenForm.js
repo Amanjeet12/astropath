@@ -91,6 +91,25 @@ const MarraigeScreenForm = ({navigation}) => {
       return;
     }
 
+    console.log(
+      name_m,
+      lat_m,
+      lon_m,
+      day_m,
+      month_m,
+      year_m,
+      hour_m,
+      min_m,
+      name_f,
+      lat_f,
+      lon_f,
+      day_f,
+      month_f,
+      year_f,
+      hour_f,
+      min_f,
+    );
+
     if (
       name_m &&
       lat_m &&

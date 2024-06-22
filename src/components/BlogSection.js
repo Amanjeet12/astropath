@@ -68,7 +68,7 @@ const BlogSection = ({data}) => {
           <View key={index} style={styles.container}>
             <ImageBackground
               source={images.blog_bg}
-              style={{height: SIZES.width * 0.59}}
+              style={{height: SIZES.width * 0.43}}
               imageStyle={{resizeMode: 'stretch'}}>
               <View
                 style={{
@@ -107,18 +107,18 @@ const BlogSection = ({data}) => {
                     </View>
                   ))}
                 </ScrollView>
-                <View style={{padding: SIZES.width * 0.039}}>
+                {/* <View style={{padding: SIZES.width * 0.039}}>
                   <Text style={styles.description} numberOfLines={3}>
                     {item.description}
                   </Text>
-                </View>
+                </View> */}
               </View>
 
               <View
                 style={{
                   position: 'absolute',
                   right: SIZES.width * 0.016,
-                  top: 3,
+                  top: -15,
                 }}>
                 <TouchableOpacity
                   style={styles.buttonContainer}
@@ -158,7 +158,7 @@ export default BlogSection;
 
 const styles = StyleSheet.create({
   container: {
-    height: SIZES.width * 0.59,
+    height: SIZES.width * 0.43,
     marginBottom: SIZES.width * 0.051,
   },
   bottomText: {

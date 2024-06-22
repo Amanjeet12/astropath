@@ -33,15 +33,37 @@ import OneSignal from 'react-native-onesignal';
 import {fetchBanner} from '../../redux/BannerSlice';
 import BannerSection from '../../components/BannerSection';
 import NetInfo from '@react-native-community/netinfo';
+import LiveStreamSection from '../../components/LiveStreamSection';
+import {useNavigation} from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {
+  fetchChatHistrory,
+  resetInProcess,
+  setInProcess,
+} from '../../redux/FetchChatHistroySlice';
+import {fetchLiveAstrolger} from '../../redux/LiveAstrologerSlice';
 
 const DashboardScreen = () => {
   const dispatch = useDispatch();
   const {t} = useTranslation();
+  const navigation = useNavigation();
   const [refreshing, setRefreshing] = useState(false);
   const {isData} = useSelector(state => state.blog);
   const {data} = useSelector(state => state.banner);
   const [topAstrologers, setTopAstrologers] = useState([]);
   const [playerId, setPlayerId] = useState('');
+  const {isChatData} = useSelector(state => state.chat);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    const data = await AsyncStorage.getItem('notification');
+    if (data === 'notification') {
+      navigation.navigate('Chathistory');
+    }
+  };
 
   const onRefresh = () => {
     setRefreshing(true);
@@ -142,15 +164,72 @@ const DashboardScreen = () => {
     }
   };
 
+  const fetchLiveAllAstrologer = async () => {
+    const token = await Preferences.getPreferences(Preferences.key.Token);
+    if (token) {
+      dispatch(fetchLiveAstrolger(token));
+    }
+  };
+
   useEffect(() => {
     handleWalletBalance();
+    fetchLiveAllAstrologer();
     handleBlog();
     handleTopAstrologer();
+    fetchChatHistroryData();
   }, [refreshing]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await fetchLiveAllAstrologer();
+    };
+
+    const interval = setInterval(() => {
+      fetchData();
+    }, 60000); // 60000 milliseconds = 1 minute
+
+    // Initial fetch when component mounts
+    fetchData();
+
+    // Clear interval on component unmount
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     fetchAndSetOneSignalId();
   }, []);
+
+  const fetchChatHistroryData = async () => {
+    console.log('chek');
+    const isConnected = await checkConnectivity();
+    if (!isConnected) {
+      return;
+    }
+    try {
+      const token = await Preferences.getPreferences(Preferences.key.Token);
+      if (token) {
+        dispatch(fetchChatHistrory(token));
+      }
+    } catch (err) {
+      console.error('Failed to fetch chat history:', err);
+      // Implement error handling or UI feedback here
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isChatData?.data) {
+      const hasInProgress = isChatData.data.some(
+        item => item.status === 'In-Progress',
+      );
+      if (hasInProgress) {
+        dispatch(setInProcess());
+      } else {
+        dispatch(resetInProcess());
+      }
+    }
+  }, [isChatData?.data, dispatch]);
 
   return (
     <View style={styles.container}>
@@ -171,15 +250,20 @@ const DashboardScreen = () => {
             <View style={{marginTop: SIZES.width * 0.026}}>
               <BannerSection data={data} set={0} />
             </View>
+
             <View style={{marginTop: SIZES.width * 0.026}}>
               <PanchangSection refreshing={refreshing} />
             </View>
             <View style={{marginTop: SIZES.width * 0.03}}>
               <KundliSecion />
             </View>
+
             <View style={{marginTop: SIZES.width * 0.01}}>
               <AdvancePanchangSection />
             </View>
+          </View>
+          <View style={{marginTop: SIZES.width * 0.026}}>
+            <LiveStreamSection />
           </View>
           {topAstrologers.length > 0 && (
             <View

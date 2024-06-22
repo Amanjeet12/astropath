@@ -23,6 +23,7 @@ const Otptextinput = ({onOtpFilled}) => {
         codeInputFieldStyle={styles.underlineStyleBase}
         codeInputHighlightStyle={styles.underlineStyleHighLighted}
         onCodeFilled={handleOtpFilled}
+        keyboardType="number-pad"
       />
     </View>
   );

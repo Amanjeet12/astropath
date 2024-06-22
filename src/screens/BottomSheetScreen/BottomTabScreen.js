@@ -18,12 +18,15 @@ import {
   AddIconFocuse,
   AstrologerIcon,
   AstrologerIconFocused,
+  ChatHistory,
+  ChatHistoryIconFocused,
   HomeIcon,
   HomeIconFocused,
   LikedIcon,
   ProfileIcon,
   ProfileIconFocused,
 } from '../SvgComponent/BottomSvgComponent';
+import Chathistory from './Chathistory';
 
 const Tab = createBottomTabNavigator();
 
@@ -88,6 +91,17 @@ const BottomTabScreen = () => {
             tabBarHideOnKeyboard: true,
             tabBarIcon: ({color, size, focused}) =>
               focused ? <AddIconFocuse /> : <AddIcon />,
+          }}
+        />
+        <Tab.Screen
+          name="Chathistory"
+          component={Chathistory}
+          options={{
+            tabBarShowLabel: false,
+            // tabBarStyle: {display: 'none'},
+            tabBarHideOnKeyboard: true,
+            tabBarIcon: ({color, size, focused}) =>
+              focused ? <ChatHistoryIconFocused /> : <ChatHistory />,
           }}
         />
         <Tab.Screen

@@ -83,7 +83,19 @@ const AstrologerComponent = ({data, filters}) => {
                           {Math.floor(item.averageRating)}
                         </Text>
                       </View>
-                    ) : null}
+                    ) : (
+                      <View style={styles.ratingContainer}>
+                        <Image
+                          source={images.star_icon}
+                          style={{
+                            width: SIZES.width * 0.051,
+                            height: SIZES.width * 0.051,
+                            resizeMode: 'contain',
+                          }}
+                        />
+                        <Text style={{color: 'grey'}}>5</Text>
+                      </View>
+                    )}
                   </View>
                 </View>
                 <View style={{width: '45%'}}>

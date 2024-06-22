@@ -181,7 +181,7 @@ const PanchangSection = ({refreshing}) => {
           imageStyle={{
             borderRadius: 5,
             width: SIZES.width * 0.515,
-            height: SIZES.height * 0.42,
+            height: SIZES.height * 0.45,
             resizeMode: 'cover',
             position: 'absolute',
             left: SIZES.width * 0.385,
@@ -259,7 +259,7 @@ export default PanchangSection;
 const styles = StyleSheet.create({
   mainContainer: {
     width: SIZES.width - 40,
-    height: SIZES.height * 0.42,
+    height: SIZES.height * 0.45,
     borderRadius: 5,
     borderColor: '#843C14',
     backgroundColor: '#fff',

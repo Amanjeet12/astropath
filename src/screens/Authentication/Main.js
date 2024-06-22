@@ -9,10 +9,22 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Preferences from '../api/Preferences';
 import {TimerProvider} from '../../constant/TimerContext';
 import TimerComponent from '../../components/TimerComponent';
+import {useNavigation} from '@react-navigation/native';
+import {useNotification} from '../../components/NotificationProvider';
 
 const Main = () => {
   const {isLoggedIn} = useAuth();
   const [isLoading, setIsLoading] = useState(true);
+  const navigation = useNavigation();
+  const {notification, setNotification} = useNotification();
+
+  useEffect(() => {
+    if (notification) {
+      console.log('enter the main and ready to navigate');
+      navigation.navigate(notification);
+      setNotification(null);
+    }
+  }, [notification, navigation, setNotification]);
 
   const checkAndUpdateDate = async () => {
     try {

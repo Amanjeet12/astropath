@@ -5,6 +5,7 @@ import blogSlice from './blogSlice';
 import AstrologerSlice from './AstrologerSlice';
 import FetchChatHistroySlice from './FetchChatHistroySlice';
 import BannerSlice from './BannerSlice';
+import LiveAstrologerSlice from './LiveAstrologerSlice';
 
 export const myStore = configureStore({
   reducer: {
@@ -14,5 +15,6 @@ export const myStore = configureStore({
     astrologer: AstrologerSlice,
     chat: FetchChatHistroySlice,
     banner: BannerSlice,
+    live: LiveAstrologerSlice,
   },
 });

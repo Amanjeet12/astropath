@@ -67,7 +67,7 @@ const TimerComponent = () => {
                 fontWeight: '600',
                 textTransform: 'capitalize',
               }}>
-              Chat Request Send
+              The Request has been send
             </Text>
             <Text
               style={{
@@ -75,7 +75,7 @@ const TimerComponent = () => {
                 fontSize: 14,
                 textTransform: 'capitalize',
               }}>
-              Our astrologer will revert in
+              Please wait, our Astrologer will connect with you in a bit.
             </Text>
           </View>
           {remainingSeconds !== 0 ? (
